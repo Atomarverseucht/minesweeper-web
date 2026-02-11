@@ -1,7 +1,7 @@
 # 🎈 minesweeper-web
  
 Welcome to the party, pal!
-
+ 
 This is a [Partykit](https://partykit.io) project, which lets you create real-time collaborative applications with minimal coding effort.
 
 This is the **React starter** which pairs a PartyKit server with a React client.
