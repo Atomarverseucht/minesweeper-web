@@ -4,7 +4,9 @@
   "private": true,
   "scripts": {
     "dev": "partykit dev --live",
-    "deploy": "partykit deploy"
+    "deploy": "partykit deploy",
+    "dev-deploy": "partykit deploy --preview dev",
+    "clean": "rm -rf public/dist"
   },
   "dependencies": {
     "partysocket": "^1.0.2",
