@@ -1,0 +1,10 @@
+{
+  "$schema": "https://www.partykit.io/schema.json",
+  "name": "minesweeper-web",
+  "main": "party/server.ts",
+  "compatibilityDate": "2026-02-11",
+  "serve": {
+    "path": "public",
+    "build": "app/client.tsx"
+  }
+}
