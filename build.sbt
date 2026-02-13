@@ -42,6 +42,7 @@ docker / dockerfile := {
 
 buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion)
 buildInfoPackage := "de.htwg.winesmeeper"
+scalaSource in Compile := baseDirectory.value / "src/scala"
 
 lazy val root = project
   .in(file("."))
