@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ScalaCompilerConfiguration">
+    <option name="separateProdTestSources" value="true" />
+    <profile name="sbt 1" modules="minesweeper-web_8373,untitled,untitled.main,untitled.test" />
+    <profile name="sbt 2" modules="minesweeper,minesweeper-scala">
+      <parameters>
+        <parameter value="-encoding" />
+        <parameter value="utf-8" />
+      </parameters>
+    </profile>
+  </component>
+</project>
