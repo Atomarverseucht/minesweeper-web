@@ -1,3 +1,10 @@
+## [1.0.3](https://github.com/Atomarverseucht/minesweeper-web/compare/1.0.2...1.0.3) (2026-02-13)
+
+
+### Bug Fixes
+
+* build.sbt ([6a68285](https://github.com/Atomarverseucht/minesweeper-web/commit/6a68285ee63f4b0acdcb457e8279c8748e8be312))
+
 ## [1.0.2](https://github.com/Atomarverseucht/minesweeper-web/compare/1.0.1...1.0.2) (2026-02-13)
 
 
