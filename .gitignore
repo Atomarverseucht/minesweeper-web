@@ -168,3 +168,7 @@ dist
 
 .partykit
 .DS_Store
+
+# added custom stuff
+*.class
+target/
