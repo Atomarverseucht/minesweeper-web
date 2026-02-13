@@ -7,4 +7,4 @@ Stable: https://minesweeper-web.atomarverseucht.partykit.dev/
 
 Dev: https://dev.minesweeper-web.atomarverseucht.partykit.dev/
 
-At this point on development you don't see something!
+At this point on development you don't see anything!
