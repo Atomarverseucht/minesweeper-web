@@ -1,3 +1,5 @@
+## [1.0.4](https://github.com/Atomarverseucht/minesweeper-web/compare/1.0.3...1.0.4) (2026-02-19)
+
 ## [1.0.3](https://github.com/Atomarverseucht/minesweeper-web/compare/1.0.2...1.0.3) (2026-02-13)
 
 
