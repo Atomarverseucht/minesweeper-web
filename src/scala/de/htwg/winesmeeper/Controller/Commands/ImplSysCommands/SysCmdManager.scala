@@ -1,0 +1,50 @@
+package de.htwg.winesmeeper.Controller.Commands.ImplSysCommands
+
+import de.htwg.winesmeeper.Controller.Commands.{AbstractCmdCOR, SysCommandCORTrait, SysCommandManagerTrait}
+import de.htwg.winesmeeper.Controller.ControllerTrait
+import javafx.scene.input.KeyCode
+
+import scala.util.{Failure, Success, Try}
+import java.nio.file.{Path, Paths}
+
+object SysCommandManager extends SysCommandManagerTrait:
+  val firstSysCmd: SysCommandCORTrait = GenerateCmd
+
+  override def isSysCmd(cmd: String): Boolean =
+    firstSysCmd.getSysCmd(cmd).nonEmpty
+
+  override def doSysCmd(observerID: Int, ctrl: ControllerTrait, cmd: String, params: Vector[String]): Option[String] =
+    val com = firstSysCmd.getSysCmd(cmd)
+    com match
+      case Some(value) => value.execute(observerID, ctrl, params)
+      case None => None
+
+  override def getSysCmdList: List[SysCommandCORTrait] = firstSysCmd.listCmds
+
+  def getAbstractCmd(cmd: String, ctrl: ControllerTrait): Option[AbstractCmdCOR] =
+    val sysCmd = firstSysCmd.getSysCmd(cmd)
+    if sysCmd.nonEmpty then sysCmd
+    else ctrl.undo.getCmd(cmd)
+
+  override def doShortCut(observerID: Int, ctrl: ControllerTrait, key: KeyCode): Option[String] =
+    val out = firstSysCmd.getSysCmd(key).map[Option[String]](_.execute(observerID, ctrl))
+    out match
+      case Some(None) => None
+      case Some(Some(value)) => Some(value)
+      case None => None
+
+object LastElemSysCommand extends SysCommandCORTrait:
+  override val cmd: String = ""
+  override val helpMsg: String = ""
+  override val next: SysCommandCORTrait = this
+
+  override def execute(observerID: Int, ctrl: ControllerTrait, params: Vector[String]): Option[String] = Some("No such command!")
+
+  override def getSysCmd(cmd: String): Option[SysCommandCORTrait] = None
+
+  override def getSysCmd(key: KeyCode): Option[SysCommandCORTrait] = None
+
+  override def listCmds: List[SysCommandCORTrait] = Nil
+
+  override val specHelpMsg: String = ""
+  override val shortcut: KeyCode = KeyCode.UNDEFINED
