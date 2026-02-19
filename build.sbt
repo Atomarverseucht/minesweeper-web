@@ -62,7 +62,7 @@ lazy val root = project
     libraryDependencies += "org.scoverage" % "sbt-coveralls_2.12_1.0" % "1.3.15",
     libraryDependencies += "org.scala-lang.modules" %% "scala-xml" % "2.4.0",
     libraryDependencies += "com.typesafe.play" %% "play-json" % "2.10.8",
-
+    libraryDependencies += "" %% "" % "" %,
 
     libraryDependencies ++= {
       // Determine OS version of JavaFX binaries
