@@ -1,15 +1,10 @@
 package de.htwg.winesmeeper.Controller.Commands.ImplSysCommands
 
-import de.htwg.winesmeeper.BuildInfo.version
 import de.htwg.winesmeeper.Controller.ControllerTrait
-import de.htwg.winesmeeper.Model.{BoardTrait, FieldTrait}
 import de.htwg.winesmeeper.Config
 import de.htwg.winesmeeper.Controller.Commands.{SysCommandCORTrait, TurnCmdManagerTrait, TurnCommandTrait}
 import javafx.scene.input.KeyCode
 
-import java.nio.file.{Files, Paths}
-import scala.collection.mutable
-import scala.collection.mutable.Stack
 import scala.util.{Failure, Success, Try}
 
 object LoadCmd extends SysCommandCORTrait:
@@ -36,6 +31,6 @@ object LoadCmd extends SysCommandCORTrait:
         ctrl.undo.overrideStacks(data.undoStack, data.redoStack)
         ctrl.notifyObservers()
         Some(f"Loaded: $file.${Config.saver.formatName} (v${data.version})" +
-          f"\n  For bringing back the old file, type: 'load loadBackup'\n  active version: $version")
+          f"\n  For bringing back the old file, type: 'load loadBackup'\n  active version: web")
       case Failure(ex) =>
         Some(f"File wasn't compatible: ${ex.getMessage}")

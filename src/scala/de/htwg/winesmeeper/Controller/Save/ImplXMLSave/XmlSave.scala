@@ -3,7 +3,6 @@ package de.htwg.winesmeeper.Controller.Save.ImplXMLSave
 import de.htwg.winesmeeper.Config
 import de.htwg.winesmeeper.Controller.Save.{SavedData, SaverTrait}
 import de.htwg.winesmeeper.Controller.ControllerTrait
-import de.htwg.winesmeeper.BuildInfo.version
 import de.htwg.winesmeeper.Controller.Commands.TurnCommandTrait
 
 import scala.collection.mutable.Stack
@@ -13,7 +12,7 @@ object XmlSave extends SaverTrait:
   override val formatName: String = "xml"
 
   override def save(ctrl: ControllerTrait, fileName: String): Option[String] =
-    val metadataXML = <version>{version}</version><state>{ctrl.gameState}</state>
+    val metadataXML = <version>{"web"}</version><state>{ctrl.gameState}</state>
     val boardXML = ctrl.gb.toXml
     val stacks = ctrl.undo.getStacks
     val stacksXML =

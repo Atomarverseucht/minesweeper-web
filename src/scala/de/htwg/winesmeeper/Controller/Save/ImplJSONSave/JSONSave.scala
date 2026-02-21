@@ -4,7 +4,6 @@ import de.htwg.winesmeeper.Controller.ControllerTrait
 import de.htwg.winesmeeper.Controller.Save.{SavedData, SaverTrait}
 import de.htwg.winesmeeper.Controller.Commands.TurnCommandTrait
 import de.htwg.winesmeeper.Model.{BoardTrait, FieldTrait}
-import de.htwg.winesmeeper.BuildInfo.version
 import de.htwg.winesmeeper.Config
 
 import scala.collection.mutable.Stack
@@ -19,7 +18,7 @@ object JSONSave extends SaverTrait:
   override def save(ctrl: ControllerTrait, fileName: String): Option[String] =
     val stacks = ctrl.undo.getStacks
     val jsonObj = Json.obj(
-      "version" -> version,
+      "version" -> "web",
       "state" -> ctrl.gameState,
       "board" -> ctrl.gb,
       "undo-Stack" -> stacks._1.map(c => c.toJSON),
