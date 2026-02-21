@@ -1,20 +1,35 @@
 import type {Controller} from "../controller";
 
-interface Command {
+export interface Command {
     readonly cmd: string;
     readonly helpMsg: string;
     readonly specHelpMsg: string;
 }
-abstract class TurnCommand implements Command {
-    abstract helpMsg: string;
-    abstract specHelpMsg: string;
+export abstract class TurnCommand implements Command {
+    // from the abstract Command
+    abstract readonly helpMsg: string;
+    abstract readonly specHelpMsg: string;
     abstract readonly cmd: string;
-    abstract doStep(observerID: number, cmd: String, x: number, y: number): string;
+
+    readonly ctrl: Controller;
+    readonly observerID: number;
+    readonly x;
+    readonly y;
+
     abstract doStep(): string;
     abstract undoStep(): string;
     abstract redoStep(): string;
     abstract readonly next_: TurnCommand;
-    abstract buildCmd(observerID: number, cmd: String, x: number, y: number, ctrl: Controller): TurnCommand;
+    constructor(ctrl: Controller, observerID: number, x: number, y: number) {
+        this.ctrl = ctrl;
+        this.observerID = observerID;
+        this.x = x;
+        this.y = y;
+    }
+    public buildCmd(cmd: String): TurnCommand {
+        if (cmd === this.cmd) return this
+        else return this.next_.buildCmd(cmd);
+    };
     public listCmds(): TurnCommand[] {
         var cmdList: TurnCommand[] = this.next_.listCmds();
         cmdList.push(this)

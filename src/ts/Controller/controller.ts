@@ -1,15 +1,17 @@
 import type {Board} from "../Model/Board";
 import {type GameState, Start} from "./state"
+import type {TurnCommandManager} from "./Commands/TurnCommands/TurnCommandManager";
+import type {SysCommandManager} from "./Commands/SystemCommands/SysCommandManager";
 
-export class Controller {
+export class Controller extends Observable{
     public state: GameState = new Start(this);
-    public readonly undo: TurnCmdManagerTrait;
-    public readonly sysCmd: SysCommandManagerTrait;
+    public readonly undo: TurnCommandManager;
+    public readonly sysCmd: SysCommandManager;
     public gb: Board;
 
     constructor(gb: Board) {
         this.undo = Config.mkUndo(this);
-        this.sysCmd = Config.standardSysCmdMan;
+        this.sysCmd = new SysCommandManager();
         this.gb = gb
     }
 
@@ -50,7 +52,7 @@ export class Controller {
     }
 
     public getSysCmdList(): string[] {
-        return this.sysCmd.getSysCmdList.map(sys => sys.cmd);
+        return [];//this.sysCmd.getSysCmdList.map(sys => sys.cmd);
     }
 
     public doShortCut(observerID: number, key: string): string | null {
