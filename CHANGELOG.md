@@ -1,3 +1,10 @@
+# [1.1.0-dev.1](https://github.com/Atomarverseucht/minesweeper-web/compare/1.0.4-dev.1...1.1.0-dev.1) (2026-02-21)
+
+
+### Features
+
+* TS translation beginning ([af51ae7](https://github.com/Atomarverseucht/minesweeper-web/commit/af51ae7b806cc2217693dc6b013fb2a13dd34f21))
+
 ## [1.0.4-dev.1](https://github.com/Atomarverseucht/minesweeper-web/compare/1.0.3...1.0.4-dev.1) (2026-02-19)
 
 ## [1.0.3](https://github.com/Atomarverseucht/minesweeper-web/compare/1.0.2...1.0.3) (2026-02-13)
