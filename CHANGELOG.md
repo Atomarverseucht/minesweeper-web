@@ -1,4 +1,25 @@
-## [1.0.4](https://github.com/Atomarverseucht/minesweeper-web/compare/1.0.3...1.0.4) (2026-02-19)
+# [1.1.0-dev.3](https://github.com/Atomarverseucht/minesweeper-web/compare/1.1.0-dev.2...1.1.0-dev.3) (2026-02-22)
+
+
+### Features
+
+* translated Controller/*, but without Command implementation ([ba3d99d](https://github.com/Atomarverseucht/minesweeper-web/commit/ba3d99d24fd82b3e1eaec6785f79256dad7f6a33))
+
+# [1.1.0-dev.2](https://github.com/Atomarverseucht/minesweeper-web/compare/1.1.0-dev.1...1.1.0-dev.2) (2026-02-21)
+
+
+### Features
+
+* TS: Command abstract ([b6b18cd](https://github.com/Atomarverseucht/minesweeper-web/commit/b6b18cd18da5fefdb2f5d9845795349c3aa009a5))
+
+# [1.1.0-dev.1](https://github.com/Atomarverseucht/minesweeper-web/compare/1.0.4-dev.1...1.1.0-dev.1) (2026-02-21)
+
+
+### Features
+
+* TS translation beginning ([af51ae7](https://github.com/Atomarverseucht/minesweeper-web/commit/af51ae7b806cc2217693dc6b013fb2a13dd34f21))
+
+## [1.0.4-dev.1](https://github.com/Atomarverseucht/minesweeper-web/compare/1.0.3...1.0.4-dev.1) (2026-02-19)
 
 ## [1.0.3](https://github.com/Atomarverseucht/minesweeper-web/compare/1.0.2...1.0.3) (2026-02-13)
 

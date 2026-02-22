@@ -2,8 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/minesweeper.iml" filepath="$PROJECT_DIR$/.idea/modules/minesweeper.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/minesweeper-scala.minesweeper-scala-build.iml" filepath="$PROJECT_DIR$/.idea/modules/minesweeper-scala.minesweeper-scala-build.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/minesweeper-web/minesweeper-scala.iml" filepath="$PROJECT_DIR$/.idea/modules/minesweeper-web/minesweeper-scala.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/minesweeper-web/minesweeper-scala.main.iml" filepath="$PROJECT_DIR$/.idea/modules/minesweeper-web/minesweeper-scala.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/minesweeper-web/minesweeper-scala.test.iml" filepath="$PROJECT_DIR$/.idea/modules/minesweeper-web/minesweeper-scala.test.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/untitled.iml" filepath="$PROJECT_DIR$/.idea/modules/untitled.iml" />
       <module fileurl="file://$PROJECT_DIR$/src/scala/de/htwg/winesmeeper/untitled/.idea/modules/untitled.main.iml" filepath="$PROJECT_DIR$/src/scala/de/htwg/winesmeeper/untitled/.idea/modules/untitled.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/src/scala/de/htwg/winesmeeper/untitled/.idea/modules/untitled.test.iml" filepath="$PROJECT_DIR$/src/scala/de/htwg/winesmeeper/untitled/.idea/modules/untitled.test.iml" />

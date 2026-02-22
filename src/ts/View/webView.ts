@@ -1,0 +1,3 @@
+class WebView extends Observer {
+
+}
