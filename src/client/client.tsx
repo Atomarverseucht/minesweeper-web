@@ -7,7 +7,7 @@ function App() {
     <main>
       <h1>🎈 Welcome to <a href="https://github.com/Atomarverseucht/minesweeper">Minesweeper Web!</a></h1>
       <p>
-        This will be the web version of Atoms Minesweeper project
+        This will be the web version of
         <a href="https://github.com/Atomarverseucht/minesweeper">
             Atoms Minesweeper project
         </a>
