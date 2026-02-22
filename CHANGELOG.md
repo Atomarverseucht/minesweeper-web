@@ -1,3 +1,10 @@
+# [1.2.0-dev.2](https://github.com/Atomarverseucht/minesweeper-web/compare/1.2.0-dev.1...1.2.0-dev.2) (2026-02-22)
+
+
+### Bug Fixes
+
+* added a tab ([2bb6ab0](https://github.com/Atomarverseucht/minesweeper-web/commit/2bb6ab0c95659b09ab9cb8646416418591fcd5e5))
+
 # [1.2.0-dev.1](https://github.com/Atomarverseucht/minesweeper-web/compare/1.1.0...1.2.0-dev.1) (2026-02-22)
 
 
