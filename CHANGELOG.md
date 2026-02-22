@@ -1,3 +1,10 @@
+# [1.2.0-dev.1](https://github.com/Atomarverseucht/minesweeper-web/compare/1.1.0...1.2.0-dev.1) (2026-02-22)
+
+
+### Features
+
+* added link to original project to Frontend ([10682db](https://github.com/Atomarverseucht/minesweeper-web/commit/10682db8192265359b545f7630b1244667aff50d))
+
 # [1.1.0](https://github.com/Atomarverseucht/minesweeper-web/compare/1.0.4...1.1.0) (2026-02-22)
 
 
