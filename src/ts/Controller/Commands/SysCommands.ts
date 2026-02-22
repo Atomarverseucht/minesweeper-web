@@ -12,7 +12,7 @@ export abstract class SysCommand implements Command{
     abstract execute(
         observerID: number,
         ctrl: Controller,
-        params?: string[]
+        params: string[]
     ): string | undefined;
 
     getSysCmd(cmd: string): SysCommand| undefined {

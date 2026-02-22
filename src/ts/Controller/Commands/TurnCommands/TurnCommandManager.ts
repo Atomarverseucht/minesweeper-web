@@ -51,8 +51,8 @@ export class TurnCommandManager {
         return this.firstCommandCOR(-1, -1, -1).listCmds();
     }
 
-    public getCmd(cmd: string, obsID: number): TurnCommand | undefined {
-        return this.firstCommandCOR(obsID, -1, -1).getCmd(cmd);
+    public getCmd(cmd: string): TurnCommand | undefined {
+        return this.firstCommandCOR(-1, -1, -1).getCmd(cmd);
     }
 
     public startCmd(observerID: number, cmd: string, x: number, y: number): string {

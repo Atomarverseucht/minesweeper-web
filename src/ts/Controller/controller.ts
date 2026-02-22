@@ -1,16 +1,17 @@
 import type {Board} from "../Model/Board";
 import {type GameState, Start} from "./state"
-import type {TurnCommandManager} from "./Commands/TurnCommands/TurnCommandManager";
-import type {SysCommandManager} from "./Commands/SystemCommands/SysCommandManager";
+import {TurnCommandManager} from "./Commands/TurnCommands/TurnCommandManager";
+import {SysCommandManager} from "./Commands/SystemCommands/SysCommandManager";
 
 export class Controller extends Observable{
     public state: GameState = new Start(this);
-    public readonly undo: TurnCommandManager;
-    public readonly sysCmd: SysCommandManager;
+    public readonly undo;
+    public readonly sysCmd;
     public gb: Board;
 
     constructor(gb: Board) {
-        this.undo = Config.mkUndo(this);
+        super();
+        this.undo = new TurnCommandManager(this);
         this.sysCmd = new SysCommandManager();
         this.gb = gb
     }
@@ -28,11 +29,11 @@ export class Controller extends Observable{
     }
 
     public isSysCmd(cmd: string): boolean {
-        return this.sysCmd.isSysCmd(cmd.toLowerCase());
+        return this.sysCmd.isSysCommand(cmd.toLowerCase());
     }
 
     public doSysCmd(observerID: number, cmd: string, params: string[]): string | null {
-        return this.sysCmd.doSysCmd(observerID, this, cmd.toLowerCase(), params) ?? null;
+        return this.sysCmd.doSysCommand(observerID, this, params) ?? null;
     }
 
     public getBoard(): number[][] {
@@ -53,10 +54,6 @@ export class Controller extends Observable{
 
     public getSysCmdList(): string[] {
         return [];//this.sysCmd.getSysCmdList.map(sys => sys.cmd);
-    }
-
-    public doShortCut(observerID: number, key: string): string | null {
-        return this.sysCmd.doShortCut(observerID, this, key) ?? null;
     }
 
     public isVictory(): boolean {
