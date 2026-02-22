@@ -1,3 +1,10 @@
+# [1.1.0-dev.3](https://github.com/Atomarverseucht/minesweeper-web/compare/1.1.0-dev.2...1.1.0-dev.3) (2026-02-22)
+
+
+### Features
+
+* translated Controller/*, but without Command implementation ([ba3d99d](https://github.com/Atomarverseucht/minesweeper-web/commit/ba3d99d24fd82b3e1eaec6785f79256dad7f6a33))
+
 # [1.1.0-dev.2](https://github.com/Atomarverseucht/minesweeper-web/compare/1.1.0-dev.1...1.1.0-dev.2) (2026-02-21)
 
 
