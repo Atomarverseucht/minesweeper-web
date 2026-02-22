@@ -1,3 +1,10 @@
+# [1.1.0-dev.2](https://github.com/Atomarverseucht/minesweeper-web/compare/1.1.0-dev.1...1.1.0-dev.2) (2026-02-21)
+
+
+### Features
+
+* TS: Command abstract ([b6b18cd](https://github.com/Atomarverseucht/minesweeper-web/commit/b6b18cd18da5fefdb2f5d9845795349c3aa009a5))
+
 # [1.1.0-dev.1](https://github.com/Atomarverseucht/minesweeper-web/compare/1.0.4-dev.1...1.1.0-dev.1) (2026-02-21)
 
 
