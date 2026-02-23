@@ -1,3 +1,10 @@
+# [1.3.0-dev.1](https://github.com/Atomarverseucht/minesweeper-web/compare/1.2.1...1.3.0-dev.1) (2026-02-23)
+
+
+### Features
+
+* Added implementation of Turn Commands ([a11f384](https://github.com/Atomarverseucht/minesweeper-web/commit/a11f384c286a7c9ecb80d2300a14cbbd5a157de5))
+
 ## [1.2.1](https://github.com/Atomarverseucht/minesweeper-web/compare/1.2.0...1.2.1) (2026-02-22)
 
 
