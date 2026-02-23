@@ -1,4 +1,5 @@
 import type {Controller} from "../controller";
+import type {cmdOut} from "../../config";
 
 export interface Command {
     readonly cmd: string;
@@ -16,26 +17,35 @@ export abstract class TurnCommand implements Command {
     readonly x;
     readonly y;
 
-    abstract doStep(): string;
-    abstract undoStep(): string;
-    abstract redoStep(): string;
-    abstract readonly next_: TurnCommand;
+    abstract doStep(): cmdOut;
+    abstract undoStep(): cmdOut;
+    abstract redoStep(): cmdOut;
+    abstract readonly next_?: TurnCommand;
     constructor(ctrl: Controller, observerID: number, x: number, y: number) {
         this.ctrl = ctrl;
         this.observerID = observerID;
         this.x = x;
         this.y = y;
     }
-    public buildCmd(cmd: String): TurnCommand {
+    public buildCmd(cmd: String): TurnCommand | undefined {
         if (cmd === this.cmd) return this
-        else return this.next_.buildCmd(cmd);
+        else if (!this.next_) return undefined;
+        else return this.next_?.buildCmd(cmd);
     };
     public listCmds(): TurnCommand[] {
-        var cmdList: TurnCommand[] = this.next_.listCmds();
-        cmdList.push(this)
-        return cmdList;
+        if (this.next_){
+            var cmdList: TurnCommand[] = this.next_.listCmds();
+            cmdList.push(this)
+            return cmdList;
+        } else return [this]
     }
     public getCmd(cmd: String): TurnCommand | undefined {
-        return (cmd === this.cmd) ? this : this.next_.getCmd(cmd);
+        return (cmd === this.cmd) ? this : (this.next_) ? this.next_.getCmd(cmd) : undefined;
+    }
+    static create<T>(
+        this: new (ctrl: Controller, id: number, x: number, y: number) => T,
+        command: TurnCommand
+    ){
+        return new this(command.ctrl, command.observerID, command.x, command.y);
     }
 }

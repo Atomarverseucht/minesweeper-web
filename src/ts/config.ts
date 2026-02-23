@@ -1,0 +1,1 @@
+export type cmdOut = [isSuccess: boolean, value: string];

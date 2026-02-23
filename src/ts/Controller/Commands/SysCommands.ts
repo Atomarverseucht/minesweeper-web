@@ -15,7 +15,7 @@ export abstract class SysCommand implements Command{
         params: string[]
     ): string | undefined;
 
-    getSysCmd(cmd: string): SysCommand| undefined {
+    getSysCmd(cmd: string): SysCommand | undefined {
         if (cmd === this.cmd) {
             return this;
         } else if (!this.next_){

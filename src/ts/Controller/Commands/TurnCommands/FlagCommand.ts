@@ -1,22 +1,32 @@
 import {TurnCommand} from "../commandInterfaces";
 import type {Controller} from "../../controller";
+import {OpenFieldCommand} from "./OpenFieldCommand";
+import type {cmdOut} from "../../../config";
 
 export class FlagCommand extends TurnCommand{
     override readonly cmd = "flag";
     override helpMsg = "flag or unflag the given coordinate";
-    readonly next_: TurnCommand = this;
+    readonly next_?: TurnCommand = OpenFieldCommand.create(this);
     override specHelpMsg = `flag <x> <y>:
 mark this position as flag or remove the flag`;
 
-    override doStep(): string {
-        return "flag";
+    override doStep(): cmdOut {
+        const f = this.ctrl.gb.getFieldAt(this.x, this.y);
+        if (!f.isOpened) {
+            this.ctrl.gb = this.ctrl.gb.updateField(this.x, this.y,
+                new Field(f.isBomb, f.isOpened, !f.isFlag));
+            return [true, ""];
+        } else {
+            // Fehlerbehandlung
+            return [false, "flag cannot be set on a opened field"]
+        }
     }
 
-    override redoStep(): string {
-        return "";
+    override redoStep(): cmdOut {
+        return this.doStep();
     }
 
-    override undoStep(): string {
-        return "";
+    override undoStep(): cmdOut {
+        return this.doStep();
     }
 }
