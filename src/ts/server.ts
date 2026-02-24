@@ -2,13 +2,13 @@ import type * as Party from "partykit/server";
 export default class Server implements Party.Server {
   count = 0;
 
-  constructor(readonly room: Party.Room) {}
+  constructor(readonly partyRoom: Party.Room) {}
   onConnect(conn: Party.Connection, ctx: Party.ConnectionContext) {
     // A websocket just connected!
     console.log(
       `Connected:
   id: ${conn.id}
-  room: ${this.room.id}
+  room: ${this.partyRoom.id}
   url: ${new URL(ctx.request.url).pathname}`
     );
 
@@ -41,8 +41,32 @@ export default class Server implements Party.Server {
   increment() {
     this.count = (this.count + 1) % 100;
     // broadcast the new count to all clients
-    this.room.broadcast(this.count.toString(), []);
+    this.partyRoom.broadcast(this.count.toString(), []);
+  }
+
+  /**
+   * Calculates the current number of active WebSocket connections in the room.
+   * @returns The count of connected clients.
+   */
+  public getOnlinePlayersCount(): number {
+    let count = 0
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    for (const _ of this.getActiveConnections("player")) {
+      count++
+    }
+    return count
+  }
+
+  /**
+   * Returns a list of connections with OPEN state.
+   * @param tag An optional filter to target a specific subset of connections.
+   */
+  public *getActiveConnections(tag?: string): Iterable<Party.Connection> {
+    for (const conn of this.partyRoom.getConnections(tag)) {
+      if (conn && conn.readyState === WebSocket.OPEN) {
+        yield conn
+      }
+    }
   }
 }
-
-Server satisfies Party.Worker;
+Server satisfies Party.Worker

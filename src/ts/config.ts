@@ -1,1 +1,1 @@
-export type cmdOut = [isSuccess: boolean, value: string];
+export type cmdOut = [isSuccess: boolean, value: string]
