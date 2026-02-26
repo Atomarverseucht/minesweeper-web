@@ -1,3 +1,10 @@
+# [1.3.0-dev.6](https://github.com/Atomarverseucht/minesweeper-web/compare/1.3.0-dev.5...1.3.0-dev.6) (2026-02-26)
+
+
+### Features
+
+* First playable Alpha! ([6be3df1](https://github.com/Atomarverseucht/minesweeper-web/commit/6be3df16f7602342c6125470e78a0f2c0c53140c))
+
 # [1.3.0-dev.5](https://github.com/Atomarverseucht/minesweeper-web/compare/1.3.0-dev.4...1.3.0-dev.5) (2026-02-26)
 
 
