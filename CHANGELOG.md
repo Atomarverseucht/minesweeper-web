@@ -1,3 +1,10 @@
+## [1.3.1-dev.1](https://github.com/Atomarverseucht/minesweeper-web/compare/1.3.0...1.3.1-dev.1) (2026-02-26)
+
+
+### Bug Fixes
+
+* added credits ([d47d010](https://github.com/Atomarverseucht/minesweeper-web/commit/d47d010a7e7917ff3855840c992b8400d7c481ea))
+
 # [1.3.0](https://github.com/Atomarverseucht/minesweeper-web/compare/1.2.1...1.3.0) (2026-02-26)
 
 
