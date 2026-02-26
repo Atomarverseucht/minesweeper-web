@@ -1,3 +1,19 @@
+# [1.3.0](https://github.com/Atomarverseucht/minesweeper-web/compare/1.2.1...1.3.0) (2026-02-26)
+
+
+### Bug Fixes
+
+* backend is in alpha, now comes the Frontend ([47b8dfd](https://github.com/Atomarverseucht/minesweeper-web/commit/47b8dfd916eeea9970595519072a5e1a5138ea3c))
+* removed useless semicolons ([0e6d96e](https://github.com/Atomarverseucht/minesweeper-web/commit/0e6d96e75dcec1196fde838f496ef23e8927ee78))
+* used the game Engine the first time rlly. But only in the backend, today... ([021a5a0](https://github.com/Atomarverseucht/minesweeper-web/commit/021a5a03a78eafd361d116c38e32091104393189))
+
+
+### Features
+
+* add first playable GameUI with websocket board updates ([bae563d](https://github.com/Atomarverseucht/minesweeper-web/commit/bae563da6b0ad56796ebcda308c07665923870ce))
+* Added implementation of Turn Commands ([a11f384](https://github.com/Atomarverseucht/minesweeper-web/commit/a11f384c286a7c9ecb80d2300a14cbbd5a157de5))
+* First playable Alpha! ([6be3df1](https://github.com/Atomarverseucht/minesweeper-web/commit/6be3df16f7602342c6125470e78a0f2c0c53140c))
+
 # [1.3.0-dev.6](https://github.com/Atomarverseucht/minesweeper-web/compare/1.3.0-dev.5...1.3.0-dev.6) (2026-02-26)
 
 
