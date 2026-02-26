@@ -1,3 +1,10 @@
+# [1.3.0-dev.4](https://github.com/Atomarverseucht/minesweeper-web/compare/1.3.0-dev.3...1.3.0-dev.4) (2026-02-26)
+
+
+### Bug Fixes
+
+* backend is in alpha, now comes the Frontend ([47b8dfd](https://github.com/Atomarverseucht/minesweeper-web/commit/47b8dfd916eeea9970595519072a5e1a5138ea3c))
+
 # [1.3.0-dev.3](https://github.com/Atomarverseucht/minesweeper-web/compare/1.3.0-dev.2...1.3.0-dev.3) (2026-02-26)
 
 
