@@ -1,31 +1,89 @@
-/* 
-  We've already included normalize.css. 
-
-  But we'd like a modern looking boilerplate. 
-  Clean type, sans-serif, and a nice color palette. 
-  
-*/
-
 body {
-  font-family: sans-serif;
+  margin: 0;
+  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
   font-size: 16px;
   line-height: 1.5;
-  color: #333;
-}
-
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  font-family: sans-serif;
-  font-weight: 600;
-  line-height: 1.25;
-  margin-top: 0;
-  margin-bottom: 0.5rem;
+  color: #e2e8f0;
+  background: radial-gradient(circle at top, #1e293b 0%, #0f172a 55%);
+  min-height: 100vh;
 }
 
 #app {
+  padding: 1.5rem;
+}
+
+main {
+  max-width: 940px;
+  margin: 0 auto;
+}
+
+h1 {
+  margin: 0 0 0.25rem;
+}
+
+p {
+  margin-top: 0;
+  color: #94a3b8;
+}
+
+.game-ui {
+  background: #0b1220;
+  border: 1px solid #334155;
+  border-radius: 12px;
   padding: 1rem;
+}
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.toolbar button {
+  background: #1e293b;
+  color: #e2e8f0;
+  border: 1px solid #334155;
+  border-radius: 8px;
+  padding: 0.45rem 0.75rem;
+  cursor: pointer;
+}
+
+.toolbar button.active {
+  border-color: #38bdf8;
+  background: #0c4a6e;
+}
+
+.game-meta {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  font-size: 0.9rem;
+  margin-bottom: 0.75rem;
+  color: #cbd5e1;
+}
+
+.board {
+  display: grid;
+  gap: 2px;
+  width: fit-content;
+  background: #475569;
+  padding: 2px;
+  border-radius: 6px;
+}
+
+.cell {
+  all: unset;
+  display: block;
+  width: 34px;
+  height: 34px;
+  cursor: pointer;
+}
+
+.cell img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  image-rendering: pixelated;
+  user-select: none;
 }
