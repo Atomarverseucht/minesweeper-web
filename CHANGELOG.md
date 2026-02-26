@@ -1,3 +1,10 @@
+# [1.3.0-dev.5](https://github.com/Atomarverseucht/minesweeper-web/compare/1.3.0-dev.4...1.3.0-dev.5) (2026-02-26)
+
+
+### Features
+
+* add first playable GameUI with websocket board updates ([bae563d](https://github.com/Atomarverseucht/minesweeper-web/commit/bae563da6b0ad56796ebcda308c07665923870ce))
+
 # [1.3.0-dev.4](https://github.com/Atomarverseucht/minesweeper-web/compare/1.3.0-dev.3...1.3.0-dev.4) (2026-02-26)
 
 
