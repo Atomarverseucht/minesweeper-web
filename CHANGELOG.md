@@ -1,3 +1,10 @@
+## [1.3.1-dev.2](https://github.com/Atomarverseucht/minesweeper-web/compare/1.3.1-dev.1...1.3.1-dev.2) (2026-02-26)
+
+
+### Bug Fixes
+
+* links are now white ([0c95435](https://github.com/Atomarverseucht/minesweeper-web/commit/0c95435352ec9db391e33a3237389106fc8a4ac4))
+
 ## [1.3.1-dev.1](https://github.com/Atomarverseucht/minesweeper-web/compare/1.3.0...1.3.1-dev.1) (2026-02-26)
 
 
