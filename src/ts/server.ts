@@ -81,7 +81,7 @@ export default class Server implements Party.Server {
 
   public getOnlinePlayersCount(): number {
     let count = 0;
-    for (const _ of this.getActiveConnections("player")) {
+    for (const _ of this.getActiveConnections()) {
       count++;
     }
     return count;
