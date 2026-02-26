@@ -1,3 +1,10 @@
+# [1.3.0-dev.2](https://github.com/Atomarverseucht/minesweeper-web/compare/1.3.0-dev.1...1.3.0-dev.2) (2026-02-24)
+
+
+### Bug Fixes
+
+* removed useless semicolons ([0e6d96e](https://github.com/Atomarverseucht/minesweeper-web/commit/0e6d96e75dcec1196fde838f496ef23e8927ee78))
+
 # [1.3.0-dev.1](https://github.com/Atomarverseucht/minesweeper-web/compare/1.2.1...1.3.0-dev.1) (2026-02-23)
 
 
