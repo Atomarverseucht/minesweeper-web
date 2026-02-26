@@ -8,7 +8,7 @@ export abstract class Observable {
     public notifyObservers(): void {
         this.server.notifyObservers()
     }
-    public generate(subID: number): void {
+    public generate(subID: string): void {
         this.server.generate(subID)
     }
 }
