@@ -3,7 +3,7 @@ import { Controller } from "./Controller/controller";
 
 export default class Server implements Party.Server {
   count = 0;
-  controller?: Controller;
+  readonly controller: Controller;
 
   constructor(readonly partyRoom: Party.Room) {
     this.controller = Controller.create(this, 5, 5, 10, 10, 15);
@@ -17,8 +17,6 @@ export default class Server implements Party.Server {
   url: ${new URL(ctx.request.url).pathname}`,
     );
 
-    if (!this.controller) return;
-
     const payload = {
       type: "init",
       board: this.controller.getBoard(),
@@ -29,8 +27,6 @@ export default class Server implements Party.Server {
   }
 
   onMessage(message: string, sender: Party.Connection) {
-    if (!this.controller) return;
-
     console.log(`connection ${sender.id} sent message: ${message}`);
 
     if (message === "increment") {
@@ -41,21 +37,16 @@ export default class Server implements Party.Server {
     const args = message.split(" ");
     if (this.controller.isSysCmd(args[0])) {
       this.controller.doSysCmd(sender.id, args);
+      console.log("sysCmd")
     } else {
       try {
         this.controller.turn(sender.id, args[0], +args[1], +args[2]);
+        console.log("turn")
       } catch {
         // ignored on purpose in this early GUI stage
+        console.log("catched turn")
       }
     }
-  }
-
-  onRequest(req: Party.Request) {
-    if (req.method === "POST") {
-      // placeholder
-    }
-
-    return new Response(this.count.toString());
   }
 
   increment() {
@@ -72,7 +63,8 @@ export default class Server implements Party.Server {
       userCount: this.getOnlinePlayersCount(),
       gameState: this.controller.gameState,
     };
-    this.partyRoom.broadcast(JSON.stringify(payload));
+    this.partyRoom.broadcast(JSON.stringify(payload), []);
+    console.log(this.getOnlinePlayersCount());
   }
 
   public generate(subID: string): void {

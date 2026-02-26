@@ -6,7 +6,7 @@ import {SysCommandManager} from "./Commands/SystemCommands/SysCommandManager"
 import type Server from "../server";
 
 export class Controller extends Observable{
-    public state: GameState = new Start(this)
+    public state: GameState = new Running(this)
     public readonly undo
     public readonly sysCmd
     public gb: Board

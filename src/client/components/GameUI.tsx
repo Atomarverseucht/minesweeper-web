@@ -20,12 +20,14 @@ export default function GameUI() {
   const [statusText, setStatusText] = useState<string>("Verbinde zum Spielserver ...");
 
   const socket = usePartySocket({
-    room: "example-room",
+    room: "example-game-room",
     onOpen() {
       setStatusText("Verbunden. Du kannst jetzt spielen.");
     },
     onMessage(evt) {
+      console.log("RAW MESSAGE:", evt.data);
       try {
+        console.log("Message received");
         const payload = JSON.parse(evt.data as string) as ServerPayload;
         if (payload.board) {
           setBoard(payload.board);
@@ -39,7 +41,7 @@ export default function GameUI() {
           setStatusText("💥 Game Over!");
         }
       } catch {
-        // Server kann beim ersten Connect noch Legacy-Text schicken.
+        console.error("lul");
       }
     },
   });
@@ -54,7 +56,7 @@ export default function GameUI() {
   };
 
   const handlePrimaryClick = (x: number, y: number) => {
-    sendTurn(toolMode, x, y);
+    sendTurn("open", x, y);
   };
 
   const handleSecondaryClick = (x: number, y: number) => {
@@ -64,21 +66,6 @@ export default function GameUI() {
   return (
     <section className="game-ui">
       <div className="toolbar">
-        <button
-          className={toolMode === "open" ? "active" : ""}
-          onClick={() => setToolMode("open")}
-          type="button"
-        >
-          Öffnen
-        </button>
-        <button
-          className={toolMode === "flag" ? "active" : ""}
-          onClick={() => setToolMode("flag")}
-          type="button"
-        >
-          Flagge
-        </button>
-        <button type="button" onClick={() => socket.send("generate")}>Neues Feld</button>
       </div>
 
       <div className="game-meta">
