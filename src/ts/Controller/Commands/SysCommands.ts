@@ -10,7 +10,7 @@ export abstract class SysCommand implements Command{
     abstract readonly next_?: SysCommand
 
     abstract execute(
-        observerID: number,
+        observerID: string,
         ctrl: Controller,
         params: string[]
     ): string | undefined

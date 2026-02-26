@@ -1,7 +1,7 @@
 import {Board} from "../Model/Board"
 import {type GameState, Running, Start} from "./state"
 import {Observable} from "../observer";
-import {TurnCommandManager} from "./Commands/TurnCommands/TurnCommandManager"
+import TurnCommandManager from "./Commands/TurnCommands/TurnCommandManager"
 import {SysCommandManager} from "./Commands/SystemCommands/SysCommandManager"
 import type Server from "../server";
 
@@ -18,7 +18,7 @@ export class Controller extends Observable{
         this.gb = gb
     }
 
-    public turn(observerID: number, cmd: string, x: number, y: number): string {
+    public turn(observerID: string, cmd: string, x: number, y: number): string {
         try {
             return this.state.turn(observerID, cmd.toLowerCase(), x, y)
         } catch (error) {
@@ -34,7 +34,7 @@ export class Controller extends Observable{
         return this.sysCmd.isSysCommand(cmd.toLowerCase())
     }
 
-    public doSysCmd(observerID: number, cmd: string, params: string[]): string | null {
+    public doSysCmd(observerID: string, params: string[]): string | null {
         return this.sysCmd.doSysCommand(observerID, this, params) ?? null
     }
 
@@ -66,7 +66,7 @@ export class Controller extends Observable{
     static create(server: Server, xStart: number, yStart: number, xSize: number, ySize: number, bombCount: number): Controller {
         const out = new Controller(server, Board.create(xSize, ySize, xStart, yStart, bombCount))
         //out.state = new Running(out)
-        out.undo.doCmd(-1, "open", xStart, yStart)
+        out.undo.doCmd("server", "open", xStart, yStart)
         return out
     }
 }

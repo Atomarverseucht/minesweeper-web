@@ -15,7 +15,7 @@ generate <x-size> <y-size> <bomb-count>
 
 generate is not undo-able!`
 
-    override execute(observerID: number, ctrl: Controller, params: string[]): string | undefined {
+    override execute(observerID: string, ctrl: Controller, params: string[]): string | undefined {
         return undefined;
     }
 }

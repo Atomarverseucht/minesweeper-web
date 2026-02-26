@@ -10,7 +10,7 @@ export class SysCommandManager {
         return this.firstSysCommand.getSysCmd(cmd) != undefined
     }
 
-    public doSysCommand(observerID: number, ctrl: Controller, params: string[]): string | undefined {
+    public doSysCommand(observerID: string, ctrl: Controller, params: string[]): string | undefined {
         const command = this.firstSysCommand.getSysCmd(params[0])
         if (!command) { return undefined }
         else {

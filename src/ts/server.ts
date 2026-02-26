@@ -25,7 +25,14 @@ export default class Server implements Party.Server {
     // we could use a more sophisticated protocol here, such as JSON
     // in the message data, but for simplicity we just use a string
     if (message === "increment") {
-      this.increment();
+      this.increment(); return;
+    }
+    const args = message.split(" ");
+    if (this.controller.isSysCmd(args[0])) {
+      this.controller.doSysCmd(sender.id, args);
+    } else {
+      try{this.controller.turn(sender.id, args[0], +args[1], +args[2])}
+      catch(err) {}
     }
   }
 
@@ -48,8 +55,20 @@ export default class Server implements Party.Server {
   }
 
   public notifyObservers(): void {
+    const payload = {
+      type: "update",
+      board: this.controller.getBoard(),
+      userCount: this.getOnlinePlayersCount()
+    };
+    this.partyRoom.broadcast(JSON.stringify(payload));
   }
-  public generate(subID: number): void {
+  public generate(subID: string): void {
+    const payload = {
+      type: "generate",
+      board: this.controller.getBoard(),
+      userCount: this.getOnlinePlayersCount()
+    };
+    this.partyRoom.getConnection(subID);
   }
 
   /**

@@ -11,7 +11,7 @@ export abstract class GameState {
         return false
     }
 
-    turn(observerID: number, cmd: string, x: number, y: number): string {
+    turn(observerID: string, cmd: string, x: number, y: number): string {
         throw new Error(`cannot make turn in state: ${this.gameState}`)
     }
 
@@ -31,7 +31,7 @@ export class Running extends GameState {
         return true
     }
 
-    override turn(observerID: number, cmd: string, x: number, y: number): string {
+    override turn(observerID: string, cmd: string, x: number, y: number): string {
         if (!this.context.gb.in(x, y)) {
             throw new Error(`${x} or ${y} is out of bound!`)
         }
@@ -57,7 +57,7 @@ export class Start extends GameState {
         return true;
     }
 
-    override turn(observerID: number, cmd: string, x: number, y: number): string {
+    override turn(observerID: string, cmd: string, x: number, y: number): string {
         if (!this.context.gb.in(x, y)) {
             throw new Error(`${x} or ${y} is out of bound!`)
         }

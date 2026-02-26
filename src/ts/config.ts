@@ -1,1 +1,3 @@
-export type cmdOut = [isSuccess: boolean, value: string]
+export class cmdOut {
+    constructor(public readonly isSuccess: boolean, public readonly value: string) {}
+}

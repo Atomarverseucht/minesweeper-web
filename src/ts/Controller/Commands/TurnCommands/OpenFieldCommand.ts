@@ -1,5 +1,5 @@
 import {TurnCommand} from "../commandInterfaces";
-import type {cmdOut} from "../../../config";
+import {cmdOut} from "../../../config";
 import {Field} from "../../../Model/Field";
 
 export class OpenFieldCommand extends TurnCommand{
@@ -25,7 +25,7 @@ export class OpenFieldCommand extends TurnCommand{
         const f = gb.getFieldAt(this.x, this.y);
 
         if (discover === f.isOpened) {
-            return [false, "Field is already open"];
+            return new cmdOut(false, "Field is already open");
         }
 
         // Feld aktualisieren
@@ -56,7 +56,7 @@ export class OpenFieldCommand extends TurnCommand{
             this.ctrl.changeState("win");
         }
 
-        return [true, "Open command successfully!"];
+        return new cmdOut(true, "Open command successfully!");
     }
 
 }

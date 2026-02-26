@@ -1,7 +1,7 @@
 import {TurnCommand} from "../commandInterfaces";
 import type {Controller} from "../../controller";
 import {OpenFieldCommand} from "./OpenFieldCommand";
-import type {cmdOut} from "../../../config";
+import {cmdOut} from "../../../config";
 import {Field} from "../../../Model/Field";
 
 export class FlagCommand extends TurnCommand{
@@ -16,10 +16,10 @@ mark this position as flag or remove the flag`;
         if (!f.isOpened) {
             this.ctrl.gb = this.ctrl.gb.updateField(this.x, this.y,
                 new Field(f.isBomb, f.isOpened, !f.isFlag));
-            return [true, ""];
+            return new cmdOut(true, "");
         } else {
             // Fehlerbehandlung
-            return [false, "flag cannot be set on a opened field"]
+            return new cmdOut(false, "flag cannot be set on a opened field")
         }
     }
 

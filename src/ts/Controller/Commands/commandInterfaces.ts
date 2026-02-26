@@ -13,7 +13,7 @@ export abstract class TurnCommand implements Command {
     abstract readonly cmd: string
 
     readonly ctrl: Controller
-    readonly observerID: number
+    readonly observerID: string
     readonly x
     readonly y
 
@@ -21,7 +21,7 @@ export abstract class TurnCommand implements Command {
     abstract undoStep(): cmdOut
     abstract redoStep(): cmdOut
     abstract readonly next_?: TurnCommand
-    constructor(ctrl: Controller, observerID: number, x: number, y: number) {
+    constructor(ctrl: Controller, observerID: string, x: number, y: number) {
         this.ctrl = ctrl
         this.observerID = observerID
         this.x = x
@@ -43,7 +43,7 @@ export abstract class TurnCommand implements Command {
         return (cmd === this.cmd) ? this : (this.next_) ? this.next_.getCmd(cmd) : undefined
     }
     static create<T>(
-        this: new (ctrl: Controller, id: number, x: number, y: number) => T,
+        this: new (ctrl: Controller, id: string, x: number, y: number) => T,
         command: TurnCommand
     ){
         return new this(command.ctrl, command.observerID, command.x, command.y)
