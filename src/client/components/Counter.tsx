@@ -35,10 +35,10 @@ export default function Counter() {
 
   const increment = () => {
     // optimistic local update
-    setCount((prev) => prev ?? 0 + 1);
+    setCount((prev) => prev ?? 1)
     // send the update to the server
-    socket.send("increment");
-  };
+    socket.send("increment")
+  }
 
   const styles = {
     backgroundColor: "#ff0f0f",
@@ -49,11 +49,11 @@ export default function Counter() {
     cursor: "pointer",
     padding: "1rem 3rem",
     margin: "1rem 0rem",
-  };
+  }
 
   return (
     <button style={styles} onClick={increment}>
       Increment me! {count !== null && <>Count: {count}</>}
     </button>
-  );
+  )
 }

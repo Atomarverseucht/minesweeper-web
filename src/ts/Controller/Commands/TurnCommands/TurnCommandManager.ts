@@ -2,10 +2,10 @@ import type {TurnCommand} from "../commandInterfaces"
 import type {Controller} from "../../controller";
 import {FlagCommand} from "./FlagCommand"
 
-export class TurnCommandManager {
+class TurnCommandManager {
     private undoStack: TurnCommand[] = [];
     private redoStack: TurnCommand[] = [];
-    private firstCommandCOR(obsID: number, x: number, y: number) {
+    private firstCommandCOR(obsID: string, x: number, y: number) {
         return new FlagCommand(this.control, obsID, x, y); }
 
     constructor(private control: Controller){}
@@ -14,7 +14,7 @@ export class TurnCommandManager {
             const stepResult = cmd.doStep(); // Annahme: wirft Error bei Failure oder gibt Try zurück
             this.undoStack.push(cmd);
             this.control.notifyObservers();
-            return stepResult;
+            return stepResult.value;
     }
 
     public redoStep(): void {
@@ -33,9 +33,9 @@ export class TurnCommandManager {
         }
     }
 
-    public doCmd(observerID: number, cmd: string, x: number, y: number): string {
-        const result = this.buildCmd(observerID, cmd, x, y);
-        return this.doStep(result);
+    public doCmd(observerID: string, cmd: string, x: number, y: number): string {
+        const result = this.buildCmd(observerID, cmd, x, y)
+        if (result) return this.doStep(result); else return ""
     }
 
     public getStacks(): [TurnCommand[], TurnCommand[]] {
@@ -48,18 +48,20 @@ export class TurnCommandManager {
     }
 
     public listCmds(): TurnCommand[] {
-        return this.firstCommandCOR(-1, -1, -1).listCmds();
+        return this.firstCommandCOR("server", -1, -1).listCmds();
     }
 
     public getCmd(cmd: string): TurnCommand | undefined {
-        return this.firstCommandCOR(-1, -1, -1).getCmd(cmd);
+        return this.firstCommandCOR("server", -1, -1).getCmd(cmd);
     }
 
-    public startCmd(observerID: number, cmd: string, x: number, y: number): string {
+    public startCmd(observerID: string, cmd: string, x: number, y: number): string {
         return "hi 123"
     }
 
-    public buildCmd(observerID: number, cmd: string, x: number, y: number): TurnCommand {
-        return this.firstCommandCOR(observerID, x, y).buildCmd(cmd);
+    public buildCmd(observerID: string, cmd: string, x: number, y: number): TurnCommand | undefined {
+        return this.firstCommandCOR(observerID, x, y).buildCmd(cmd)
     }
 }
+
+export default TurnCommandManager
