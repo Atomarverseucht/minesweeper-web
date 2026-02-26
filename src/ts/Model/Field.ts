@@ -1,4 +1,4 @@
-class Field {
+export class Field {
     public readonly isBomb: boolean
     public readonly isOpened: boolean
     public readonly isFlag: boolean

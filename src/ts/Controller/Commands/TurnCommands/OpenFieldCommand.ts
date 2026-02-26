@@ -1,5 +1,6 @@
 import {TurnCommand} from "../commandInterfaces";
 import type {cmdOut} from "../../../config";
+import {Field} from "../../../Model/Field";
 
 export class OpenFieldCommand extends TurnCommand{
     override readonly cmd = "open";

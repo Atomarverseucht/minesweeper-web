@@ -1,3 +1,4 @@
+import {Field} from './Field'
 export class Board {
     public readonly board: readonly (readonly Field[])[]
     constructor(board: readonly(readonly Field[])[]) {

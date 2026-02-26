@@ -1,7 +1,7 @@
 import type {Controller} from "./controller";
 
 export abstract class GameState {
-    abstract readonly nextState: GameState
+    abstract readonly nextState?: GameState
     public readonly context: Controller
     abstract readonly gameState: string
     constructor(public readonly context_: Controller) {
@@ -19,7 +19,7 @@ export abstract class GameState {
         if (state === this.gameState) {
             this.context.state = this
         } else {
-            this.nextState.changeState(state)
+            this.nextState?.changeState(state)
         }
     }
 }
@@ -52,7 +52,7 @@ export class Lost extends GameState {
 
 export class Start extends GameState {
     override readonly gameState = "start"
-    override readonly nextState: GameState = new Won(this.context)
+    override readonly nextState?: GameState = undefined
     override get inGame(): boolean {
         return true;
     }

@@ -1,7 +1,9 @@
-import type {Board} from "../Model/Board";
-import {type GameState, Start} from "./state"
-import {TurnCommandManager} from "./Commands/TurnCommands/TurnCommandManager";
-import {SysCommandManager} from "./Commands/SystemCommands/SysCommandManager";
+import {Board} from "../Model/Board"
+import {type GameState, Running, Start} from "./state"
+import {Observable} from "../observer";
+import {TurnCommandManager} from "./Commands/TurnCommands/TurnCommandManager"
+import {SysCommandManager} from "./Commands/SystemCommands/SysCommandManager"
+import type Server from "../server";
 
 export class Controller extends Observable{
     public state: GameState = new Start(this)
@@ -9,8 +11,8 @@ export class Controller extends Observable{
     public readonly sysCmd
     public gb: Board
 
-    constructor(gb: Board) {
-        super()
+    constructor(server: Server, gb: Board) {
+        super(server)
         this.undo = new TurnCommandManager(this)
         this.sysCmd = new SysCommandManager()
         this.gb = gb
@@ -61,9 +63,9 @@ export class Controller extends Observable{
     }
 
     // Statische Factory
-    static create(xStart: number, yStart: number, gb: Board): Controller {
-        const out = new Controller(gb)
-        out.changeState("running")
+    static create(server: Server, xStart: number, yStart: number, xSize: number, ySize: number, bombCount: number): Controller {
+        const out = new Controller(server, Board.create(xSize, ySize, xStart, yStart, bombCount))
+        //out.state = new Running(out)
         out.undo.doCmd(-1, "open", xStart, yStart)
         return out
     }

@@ -2,7 +2,7 @@ import  {SysCommand} from "../SysCommands"
 import  {type Controller} from "../../controller"
 
 export class GenerateCmd extends SysCommand {
-    override readonly next_: SysCommand = new GenerateCmd();
+    override readonly next_?: SysCommand = undefined;
     override readonly cmd: string = "generate"
     override readonly helpMsg: string = "generates a new Board"
     override readonly specHelpMsg: string = `generate:

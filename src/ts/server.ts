@@ -1,8 +1,11 @@
 import type * as Party from "partykit/server";
+import {Controller} from "./Controller/controller";
 export default class Server implements Party.Server {
   count = 0;
-
-  constructor(readonly partyRoom: Party.Room) {}
+  readonly controller: Controller;
+  constructor(readonly partyRoom: Party.Room) {
+    this.controller = Controller.create(this, 5, 5, 10, 10, 15)
+  }
   onConnect(conn: Party.Connection, ctx: Party.ConnectionContext) {
     // A websocket just connected!
     console.log(
@@ -32,7 +35,7 @@ export default class Server implements Party.Server {
 
     // if the request is a POST, increment the count
     if (req.method === "POST") {
-      this.increment();
+      //this.increment();
     }
 
     return new Response(this.count.toString());
@@ -42,6 +45,11 @@ export default class Server implements Party.Server {
     this.count = (this.count + 1) % 100;
     // broadcast the new count to all clients
     this.partyRoom.broadcast(this.count.toString(), []);
+  }
+
+  public notifyObservers(): void {
+  }
+  public generate(subID: number): void {
   }
 
   /**
