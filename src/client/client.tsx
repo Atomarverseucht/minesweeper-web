@@ -6,10 +6,13 @@ import Counter from "./components/Counter";
 function App() {
   return (
     <main>
-      <h1>💣 Minesweeper Web</h1>
-      <p>Erste spielbare GUI für das Multiplayer-Minesweeper.</p>
+      <h1>💣 <a href="https://github.com/Atomarverseucht/minesweeper-web">
+          Minesweeper Web
+      </a></h1>
+      <p>The web version of <a href="https://github.com/Atomarverseucht/minesweeper">
+          Atoms and Guakocius Minesweeper project
+      </a>.</p>
       <GameUI />
-      <Counter />
     </main>
   );
 }
