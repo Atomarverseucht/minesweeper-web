@@ -1,3 +1,10 @@
+## [1.3.2-dev.1](https://github.com/Atomarverseucht/minesweeper-web/compare/1.3.1...1.3.2-dev.1) (2026-02-26)
+
+
+### Bug Fixes
+
+* online count now correct ([e7ad8a0](https://github.com/Atomarverseucht/minesweeper-web/commit/e7ad8a0061f56dd99d79f3d8c5410d85ca7a1d54))
+
 ## [1.3.1](https://github.com/Atomarverseucht/minesweeper-web/compare/1.3.0...1.3.1) (2026-02-26)
 
 
