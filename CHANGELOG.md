@@ -1,3 +1,10 @@
+# [1.3.0-dev.3](https://github.com/Atomarverseucht/minesweeper-web/compare/1.3.0-dev.2...1.3.0-dev.3) (2026-02-26)
+
+
+### Bug Fixes
+
+* used the game Engine the first time rlly. But only in the backend, today... ([021a5a0](https://github.com/Atomarverseucht/minesweeper-web/commit/021a5a03a78eafd361d116c38e32091104393189))
+
 # [1.3.0-dev.2](https://github.com/Atomarverseucht/minesweeper-web/compare/1.3.0-dev.1...1.3.0-dev.2) (2026-02-24)
 
 
