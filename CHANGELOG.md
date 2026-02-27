@@ -1,3 +1,16 @@
+# [1.4.0](https://github.com/Atomarverseucht/minesweeper-web/compare/1.3.1...1.4.0) (2026-02-27)
+
+
+### Bug Fixes
+
+* new room system & object oriented frontend ([09ff798](https://github.com/Atomarverseucht/minesweeper-web/commit/09ff798735a8e0286664071838e36d8b1d347c54))
+* online count now correct ([e7ad8a0](https://github.com/Atomarverseucht/minesweeper-web/commit/e7ad8a0061f56dd99d79f3d8c5410d85ca7a1d54))
+
+
+### Features
+
+* new room system & object oriented frontend ([df998ba](https://github.com/Atomarverseucht/minesweeper-web/commit/df998baa59a13d8f39c35d3b9ab01f40d44d7f85))
+
 # [1.4.0-dev.1](https://github.com/Atomarverseucht/minesweeper-web/compare/1.3.2-dev.2...1.4.0-dev.1) (2026-02-27)
 
 
