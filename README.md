@@ -1,6 +1,6 @@
 # 🎈 minesweeper-web
 
-This will be the web version of [my and Guakocius minesweeper project](https://github.com/Atomarverseucht/minesweeper) <br>
+This is the web version of [my and Guakocius minesweeper project](https://github.com/Atomarverseucht/minesweeper) <br>
 Made with Partykit, React and TypeScript.
 
 Stable: https://minesweeper-web.atomarverseucht.partykit.dev/
