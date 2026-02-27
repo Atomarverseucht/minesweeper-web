@@ -65,20 +65,37 @@ p {
   color: #cbd5e1;
 }
 
+.room-code {
+  all: unset;
+  cursor: pointer;
+  display: inline-block;
+  padding: 0 0.2rem;
+  border-radius: 4px;
+  border: 1px solid #64748b;
+  background: #1e293b;
+}
+
+.copy-hint {
+  margin-left: 0.45rem;
+  color: #7dd3fc;
+}
+
 .board {
   display: grid;
   gap: 2px;
   width: fit-content;
+  max-width: 100%;
   background: #475569;
   padding: 2px;
   border-radius: 6px;
+  overflow: auto;
 }
 
 .cell {
   all: unset;
   display: block;
-  width: 34px;
-  height: 34px;
+  width: var(--cell-size, 34px);
+  height: var(--cell-size, 34px);
   cursor: pointer;
 }
 
