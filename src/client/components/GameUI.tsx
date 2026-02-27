@@ -4,7 +4,7 @@ import PartySocket from "partysocket";
 const ROOM_ID_PATTERN = /(?:\?|&|\/)room=([A-Za-z0-9_-]+)/;
 
 type ServerPayload = {
-  type: "update" | "init" | "generate";
+  type: string;
   board?: number[][];
   userCount?: number;
   gameState?: string;
