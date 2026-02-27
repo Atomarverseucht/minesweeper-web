@@ -1,3 +1,10 @@
+## [1.3.2-dev.2](https://github.com/Atomarverseucht/minesweeper-web/compare/1.3.2-dev.1...1.3.2-dev.2) (2026-02-27)
+
+
+### Bug Fixes
+
+* new room system & object oriented frontend ([09ff798](https://github.com/Atomarverseucht/minesweeper-web/commit/09ff798735a8e0286664071838e36d8b1d347c54))
+
 ## [1.3.2-dev.1](https://github.com/Atomarverseucht/minesweeper-web/compare/1.3.1...1.3.2-dev.1) (2026-02-26)
 
 
