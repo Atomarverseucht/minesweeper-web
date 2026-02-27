@@ -69,9 +69,9 @@ class BoardLayoutService {
 }
 
 export default class GameUI extends Component<Record<string, never>, GameUIState> {
-  private socket: PartySocket | null = null;
+  private socket?: PartySocket = undefined;
 
-  private clearCopyHintTimeout: number | null = null;
+  private clearCopyHintTimeout?: number = undefined;
 
   public constructor(props: Record<string, never>) {
     super(props);
@@ -92,12 +92,11 @@ export default class GameUI extends Component<Record<string, never>, GameUIState
   public componentWillUnmount(): void {
     if (this.socket) {
       this.socket.close();
-      this.socket = null;
+      this.socket = undefined;
     }
-
-    if (this.clearCopyHintTimeout !== null) {
+    if (this.clearCopyHintTimeout !== undefined) {
       window.clearTimeout(this.clearCopyHintTimeout);
-      this.clearCopyHintTimeout = null;
+      this.clearCopyHintTimeout = undefined;
     }
   }
 
@@ -157,13 +156,13 @@ export default class GameUI extends Component<Record<string, never>, GameUIState
       this.setState({ copyHint: "Kopieren fehlgeschlagen" });
     }
 
-    if (this.clearCopyHintTimeout !== null) {
+    if (this.clearCopyHintTimeout !== undefined) {
       window.clearTimeout(this.clearCopyHintTimeout);
     }
 
     this.clearCopyHintTimeout = window.setTimeout(() => {
       this.setState({ copyHint: "" });
-      this.clearCopyHintTimeout = null;
+      this.clearCopyHintTimeout = undefined;
     }, 2000);
   };
 
@@ -187,7 +186,7 @@ export default class GameUI extends Component<Record<string, never>, GameUIState
             <button type="button" className="room-code" onClick={this.copyRoomLink} title="Raum-Link kopieren">
               <code>{roomId}</code>
             </button>
-            {copyHint ? <small className="copy-hint">{copyHint}</small> : null}
+            {copyHint ? <small className="copy-hint">{copyHint}</small> : undefined}
           </span>
           <span>Spieler online: {userCount}</span>
           <span>Board: {width}×{height}</span>

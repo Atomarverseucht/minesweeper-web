@@ -2,7 +2,7 @@ import { Component } from "react";
 import PartySocket from "partysocket";
 
 type CounterState = {
-  count: number | null;
+  count?: number;
 };
 
 export async function loadInitialCount(host: string) {
@@ -20,11 +20,11 @@ export async function loadInitialCount(host: string) {
 }
 
 export default class Counter extends Component<Record<string, never>, CounterState> {
-  private socket: PartySocket | null = null;
+  private socket?: PartySocket = undefined;
 
   public constructor(props: Record<string, never>) {
     super(props);
-    this.state = { count: null };
+    this.state = { count: undefined };
   }
 
   public componentDidMount(): void {
@@ -40,7 +40,7 @@ export default class Counter extends Component<Record<string, never>, CounterSta
 
   public componentWillUnmount(): void {
     this.socket?.close();
-    this.socket = null;
+    this.socket = undefined;
   }
 
   private increment = (): void => {
@@ -64,7 +64,7 @@ export default class Counter extends Component<Record<string, never>, CounterSta
 
     return (
       <button style={styles} onClick={this.increment}>
-        Increment me! {count !== null && <>Count: {count}</>}
+        Increment me! {count !== undefined && <>Count: {count}</>}
       </button>
     );
   }
