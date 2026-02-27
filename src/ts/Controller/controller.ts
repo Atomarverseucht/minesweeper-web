@@ -34,8 +34,8 @@ export class Controller extends Observable{
         return this.sysCmd.isSysCommand(cmd.toLowerCase())
     }
 
-    public doSysCmd(observerID: string, params: string[]): string | null {
-        return this.sysCmd.doSysCommand(observerID, this, params) ?? null
+    public doSysCmd(observerID: string, params: string[]): string | undefined {
+        return this.sysCmd.doSysCommand(observerID, this, params)
     }
 
     public getBoard(): number[][] {
