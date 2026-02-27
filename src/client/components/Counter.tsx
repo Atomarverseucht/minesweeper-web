@@ -1,11 +1,10 @@
-import { useState } from "react";
+import { Component } from "react";
 import PartySocket from "partysocket";
-import usePartySocket from "partysocket/react";
 
-// We're not using server-side rendering and initial props in this
-// example (our app is client-side only), so loadInitialCount is not
-// used. But if we were using SSR, we would use this function to load
-// the initial count, as returned by onRequest in `party/server.ts`.
+type CounterState = {
+  count: number | null;
+};
+
 export async function loadInitialCount(host: string) {
   const initialCount = await PartySocket.fetch(
     {
@@ -17,43 +16,56 @@ export async function loadInitialCount(host: string) {
       method: "GET",
     }
   ).then((res) => res.text());
-  return parseInt(initialCount) || 0;
+  return parseInt(initialCount, 10) || 0;
 }
 
-export default function Counter() {
-  const [count, setCount] = useState<number | null>(null);
+export default class Counter extends Component<Record<string, never>, CounterState> {
+  private socket: PartySocket | null = null;
 
-  const socket = usePartySocket({
-    // host defaults to the current URL if not set
-    //host: process.env.PARTYKIT_HOST,
-    // we could use any room name here
-    room: "example-room",
-    onMessage(evt) {
-      setCount(parseInt(evt.data));
-    },
-  });
-
-  const increment = () => {
-    // optimistic local update
-    setCount((prev) => prev ?? 1)
-    // send the update to the server
-    socket.send("increment")
+  public constructor(props: Record<string, never>) {
+    super(props);
+    this.state = { count: null };
   }
 
-  const styles = {
-    backgroundColor: "#ff0f0f",
-    borderRadius: "9999px",
-    border: "none",
-    color: "white",
-    fontSize: "0.95rem",
-    cursor: "pointer",
-    padding: "1rem 3rem",
-    margin: "1rem 0rem",
+  public componentDidMount(): void {
+    this.socket = new PartySocket({
+      host: window.location.host,
+      room: "example-room",
+    });
+
+    this.socket.addEventListener("message", (event: MessageEvent) => {
+      this.setState({ count: parseInt(event.data as string, 10) });
+    });
   }
 
-  return (
-    <button style={styles} onClick={increment}>
-      Increment me! {count !== null && <>Count: {count}</>}
-    </button>
-  )
+  public componentWillUnmount(): void {
+    this.socket?.close();
+    this.socket = null;
+  }
+
+  private increment = (): void => {
+    this.setState((previousState) => ({ count: previousState.count ?? 1 }));
+    this.socket?.send("increment");
+  };
+
+  public render() {
+    const { count } = this.state;
+
+    const styles = {
+      backgroundColor: "#ff0f0f",
+      borderRadius: "9999px",
+      border: "none",
+      color: "white",
+      fontSize: "0.95rem",
+      cursor: "pointer",
+      padding: "1rem 3rem",
+      margin: "1rem 0rem",
+    };
+
+    return (
+      <button style={styles} onClick={this.increment}>
+        Increment me! {count !== null && <>Count: {count}</>}
+      </button>
+    );
+  }
 }
