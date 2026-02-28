@@ -1,7 +1,6 @@
 import { Component, type CSSProperties, type MouseEvent } from "react";
 import PartySocket from "partysocket";
-
-const ROOM_ID_PATTERN = /(?:\?|&|\/)room=([A-Za-z0-9_-]+)/;
+import {RoomService} from "../roomService";
 
 type ServerPayload = {
   type: string;
@@ -10,8 +9,6 @@ type ServerPayload = {
   gameState?: string;
 };
 
-type ToolMode = "open" | "flag";
-
 type GameUIState = {
   board: number[][];
   userCount: number;
@@ -19,35 +16,6 @@ type GameUIState = {
   roomId: string;
   copyHint: string;
 };
-
-class RoomService {
-  public static createRoomId(length = 8): string {
-    const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-    return Array.from({ length }, () => characters[Math.floor(Math.random() * characters.length)]).join("");
-  }
-
-  public static getOrCreateRoomId(): string {
-    const url = new URL(window.location.href);
-    const queryRoom = url.searchParams.get("room");
-    if (queryRoom) {
-      return queryRoom;
-    }
-
-    const pathRoom = window.location.href.match(ROOM_ID_PATTERN)?.[1];
-    if (pathRoom) {
-      return pathRoom;
-    }
-
-    const generatedRoomId = RoomService.createRoomId();
-    url.searchParams.set("room", generatedRoomId);
-    window.history.replaceState({}, "", url.toString());
-    return generatedRoomId;
-  }
-
-  public static buildRoomLink(roomId: string): string {
-    return `${window.location.origin}${window.location.pathname}?room=${encodeURIComponent(roomId)}`;
-  }
-}
 
 class BoardLayoutService {
   public static fallbackBoard(width: number, height: number): number[][] {
@@ -64,7 +32,7 @@ class BoardLayoutService {
   public static getCellSize(width: number, height: number): string {
     const safeWidth = Math.max(width, 1);
     const safeHeight = Math.max(height, 1);
-    return `min(34px, calc((100vw - 5rem) / ${safeWidth}), calc((100vh - 16rem) / ${safeHeight}))`;
+    return `min(calc((100vw - 5rem) / ${safeWidth}), calc((100vh - 16rem) / ${safeHeight}))`;
   }
 }
 
@@ -134,7 +102,7 @@ export default class GameUI extends Component<Record<string, never>, GameUIState
     }
   }
 
-  private sendTurn(command: ToolMode, x: number, y: number): void {
+  private sendTurn(command: string, x: number, y: number): void {
     this.socket?.send(`${command} ${x} ${y}`);
   }
 
@@ -202,8 +170,7 @@ export default class GameUI extends Component<Record<string, never>, GameUIState
                 className="cell"
                 onClick={() => this.handlePrimaryClick(x, y)}
                 onContextMenu={(event) => this.handleSecondaryClick(event, x, y)}
-                title={`(${x}, ${y})`}
-              >
+                title={`(${x}, ${y})`} >
                 <img src={`/assets/fields/${value}.png`} alt={`Feldwert ${value}`} draggable={false} />
               </button>
             ))
