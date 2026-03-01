@@ -1,3 +1,10 @@
+## [1.4.1-dev.2](https://github.com/Atomarverseucht/minesweeper-web/compare/1.4.1-dev.1...1.4.1-dev.2) (2026-03-01)
+
+
+### Bug Fixes
+
+* translated frontend fully in English ([d49ee30](https://github.com/Atomarverseucht/minesweeper-web/commit/d49ee3038104b51a929031cb80e5568936040d60))
+
 ## [1.4.1-dev.1](https://github.com/Atomarverseucht/minesweeper-web/compare/1.4.0...1.4.1-dev.1) (2026-02-28)
 
 
