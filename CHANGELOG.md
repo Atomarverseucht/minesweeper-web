@@ -1,3 +1,10 @@
+# [1.5.0-dev.1](https://github.com/Atomarverseucht/minesweeper-web/compare/1.4.1-dev.2...1.5.0-dev.1) (2026-03-01)
+
+
+### Features
+
+* Generate Cmd and NEW Start system! ([04e88da](https://github.com/Atomarverseucht/minesweeper-web/commit/04e88da1e00420e02a906555d7736b81ae6ebf8e))
+
 ## [1.4.1-dev.2](https://github.com/Atomarverseucht/minesweeper-web/compare/1.4.1-dev.1...1.4.1-dev.2) (2026-03-01)
 
 
