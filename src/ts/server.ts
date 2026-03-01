@@ -6,7 +6,7 @@ export default class Server implements Party.Server {
   readonly controller: Controller;
 
   constructor(readonly partyRoom: Party.Room) {
-    this.controller = Controller.create(this, 5, 5, 10, 10, 15);
+    this.controller = new Controller(this)
   }
 
   onConnect(conn: Party.Connection, ctx: Party.ConnectionContext) {

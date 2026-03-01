@@ -1,7 +1,6 @@
 import { Component, type CSSProperties, type MouseEvent } from "react";
 import PartySocket from "partysocket";
-
-const ROOM_ID_PATTERN = /(?:\?|&|\/)room=([A-Za-z0-9_-]+)/;
+import {RoomService} from "../roomService";
 
 type ServerPayload = {
   type: string;
@@ -10,8 +9,6 @@ type ServerPayload = {
   gameState?: string;
 };
 
-type ToolMode = "open" | "flag";
-
 type GameUIState = {
   board: number[][];
   userCount: number;
@@ -19,35 +16,6 @@ type GameUIState = {
   roomId: string;
   copyHint: string;
 };
-
-class RoomService {
-  public static createRoomId(length = 8): string {
-    const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-    return Array.from({ length }, () => characters[Math.floor(Math.random() * characters.length)]).join("");
-  }
-
-  public static getOrCreateRoomId(): string {
-    const url = new URL(window.location.href);
-    const queryRoom = url.searchParams.get("room");
-    if (queryRoom) {
-      return queryRoom;
-    }
-
-    const pathRoom = window.location.href.match(ROOM_ID_PATTERN)?.[1];
-    if (pathRoom) {
-      return pathRoom;
-    }
-
-    const generatedRoomId = RoomService.createRoomId();
-    url.searchParams.set("room", generatedRoomId);
-    window.history.replaceState({}, "", url.toString());
-    return generatedRoomId;
-  }
-
-  public static buildRoomLink(roomId: string): string {
-    return `${window.location.origin}${window.location.pathname}?room=${encodeURIComponent(roomId)}`;
-  }
-}
 
 class BoardLayoutService {
   public static fallbackBoard(width: number, height: number): number[][] {
@@ -64,7 +32,7 @@ class BoardLayoutService {
   public static getCellSize(width: number, height: number): string {
     const safeWidth = Math.max(width, 1);
     const safeHeight = Math.max(height, 1);
-    return `min(34px, calc((100vw - 5rem) / ${safeWidth}), calc((100vh - 16rem) / ${safeHeight}))`;
+    return `min(calc((100vw - 5rem) / ${safeWidth}), calc((100vh - 16rem) / ${safeHeight}))`;
   }
 }
 
@@ -79,7 +47,7 @@ export default class GameUI extends Component<Record<string, never>, GameUIState
     this.state = {
       board: BoardLayoutService.fallbackBoard(10, 10),
       userCount: 0,
-      statusText: "Verbinde zum Spielserver ...",
+      statusText: "Connect to server ...",
       roomId: RoomService.getOrCreateRoomId(),
       copyHint: "",
     };
@@ -107,7 +75,7 @@ export default class GameUI extends Component<Record<string, never>, GameUIState
     });
 
     this.socket.addEventListener("open", () => {
-      this.setState({ statusText: "Verbunden. Du kannst jetzt spielen." });
+      this.setState({ statusText: "Connected!" });
     });
 
     this.socket.addEventListener("message", (event: MessageEvent) => {
@@ -125,16 +93,16 @@ export default class GameUI extends Component<Record<string, never>, GameUIState
         this.setState({ userCount: payload.userCount });
       }
       if (payload.gameState === "win") {
-        this.setState({ statusText: "🎉 Du hast gewonnen!" });
+        this.setState({ statusText: "🎉 You have won!" });
       } else if (payload.gameState === "lost") {
         this.setState({ statusText: "💥 Game Over!" });
       }
     } catch {
-      this.setState({ statusText: "Ungültige Servernachricht erhalten." });
+      this.setState({ statusText: "Invalid message from server." });
     }
   }
 
-  private sendTurn(command: ToolMode, x: number, y: number): void {
+  private sendTurn(command: string, x: number, y: number): void {
     this.socket?.send(`${command} ${x} ${y}`);
   }
 
@@ -151,9 +119,9 @@ export default class GameUI extends Component<Record<string, never>, GameUIState
     const roomLink = RoomService.buildRoomLink(this.state.roomId);
     try {
       await navigator.clipboard.writeText(roomLink);
-      this.setState({ copyHint: "Link kopiert" });
+      this.setState({ copyHint: "copy success" });
     } catch {
-      this.setState({ copyHint: "Kopieren fehlgeschlagen" });
+      this.setState({ copyHint: "copy failed" });
     }
 
     if (this.clearCopyHintTimeout !== undefined) {
@@ -183,12 +151,12 @@ export default class GameUI extends Component<Record<string, never>, GameUIState
         <div className="game-meta">
           <span>
             Raum:{" "}
-            <button type="button" className="room-code" onClick={this.copyRoomLink} title="Raum-Link kopieren">
+            <button type="button" className="room-code" onClick={this.copyRoomLink} title="copy room-link">
               <code>{roomId}</code>
             </button>
             {copyHint ? <small className="copy-hint">{copyHint}</small> : undefined}
           </span>
-          <span>Spieler online: {userCount}</span>
+          <span>Players online: {userCount}</span>
           <span>Board: {width}×{height}</span>
           <span>Status: {statusText}</span>
         </div>
@@ -202,8 +170,7 @@ export default class GameUI extends Component<Record<string, never>, GameUIState
                 className="cell"
                 onClick={() => this.handlePrimaryClick(x, y)}
                 onContextMenu={(event) => this.handleSecondaryClick(event, x, y)}
-                title={`(${x}, ${y})`}
-              >
+                title={`(${x}, ${y})`} >
                 <img src={`/assets/fields/${value}.png`} alt={`Feldwert ${value}`} draggable={false} />
               </button>
             ))

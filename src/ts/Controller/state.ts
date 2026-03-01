@@ -4,8 +4,8 @@ export abstract class GameState {
     abstract readonly nextState?: GameState
     public readonly context: Controller
     abstract readonly gameState: string
-    constructor(public readonly context_: Controller) {
-        this.context = context_
+    constructor(context: Controller) {
+        this.context = context
     }
     get inGame(): boolean {
         return false
@@ -61,7 +61,9 @@ export class Start extends GameState {
         if (!this.context.gb.in(x, y)) {
             throw new Error(`${x} or ${y} is out of bound!`)
         }
-        return this.context.undo.startCmd(observerID, cmd, x, y)
+        const [xSize, ySize] = this.context.gb.getSize()
+        return this.context.doSysCmd(observerID,["generate", String(xSize), String(ySize),
+            String(x), String(y), String(this.context.config.bombCount4Generate)]) ?? ""
     }
 
     public changeState(state: string): void {

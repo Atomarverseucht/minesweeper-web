@@ -1,5 +1,7 @@
 import  {SysCommand} from "../SysCommands"
 import  {type Controller} from "../../controller"
+import {Board} from "../../../Model/Board";
+import {Running} from "../../state";
 
 export class GenerateCmd extends SysCommand {
     override readonly next_?: SysCommand = undefined;
@@ -16,6 +18,23 @@ generate <x-size> <y-size> <bomb-count>
 generate is not undo-able!`
 
     override execute(observerID: string, ctrl: Controller, params: string[]): string | undefined {
-        return undefined;
-    }
+        console.log("generate command")
+        try{
+            ctrl.gb = Board.create(+params[1], +params[2], +params[3], +params[4], +params[5])
+            ctrl.state = new Running(ctrl)
+            ctrl.turn(observerID, "open", +params[3], +params[4])
+            ctrl.undo.overrideStacks([],[])
+            return "Generated!"
+        } catch (e) {
+            try {
+                ctrl.config.bombCount4Generate = +params[3]
+                ctrl.gb = ctrl.config.startBoard(+params[1], +params[2])
+                ctrl.changeState("start")
+                return "Place to generate!"
+            } catch (e) {
+                ctrl.generate(observerID);
+            }
+        }
+        }
+
 }

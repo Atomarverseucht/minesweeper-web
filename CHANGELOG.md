@@ -1,3 +1,24 @@
+# [1.5.0-dev.1](https://github.com/Atomarverseucht/minesweeper-web/compare/1.4.1-dev.2...1.5.0-dev.1) (2026-03-01)
+
+
+### Features
+
+* Generate Cmd and NEW Start system! ([04e88da](https://github.com/Atomarverseucht/minesweeper-web/commit/04e88da1e00420e02a906555d7736b81ae6ebf8e))
+
+## [1.4.1-dev.2](https://github.com/Atomarverseucht/minesweeper-web/compare/1.4.1-dev.1...1.4.1-dev.2) (2026-03-01)
+
+
+### Bug Fixes
+
+* translated frontend fully in English ([d49ee30](https://github.com/Atomarverseucht/minesweeper-web/commit/d49ee3038104b51a929031cb80e5568936040d60))
+
+## [1.4.1-dev.1](https://github.com/Atomarverseucht/minesweeper-web/compare/1.4.0...1.4.1-dev.1) (2026-02-28)
+
+
+### Bug Fixes
+
+* better resize ([225d573](https://github.com/Atomarverseucht/minesweeper-web/commit/225d5731c1eae8b0b01cb647ff62357cf0310c87))
+
 # [1.4.0](https://github.com/Atomarverseucht/minesweeper-web/compare/1.3.1...1.4.0) (2026-02-27)
 
 
