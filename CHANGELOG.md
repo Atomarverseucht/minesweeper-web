@@ -1,3 +1,10 @@
+## [1.4.1-dev.1](https://github.com/Atomarverseucht/minesweeper-web/compare/1.4.0...1.4.1-dev.1) (2026-02-28)
+
+
+### Bug Fixes
+
+* better resize ([225d573](https://github.com/Atomarverseucht/minesweeper-web/commit/225d5731c1eae8b0b01cb647ff62357cf0310c87))
+
 # [1.4.0](https://github.com/Atomarverseucht/minesweeper-web/compare/1.3.1...1.4.0) (2026-02-27)
 
 
