@@ -47,7 +47,7 @@ export default class GameUI extends Component<Record<string, never>, GameUIState
     this.state = {
       board: BoardLayoutService.fallbackBoard(10, 10),
       userCount: 0,
-      statusText: "Verbinde zum Spielserver ...",
+      statusText: "Connect to server ...",
       roomId: RoomService.getOrCreateRoomId(),
       copyHint: "",
     };
@@ -75,7 +75,7 @@ export default class GameUI extends Component<Record<string, never>, GameUIState
     });
 
     this.socket.addEventListener("open", () => {
-      this.setState({ statusText: "Verbunden. Du kannst jetzt spielen." });
+      this.setState({ statusText: "Connected!" });
     });
 
     this.socket.addEventListener("message", (event: MessageEvent) => {
@@ -93,12 +93,12 @@ export default class GameUI extends Component<Record<string, never>, GameUIState
         this.setState({ userCount: payload.userCount });
       }
       if (payload.gameState === "win") {
-        this.setState({ statusText: "🎉 Du hast gewonnen!" });
+        this.setState({ statusText: "🎉 You have won!" });
       } else if (payload.gameState === "lost") {
         this.setState({ statusText: "💥 Game Over!" });
       }
     } catch {
-      this.setState({ statusText: "Ungültige Servernachricht erhalten." });
+      this.setState({ statusText: "Invalid message from server." });
     }
   }
 
@@ -119,9 +119,9 @@ export default class GameUI extends Component<Record<string, never>, GameUIState
     const roomLink = RoomService.buildRoomLink(this.state.roomId);
     try {
       await navigator.clipboard.writeText(roomLink);
-      this.setState({ copyHint: "Link kopiert" });
+      this.setState({ copyHint: "copy success" });
     } catch {
-      this.setState({ copyHint: "Kopieren fehlgeschlagen" });
+      this.setState({ copyHint: "copy failed" });
     }
 
     if (this.clearCopyHintTimeout !== undefined) {
@@ -151,12 +151,12 @@ export default class GameUI extends Component<Record<string, never>, GameUIState
         <div className="game-meta">
           <span>
             Raum:{" "}
-            <button type="button" className="room-code" onClick={this.copyRoomLink} title="Raum-Link kopieren">
+            <button type="button" className="room-code" onClick={this.copyRoomLink} title="copy room-link">
               <code>{roomId}</code>
             </button>
             {copyHint ? <small className="copy-hint">{copyHint}</small> : undefined}
           </span>
-          <span>Spieler online: {userCount}</span>
+          <span>Players online: {userCount}</span>
           <span>Board: {width}×{height}</span>
           <span>Status: {statusText}</span>
         </div>
