@@ -1,3 +1,10 @@
+# [1.6.0-dev.2](https://github.com/Atomarverseucht/minesweeper-web/compare/1.6.0-dev.1...1.6.0-dev.2) (2026-03-03)
+
+
+### Bug Fixes
+
+* better code style with the payLoad in server.ts ([f12f345](https://github.com/Atomarverseucht/minesweeper-web/commit/f12f3451f2a367781b9626f6a4535e2a50698610))
+
 # [1.6.0-dev.1](https://github.com/Atomarverseucht/minesweeper-web/compare/1.5.0...1.6.0-dev.1) (2026-03-03)
 
 
