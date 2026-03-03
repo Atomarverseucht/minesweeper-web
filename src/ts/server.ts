@@ -36,7 +36,7 @@ export default class Server implements Party.Server {
       switch (args[0]) {
         case "increment": this.increment(); return;
         case "changeName": this.playerNames.set(sender.id, args[1]);
-        case "getNames": this.notifyNames(); return;
+        case "getNames": this.notifyObservers("names"); return;
       }
       if (this.controller.isSysCmd(args[0])) {
         this.controller.doSysCmd(this.playerNames.get(sender.id)!, args);
@@ -54,35 +54,46 @@ export default class Server implements Party.Server {
     this.count = (this.count + 1) % 100;
     this.partyRoom.broadcast(this.count.toString(), []);
   }
-  public notifyNames(): void {
-    const payload = {
-      type: "userChange",
-      users: this.playerNames.values(),
-      userCount: this.getOnlinePlayersCount()
-    };
-    this.partyRoom.broadcast(JSON.stringify(payload), []);
-  }
-  public notifyObservers(): void {
-    const payload = {
-      type: "update",
-      board: this.controller.getBoard(),
-      userCount: this.getOnlinePlayersCount(),
-      gameState: this.controller.gameState,
-    };
+
+  public notifyObservers(cmd = "update"): void {
+    const payload = this.getPayload(cmd)
     this.partyRoom.broadcast(JSON.stringify(payload), []);
     console.log(this.getOnlinePlayersCount());
   }
 
-  public specNotify(subName: string): void {
-    if (!this.controller) return;
+  public specNotify(subName: string, cmd = "generate"): void {
 
-    const payload = {
-      type: "generate",
-      board: this.controller.getBoard(),
-      userCount: this.getOnlinePlayersCount(),
-      gameState: this.controller.gameState,
-    };
+    const payload = this.getPayload(cmd)
     this.partyRoom.getConnection(this.playerNames.getKey(subName)!)?.send(JSON.stringify(payload));
+  }
+  public getPayload(cmd: string, subName?: string){
+    switch (cmd) {
+      case "generate":
+        return {
+          type: "generate",
+          board: this.controller.getBoard(),
+          userCount: this.getOnlinePlayersCount(),
+          gameState: this.controller.gameState,
+        };
+      case "myName":
+        return {
+          type: "myName",
+          myName: subName!
+        }
+      case "names":
+        return {
+          type: "userChange",
+          users: this.playerNames.values(),
+          userCount: this.getOnlinePlayersCount()
+        };
+      case "update":
+        return {
+          type: "update",
+          board: this.controller.getBoard(),
+          userCount: this.getOnlinePlayersCount(),
+          gameState: this.controller.gameState,
+        };
+    }
   }
 
   public getOnlinePlayersCount(): number {
@@ -104,7 +115,7 @@ export default class Server implements Party.Server {
     // Hier Logik einfügen, z.B. aus der Map löschen
     console.log(`User ${this.playerNames.get(connection.id)} disconnected.`);
     this.playerNames.delete(connection.id);
-    this.notifyNames();
+    this.notifyObservers("names");
   }
 }
 
