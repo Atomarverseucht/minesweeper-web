@@ -1,9 +1,12 @@
 import type * as Party from "partykit/server";
 import { Controller } from "./Controller/controller";
+import BiMap from 'bidirectional-map'
 
 export default class Server implements Party.Server {
   count = 0;
+  playerNumber = 1
   readonly controller: Controller;
+  playerNames = new BiMap<string>();
 
   constructor(readonly partyRoom: Party.Room) {
     this.controller = new Controller(this)
@@ -16,7 +19,7 @@ export default class Server implements Party.Server {
   room: ${this.partyRoom.id}
   url: ${new URL(ctx.request.url).pathname}`,
     );
-
+    this.playerNames.set(conn.id, `Player ${this.playerNumber.toString()}`);
     const payload = {
       type: "init",
       board: this.controller.getBoard(),
@@ -28,24 +31,22 @@ export default class Server implements Party.Server {
 
   onMessage(message: string, sender: Party.Connection) {
     console.log(`connection ${sender.id} sent message: ${message}`);
-
-    if (message === "increment") {
-      this.increment();
-      return;
-    }
-
-    const args = message.split(" ");
-    if (this.controller.isSysCmd(args[0])) {
-      this.controller.doSysCmd(sender.id, args);
-      console.log("sysCmd")
-    } else {
-      try {
-        this.controller.turn(sender.id, args[0], +args[1], +args[2]);
-        console.log("turn")
-      } catch {
-        // ignored on purpose in this early GUI stage
-        console.log("catched turn")
+    try {
+      const args = message.split(" ");
+      switch (args[0]) {
+        case "increment": this.increment(); return;
+        case "changeName": this.playerNames.set(sender.id, args[1]);
+        case "getNames": this.notifyNames(); return;
       }
+      if (this.controller.isSysCmd(args[0])) {
+        this.controller.doSysCmd(this.playerNames.get(sender.id)!, args);
+        console.log("sysCmd")
+      } else {
+        this.controller.turn(this.playerNames.get(sender.id)!, args[0], +args[1], +args[2]);
+        console.log("turn")
+      }
+    } catch {
+      console.log("catched turn")
     }
   }
 
@@ -53,10 +54,15 @@ export default class Server implements Party.Server {
     this.count = (this.count + 1) % 100;
     this.partyRoom.broadcast(this.count.toString(), []);
   }
-
+  public notifyNames(): void {
+    const payload = {
+      type: "userChange",
+      users: this.playerNames.values(),
+      userCount: this.getOnlinePlayersCount()
+    };
+    this.partyRoom.broadcast(JSON.stringify(payload), []);
+  }
   public notifyObservers(): void {
-    if (!this.controller) return;
-
     const payload = {
       type: "update",
       board: this.controller.getBoard(),
@@ -67,7 +73,7 @@ export default class Server implements Party.Server {
     console.log(this.getOnlinePlayersCount());
   }
 
-  public generate(subID: string): void {
+  public specNotify(subName: string): void {
     if (!this.controller) return;
 
     const payload = {
@@ -76,7 +82,7 @@ export default class Server implements Party.Server {
       userCount: this.getOnlinePlayersCount(),
       gameState: this.controller.gameState,
     };
-    this.partyRoom.getConnection(subID)?.send(JSON.stringify(payload));
+    this.partyRoom.getConnection(this.playerNames.getKey(subName)!)?.send(JSON.stringify(payload));
   }
 
   public getOnlinePlayersCount(): number {
@@ -93,6 +99,12 @@ export default class Server implements Party.Server {
         yield conn;
       }
     }
+  }
+  async onClose(connection: Party.Connection) {
+    // Hier Logik einfügen, z.B. aus der Map löschen
+    console.log(`User ${this.playerNames.get(connection.id)} disconnected.`);
+    this.playerNames.delete(connection.id);
+    this.notifyNames();
   }
 }
 

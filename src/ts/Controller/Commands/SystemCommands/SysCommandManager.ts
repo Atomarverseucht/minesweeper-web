@@ -4,7 +4,7 @@ import type {Controller} from "../../controller"
 import type {Command} from "../commandInterfaces"
 
 export class SysCommandManager {
-    readonly firstSysCommand: SysCommand = new GenerateCmd()
+    readonly firstSysCommand = new GenerateCmd()
 
     public isSysCommand(cmd: string): boolean {
         return this.firstSysCommand.getSysCmd(cmd) != undefined

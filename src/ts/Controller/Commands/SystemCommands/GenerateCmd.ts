@@ -32,7 +32,7 @@ generate is not undo-able!`
                 ctrl.changeState("start")
                 return "Place to generate!"
             } catch (e) {
-                ctrl.generate(observerID);
+                ctrl.specNotify(observerID);
             }
         }
         }
