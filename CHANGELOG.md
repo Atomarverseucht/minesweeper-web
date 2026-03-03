@@ -1,3 +1,10 @@
+# [1.6.0-dev.1](https://github.com/Atomarverseucht/minesweeper-web/compare/1.5.0...1.6.0-dev.1) (2026-03-03)
+
+
+### Features
+
+* adding name system in Backend ([6ba4fe5](https://github.com/Atomarverseucht/minesweeper-web/commit/6ba4fe53128358a6d90b01c31f60ecd896b6fd21))
+
 # [1.5.0](https://github.com/Atomarverseucht/minesweeper-web/compare/1.4.0...1.5.0) (2026-03-01)
 
 
