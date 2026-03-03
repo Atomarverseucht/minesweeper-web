@@ -1,3 +1,10 @@
+# [1.6.0-dev.3](https://github.com/Atomarverseucht/minesweeper-web/compare/1.6.0-dev.2...1.6.0-dev.3) (2026-03-03)
+
+
+### Bug Fixes
+
+* added cmd "myName" ([fd6d386](https://github.com/Atomarverseucht/minesweeper-web/commit/fd6d386d85d8381a66f82376853f9f79de984045))
+
 # [1.6.0-dev.2](https://github.com/Atomarverseucht/minesweeper-web/compare/1.6.0-dev.1...1.6.0-dev.2) (2026-03-03)
 
 
