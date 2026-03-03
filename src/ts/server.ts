@@ -37,6 +37,7 @@ export default class Server implements Party.Server {
         case "increment": this.increment(); return;
         case "changeName": this.playerNames.set(sender.id, args[1]);
         case "getNames": this.notifyObservers("names"); return;
+        case "myName": this.specNotify("myName"); return;
       }
       if (this.controller.isSysCmd(args[0])) {
         this.controller.doSysCmd(this.playerNames.get(sender.id)!, args);
