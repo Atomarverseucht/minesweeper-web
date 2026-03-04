@@ -118,6 +118,14 @@ p {
   font-size: 1rem;
 }
 
+
+.own-name-row {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  margin-bottom: 0.55rem;
+}
+
 .name-list {
   list-style: none;
   padding: 0;
