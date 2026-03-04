@@ -1,3 +1,10 @@
+# [1.6.0-dev.4](https://github.com/Atomarverseucht/minesweeper-web/compare/1.6.0-dev.3...1.6.0-dev.4) (2026-03-04)
+
+
+### Features
+
+* FRONTEND: added player list ([a4c7139](https://github.com/Atomarverseucht/minesweeper-web/commit/a4c7139debc7b17fe4615f8ff1f46d33ae3040f5))
+
 # [1.6.0-dev.3](https://github.com/Atomarverseucht/minesweeper-web/compare/1.6.0-dev.2...1.6.0-dev.3) (2026-03-03)
 
 
