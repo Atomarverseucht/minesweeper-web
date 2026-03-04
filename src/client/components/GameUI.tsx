@@ -7,6 +7,21 @@ type ServerPayload = {
   board?: number[][];
   userCount?: number;
   gameState?: string;
+  names?: Array<string | { id?: string; name?: string; isSelf?: boolean }>;
+  selfId?: string;
+  yourId?: string;
+  ownId?: string;
+  myId?: string;
+  selfName?: string;
+  yourName?: string;
+  ownName?: string;
+  myName?: string;
+};
+
+type PlayerName = {
+  id: string;
+  name: string;
+  isSelf: boolean;
 };
 
 type GameUIState = {
@@ -15,6 +30,10 @@ type GameUIState = {
   statusText: string;
   roomId: string;
   copyHint: string;
+  playerNames: PlayerName[];
+  pendingName: string;
+  isEditingOwnName: boolean;
+  ownName: string;
 };
 
 class BoardLayoutService {
@@ -50,6 +69,10 @@ export default class GameUI extends Component<Record<string, never>, GameUIState
       statusText: "Connect to server ...",
       roomId: RoomService.getOrCreateRoomId(),
       copyHint: "",
+      playerNames: [],
+      pendingName: "",
+      isEditingOwnName: false,
+      ownName: "",
     };
   }
 
@@ -97,9 +120,46 @@ export default class GameUI extends Component<Record<string, never>, GameUIState
       } else if (payload.gameState === "lost") {
         this.setState({ statusText: "💥 Game Over!" });
       }
+
+      this.updateNamesFromPayload(payload);
     } catch {
       this.setState({ statusText: "Invalid message from server." });
     }
+  }
+
+  private updateNamesFromPayload(payload: ServerPayload): void {
+    if (!payload.names && !payload.selfName && !payload.yourName && !payload.ownName && !payload.myName) {
+      return;
+    }
+
+    const selfId = payload.selfId ?? payload.yourId ?? payload.ownId ?? payload.myId ?? "";
+    const explicitOwnName = payload.selfName ?? payload.yourName ?? payload.ownName ?? payload.myName ?? "";
+    const rawNames = payload.names ?? [];
+
+    const normalizedNames: PlayerName[] = rawNames.map((entry, index) => {
+      if (typeof entry === "string") {
+        const isSelf = explicitOwnName ? entry === explicitOwnName : false;
+        return { id: `player-${index}`, name: entry, isSelf };
+      }
+
+      const entryId = entry.id ?? `player-${index}`;
+      const entryName = entry.name ?? "Unknown";
+      const isSelfById = selfId ? entryId === selfId : false;
+      const isSelfByName = explicitOwnName ? entryName === explicitOwnName : false;
+      return {
+        id: entryId,
+        name: entryName,
+        isSelf: Boolean(entry.isSelf) || isSelfById || isSelfByName,
+      };
+    });
+
+    const ownName = explicitOwnName || normalizedNames.find((entry) => entry.isSelf)?.name || "";
+
+    this.setState((prevState) => ({
+      playerNames: normalizedNames,
+      ownName,
+      pendingName: prevState.isEditingOwnName ? prevState.pendingName : ownName,
+    }));
   }
 
   private sendTurn(command: string, x: number, y: number): void {
@@ -134,8 +194,42 @@ export default class GameUI extends Component<Record<string, never>, GameUIState
     }, 2000);
   };
 
+  private startEditingOwnName = (): void => {
+    this.setState((prevState) => ({
+      isEditingOwnName: true,
+      pendingName: prevState.ownName,
+    }));
+  };
+
+  private changePendingName = (nextName: string): void => {
+    this.setState({ pendingName: nextName });
+  };
+
+  private saveOwnName = (): void => {
+    const trimmedName = this.state.pendingName.trim();
+    const safeName = trimmedName.replace(/\s+/g, "_");
+    if (!safeName) {
+      this.setState({ isEditingOwnName: false, pendingName: this.state.ownName });
+      return;
+    }
+
+    this.socket?.send(`name ${safeName}`);
+    this.setState({
+      ownName: safeName,
+      isEditingOwnName: false,
+      statusText: "Name updated.",
+    });
+  };
+
+  private cancelOwnNameEdit = (): void => {
+    this.setState((prevState) => ({
+      isEditingOwnName: false,
+      pendingName: prevState.ownName,
+    }));
+  };
+
   public render() {
-    const { board, userCount, statusText, roomId, copyHint } = this.state;
+    const { board, userCount, statusText, roomId, copyHint, playerNames, ownName, pendingName, isEditingOwnName } = this.state;
     const [width, height] = BoardLayoutService.getDimensions(board);
     const cellSize = BoardLayoutService.getCellSize(width, height);
 
@@ -176,6 +270,44 @@ export default class GameUI extends Component<Record<string, never>, GameUIState
             ))
           )}
         </div>
+
+        <section className="name-panel" aria-label="Spielernamen">
+          <h2>Spieler</h2>
+          {playerNames.length ? (
+            <ul className="name-list">
+              {playerNames.map((player) => (
+                <li key={player.id}>
+                  {player.isSelf ? (
+                    isEditingOwnName ? (
+                      <div className="name-edit-row">
+                        <input
+                          type="text"
+                          value={pendingName}
+                          onChange={(event) => this.changePendingName(event.target.value)}
+                          maxLength={24}
+                          autoFocus
+                        />
+                        <button type="button" onClick={this.saveOwnName}>Save</button>
+                        <button type="button" onClick={this.cancelOwnNameEdit}>Cancel</button>
+                      </div>
+                    ) : (
+                      <button type="button" className="own-name" onClick={this.startEditingOwnName} title="Klicken zum Bearbeiten">
+                        {player.name} (du)
+                      </button>
+                    )
+                  ) : (
+                    <span>{player.name}</span>
+                  )}
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="name-empty">Noch keine Namen empfangen.</p>
+          )}
+          {!playerNames.some((player) => player.isSelf) && ownName ? (
+            <p className="name-empty">Dein Name: {ownName}</p>
+          ) : undefined}
+        </section>
       </section>
     );
   }
