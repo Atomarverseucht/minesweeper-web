@@ -1,3 +1,10 @@
+# [1.6.0-dev.5](https://github.com/Atomarverseucht/minesweeper-web/compare/1.6.0-dev.4...1.6.0-dev.5) (2026-03-04)
+
+
+### Bug Fixes
+
+* added playerNumber Counter ([ae880a4](https://github.com/Atomarverseucht/minesweeper-web/commit/ae880a434bf74c3799f9314f93e65bb97114a9a1))
+
 # [1.6.0-dev.4](https://github.com/Atomarverseucht/minesweeper-web/compare/1.6.0-dev.3...1.6.0-dev.4) (2026-03-04)
 
 
