@@ -106,3 +106,58 @@ p {
   image-rendering: pixelated;
   user-select: none;
 }
+
+.name-panel {
+  margin-top: 1rem;
+  border-top: 1px solid #334155;
+  padding-top: 0.75rem;
+}
+
+.name-panel h2 {
+  margin: 0 0 0.4rem;
+  font-size: 1rem;
+}
+
+.name-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.name-empty {
+  margin: 0;
+  color: #94a3b8;
+}
+
+.own-name {
+  all: unset;
+  cursor: pointer;
+  color: #7dd3fc;
+  text-decoration: underline;
+}
+
+.name-edit-row {
+  display: inline-flex;
+  gap: 0.35rem;
+  align-items: center;
+}
+
+.name-edit-row input {
+  background: #1e293b;
+  color: #e2e8f0;
+  border: 1px solid #475569;
+  border-radius: 6px;
+  padding: 0.2rem 0.45rem;
+}
+
+.name-edit-row button {
+  background: #1e293b;
+  color: #e2e8f0;
+  border: 1px solid #334155;
+  border-radius: 6px;
+  padding: 0.2rem 0.45rem;
+  cursor: pointer;
+}
