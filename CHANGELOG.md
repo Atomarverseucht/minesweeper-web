@@ -1,3 +1,10 @@
+# [1.6.0-dev.6](https://github.com/Atomarverseucht/minesweeper-web/compare/1.6.0-dev.5...1.6.0-dev.6) (2026-03-04)
+
+
+### Bug Fixes
+
+* right parameter in server.ts ([82c1772](https://github.com/Atomarverseucht/minesweeper-web/commit/82c177237f47bd15c68348c369c225817da3e01d))
+
 # [1.6.0-dev.5](https://github.com/Atomarverseucht/minesweeper-web/compare/1.6.0-dev.4...1.6.0-dev.5) (2026-03-04)
 
 
