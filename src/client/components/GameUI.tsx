@@ -293,6 +293,41 @@ export default class GameUI extends Component<Record<string, never>, GameUIState
     this.setState({ playerNames: normalizedNames });
   }
 
+  private updateNamesFromPayload(payload: ServerPayload): void {
+    if (!payload.names && !payload.selfName && !payload.yourName && !payload.ownName && !payload.myName) {
+      return;
+    }
+
+    const selfId = payload.selfId ?? payload.yourId ?? payload.ownId ?? payload.myId ?? "";
+    const explicitOwnName = payload.selfName ?? payload.yourName ?? payload.ownName ?? payload.myName ?? "";
+    const rawNames = payload.names ?? [];
+
+    const normalizedNames: PlayerName[] = rawNames.map((entry, index) => {
+      if (typeof entry === "string") {
+        const isSelf = explicitOwnName ? entry === explicitOwnName : false;
+        return { id: `player-${index}`, name: entry, isSelf };
+      }
+
+      const entryId = entry.id ?? `player-${index}`;
+      const entryName = entry.name ?? "Unknown";
+      const isSelfById = selfId ? entryId === selfId : false;
+      const isSelfByName = explicitOwnName ? entryName === explicitOwnName : false;
+      return {
+        id: entryId,
+        name: entryName,
+        isSelf: Boolean(entry.isSelf) || isSelfById || isSelfByName,
+      };
+    });
+
+    const ownName = explicitOwnName || normalizedNames.find((entry) => entry.isSelf)?.name || "";
+
+    this.setState((prevState) => ({
+      playerNames: normalizedNames,
+      ownName,
+      pendingName: prevState.isEditingOwnName ? prevState.pendingName : ownName,
+    }));
+  }
+
   private sendTurn(command: string, x: number, y: number): void {
     this.socket?.send(`${command} ${x} ${y}`);
   }
