@@ -27,6 +27,7 @@ export default class Server implements Party.Server {
       userCount: this.getOnlinePlayersCount(),
       gameState: this.controller.gameState,
       myName: this.playerNames.get(conn.id),
+      users: this.playerNames.values(),
     };
     conn.send(JSON.stringify(payload));
     this.notifyObservers("names");
@@ -34,13 +35,14 @@ export default class Server implements Party.Server {
 
   onMessage(message: string, sender: Party.Connection) {
     console.log(`connection ${sender.id} sent message: ${message}`);
+    const name = this.playerNames.get(sender.id)!;
     try {
       const args = message.split(" ");
       switch (args[0]) {
         case "increment": this.increment(); return;
         case "changeName": this.playerNames.set(sender.id, args[1]);
-        case "getNames": this.notifyObservers("names"); return;
-        case "myName": this.specNotify(this.playerNames.get(sender.id)!, "myName"); return;
+        case "getNames": this.specNotify(name, "names"); return;
+        case "myName": this.specNotify(name, "myName"); return;
       }
       if (this.controller.isSysCmd(args[0])) {
         this.controller.doSysCmd(this.playerNames.get(sender.id)!, args);
