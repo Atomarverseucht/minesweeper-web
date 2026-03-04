@@ -20,6 +20,7 @@ export default class Server implements Party.Server {
   url: ${new URL(ctx.request.url).pathname}`,
     );
     this.playerNames.set(conn.id, `Player ${this.playerNumber.toString()}`);
+    this.playerNumber++
     const payload = {
       type: "init",
       board: this.controller.getBoard(),
@@ -27,6 +28,7 @@ export default class Server implements Party.Server {
       gameState: this.controller.gameState,
     };
     conn.send(JSON.stringify(payload));
+    this.notifyObservers("names");
   }
 
   onMessage(message: string, sender: Party.Connection) {
