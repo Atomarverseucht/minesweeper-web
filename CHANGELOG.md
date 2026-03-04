@@ -1,3 +1,10 @@
+# [1.6.0-dev.7](https://github.com/Atomarverseucht/minesweeper-web/compare/1.6.0-dev.6...1.6.0-dev.7) (2026-03-04)
+
+
+### Bug Fixes
+
+* init gives now more content ([8da287a](https://github.com/Atomarverseucht/minesweeper-web/commit/8da287a3a5bd23b33744285ea246ba4921a7cb30))
+
 # [1.6.0-dev.6](https://github.com/Atomarverseucht/minesweeper-web/compare/1.6.0-dev.5...1.6.0-dev.6) (2026-03-04)
 
 
