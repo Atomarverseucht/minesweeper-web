@@ -268,10 +268,12 @@ export default class GameUI extends Component<Record<string, never>, GameUIState
     this.setState((prevState) => ({
       ownName: nextOwnName,
       pendingName: prevState.isEditingOwnName ? prevState.pendingName : nextOwnName,
-      playerNames: prevState.playerNames.map((entry) => ({
-        ...entry,
-        isSelf: entry.name === nextOwnName || entry.isSelf,
-      })),
+      playerNames: prevState.playerNames.map((entry) => {
+        if (entry.isSelf) {
+          return { ...entry, name: nextOwnName, isSelf: true };
+        }
+        return { ...entry, isSelf: entry.name === nextOwnName };
+      }),
     }));
   }
 
@@ -290,42 +292,31 @@ export default class GameUI extends Component<Record<string, never>, GameUIState
       };
     });
 
-    this.setState({ playerNames: normalizedNames });
-  }
-
-  private updateNamesFromPayload(payload: ServerPayload): void {
-    if (!payload.names && !payload.selfName && !payload.yourName && !payload.ownName && !payload.myName) {
-      return;
-    }
-
-    const selfId = payload.selfId ?? payload.yourId ?? payload.ownId ?? payload.myId ?? "";
-    const explicitOwnName = payload.selfName ?? payload.yourName ?? payload.ownName ?? payload.myName ?? "";
-    const rawNames = payload.names ?? [];
-
-    const normalizedNames: PlayerName[] = rawNames.map((entry, index) => {
-      if (typeof entry === "string") {
-        const isSelf = explicitOwnName ? entry === explicitOwnName : false;
-        return { id: `player-${index}`, name: entry, isSelf };
+    this.setState((prevState) => {
+      if (normalizedNames.length > 0) {
+        return { playerNames: normalizedNames };
       }
 
-      const entryId = entry.id ?? `player-${index}`;
-      const entryName = entry.name ?? "Unknown";
-      const isSelfById = selfId ? entryId === selfId : false;
-      const isSelfByName = explicitOwnName ? entryName === explicitOwnName : false;
-      return {
-        id: entryId,
-        name: entryName,
-        isSelf: Boolean(entry.isSelf) || isSelfById || isSelfByName,
-      };
+      if (prevState.playerNames.length > 0) {
+        return null;
+      }
+
+      const fallbackCount = payload?.userCount ?? prevState.userCount;
+      if (fallbackCount <= 0) {
+        return null;
+      }
+
+      const fallbackNames: PlayerName[] = Array.from({ length: fallbackCount }, (_, index) => {
+        const fallbackName = index === 0 && prevState.ownName ? prevState.ownName : `Player ${index + 1}`;
+        return {
+          id: `fallback-${index + 1}`,
+          name: fallbackName,
+          isSelf: fallbackName === prevState.ownName || (index === 0 && !prevState.ownName),
+        };
+      });
+
+      return { playerNames: fallbackNames };
     });
-
-    const ownName = explicitOwnName || normalizedNames.find((entry) => entry.isSelf)?.name || "";
-
-    this.setState((prevState) => ({
-      playerNames: normalizedNames,
-      ownName,
-      pendingName: prevState.isEditingOwnName ? prevState.pendingName : ownName,
-    }));
   }
 
   private sendTurn(command: string, x: number, y: number): void {
