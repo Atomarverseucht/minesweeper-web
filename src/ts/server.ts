@@ -40,7 +40,7 @@ export default class Server implements Party.Server {
       const args = message.split(" ");
       switch (args[0]) {
         case "increment": this.increment(); return;
-        case "changeName": this.playerNames.set(sender.id, args[1]);
+        case "changeName": this.playerNames.set(sender.id, args[1]); this.notifyObservers("names"); return;
         case "getNames": this.specNotify(name, "names"); return;
         case "myName": this.specNotify(name, "myName"); return;
       }
@@ -88,7 +88,7 @@ export default class Server implements Party.Server {
         }
       case "names":
         return {
-          type: "userChange",
+          type: "getNames",
           users: this.playerNames.values(),
           userCount: this.getOnlinePlayersCount()
         };

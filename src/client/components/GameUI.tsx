@@ -2,40 +2,17 @@ import { Component, type CSSProperties, type MouseEvent } from "react";
 import PartySocket from "partysocket";
 import { RoomService } from "../roomService";
 
-type NameEntryObject = {
-  id?: string;
-  userId?: string;
-  playerId?: string;
-  connectionId?: string;
-  name?: string;
-  value?: string;
-  isSelf?: boolean;
-};
-
 type ServerPayload = {
   type?: string;
   cmd?: string;
   board?: number[][];
   userCount?: number;
   gameState?: string;
-  names?: unknown;
-  playerNames?: unknown;
   users?: unknown;
-  data?: unknown;
-  selfId?: string;
-  yourId?: string;
-  ownId?: string;
-  myId?: string;
-  clientId?: string;
-  selfName?: string;
-  yourName?: string;
-  ownName?: string;
   myName?: string;
-  name?: string;
 };
 
 type PlayerName = {
-  id: string;
   name: string;
   isSelf: boolean;
 };
@@ -86,9 +63,9 @@ export default class GameUI extends Component<Record<string, never>, GameUIState
       roomId: RoomService.getOrCreateRoomId(),
       copyHint: "",
       playerNames: [],
-      pendingName: "Player 1",
+      pendingName: "...",
       isEditingOwnName: false,
-      ownName: "Player 1",
+      ownName: "...",
     };
   }
 
@@ -153,24 +130,19 @@ export default class GameUI extends Component<Record<string, never>, GameUIState
       this.setState({ statusText: "💥 Game over." });
     }
 
-    const cmd = (payload.cmd ?? payload.type ?? "").toLowerCase();
+    const cmd = (payload.type ?? "").toLowerCase();
 
-    const ownNameFromPayload = payload.selfName ?? payload.yourName ?? payload.ownName ?? payload.myName ?? payload.name;
+    const ownNameFromPayload = payload.myName;
     if (typeof ownNameFromPayload === "string" && ownNameFromPayload.trim()) {
       this.setOwnName(ownNameFromPayload.trim());
     }
 
-    if (cmd === "myname" && typeof payload.data === "string") {
-      this.setOwnName(payload.data);
+    if (cmd === "myName") {
+      this.setOwnName(payload.myName!);
     }
 
-    if (cmd === "getnames" || cmd === "notifynames") {
-      this.applyNames(payload.names ?? payload.playerNames ?? payload.users ?? payload.data, payload);
-      return;
-    }
-
-    if (payload.names !== undefined || payload.playerNames !== undefined || payload.users !== undefined) {
-      this.applyNames(payload.names ?? payload.playerNames ?? payload.users, payload);
+    if ( payload.users !== undefined) {
+      this.applyNames(payload.users as string[], payload);
     }
   }
 
@@ -241,29 +213,6 @@ export default class GameUI extends Component<Record<string, never>, GameUIState
     });
   }
 
-  private normalizeNameData(raw: unknown): NameEntryObject[] {
-    if (Array.isArray(raw)) {
-      return raw.map((entry, index) => {
-        if (typeof entry === "string") {
-          return { id: `player-${index}`, name: entry };
-        }
-        if (entry && typeof entry === "object") {
-          return entry as NameEntryObject;
-        }
-        return { id: `player-${index}`, name: "Unknown" };
-      });
-    }
-
-    if (raw && typeof raw === "object") {
-      return Object.entries(raw as Record<string, unknown>).map(([id, value]) => ({
-        id,
-        name: typeof value === "string" ? value : "Unknown",
-      }));
-    }
-
-    return [];
-  }
-
   private setOwnName(nextOwnName: string): void {
     this.setState((prevState) => ({
       ownName: nextOwnName,
@@ -277,41 +226,35 @@ export default class GameUI extends Component<Record<string, never>, GameUIState
     }));
   }
 
-  private applyNames(rawNames: unknown, payload?: ServerPayload): void {
-    const selfId = payload?.selfId ?? payload?.yourId ?? payload?.ownId ?? payload?.myId ?? payload?.clientId ?? "";
+  private applyNames(rawNames: string[], payload?: ServerPayload): void {
 
-    const normalizedNames = this.normalizeNameData(rawNames).map((entry, index) => {
-      const id = entry.id ?? entry.userId ?? entry.playerId ?? entry.connectionId ?? `player-${index}`;
-      const name = entry.name ?? entry.value ?? "Unknown";
-      const isSelfById = selfId ? id === selfId : false;
-      const isSelfByName = this.state.ownName ? name === this.state.ownName : false;
+    const normalizedNames = rawNames.map((entry) => {
+      const isSelf = entry === this.state.ownName;
       return {
-        id,
-        name,
-        isSelf: Boolean(entry.isSelf) || isSelfById || isSelfByName,
+        entry,
+        isSelf,
       };
     });
 
     this.setState((prevState) => {
       if (normalizedNames.length > 0) {
-        return { playerNames: normalizedNames };
+        return {normalizedNames };
       }
 
       if (prevState.playerNames.length > 0) {
-        return null;
+        return undefined;
       }
 
       const fallbackCount = payload?.userCount ?? prevState.userCount;
       if (fallbackCount <= 0) {
-        return null;
+        return undefined;
       }
 
       const fallbackNames: PlayerName[] = Array.from({ length: fallbackCount }, (_, index) => {
-        const fallbackName = index === 0 && prevState.ownName ? prevState.ownName : `Player ${index + 1}`;
+        const fallbackName = prevState.ownName ? prevState.ownName : `Player ${index + 1}`;
         return {
-          id: `fallback-${index + 1}`,
           name: fallbackName,
-          isSelf: fallbackName === prevState.ownName || (index === 0 && !prevState.ownName),
+          isSelf: fallbackName === prevState.ownName,
         };
       });
 
@@ -455,7 +398,7 @@ export default class GameUI extends Component<Record<string, never>, GameUIState
           {playerNames.length ? (
             <ul className="name-list">
               {playerNames.map((player) => (
-                <li key={player.id}>
+                <li key={player.name}>
                   <span>{player.name}{player.isSelf ? " (you)" : ""}</span>
                 </li>
               ))}
