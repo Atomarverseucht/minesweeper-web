@@ -1,3 +1,10 @@
+# [1.6.0-dev.8](https://github.com/Atomarverseucht/minesweeper-web/compare/1.6.0-dev.7...1.6.0-dev.8) (2026-03-05)
+
+
+### Bug Fixes
+
+* Player list should now work ([36cd0ba](https://github.com/Atomarverseucht/minesweeper-web/commit/36cd0ba3bf0939453e747dfaef9a759ffb1eb8ff))
+
 # [1.6.0-dev.7](https://github.com/Atomarverseucht/minesweeper-web/compare/1.6.0-dev.6...1.6.0-dev.7) (2026-03-04)
 
 

@@ -1,6 +1,6 @@
 {
   "name": "minesweeper-web",
-  "version": "1.6.0-dev.7",
+  "version": "1.6.0-dev.8",
   "private": true,
   "scripts": {
     "dev": "partykit dev --live",
