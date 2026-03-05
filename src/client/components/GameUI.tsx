@@ -228,37 +228,18 @@ export default class GameUI extends Component<Record<string, never>, GameUIState
 
   private applyNames(rawNames: string[], payload?: ServerPayload): void {
 
-    const normalizedNames = rawNames.map((entry) => {
-      const isSelf = entry === this.state.ownName;
+    const normalizedNames: PlayerName[] = rawNames.map((name): PlayerName => {
+      const isSelf = name === this.state.ownName;
       return {
-        entry,
+        name,
         isSelf,
       };
     });
 
     this.setState((prevState) => {
-      if (normalizedNames.length > 0) {
-        return {normalizedNames };
-      }
-
-      if (prevState.playerNames.length > 0) {
-        return undefined;
-      }
-
-      const fallbackCount = payload?.userCount ?? prevState.userCount;
-      if (fallbackCount <= 0) {
-        return undefined;
-      }
-
-      const fallbackNames: PlayerName[] = Array.from({ length: fallbackCount }, (_, index) => {
-        const fallbackName = prevState.ownName ? prevState.ownName : `Player ${index + 1}`;
-        return {
-          name: fallbackName,
-          isSelf: fallbackName === prevState.ownName,
-        };
-      });
-
-      return { playerNames: fallbackNames };
+      let newState: GameUIState = prevState
+      newState.playerNames = normalizedNames
+      return newState;
     });
   }
 
