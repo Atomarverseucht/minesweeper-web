@@ -1,3 +1,73 @@
+# [1.6.0-dev.10](https://github.com/Atomarverseucht/minesweeper-web/compare/1.6.0-dev.9...1.6.0-dev.10) (2026-03-07)
+
+
+### Bug Fixes
+
+* FINALLY correct user display in FRONTEND ;) ([8bbefe4](https://github.com/Atomarverseucht/minesweeper-web/commit/8bbefe4aa516cde3636968e1f2d8476d5790d103))
+
+# [1.6.0-dev.9](https://github.com/Atomarverseucht/minesweeper-web/compare/1.6.0-dev.8...1.6.0-dev.9) (2026-03-05)
+
+
+### Bug Fixes
+
+* now something works ([6a4325f](https://github.com/Atomarverseucht/minesweeper-web/commit/6a4325f93c5e059323214f768bd524de769a5c2f))
+
+# [1.6.0-dev.8](https://github.com/Atomarverseucht/minesweeper-web/compare/1.6.0-dev.7...1.6.0-dev.8) (2026-03-05)
+
+
+### Bug Fixes
+
+* Player list should now work ([36cd0ba](https://github.com/Atomarverseucht/minesweeper-web/commit/36cd0ba3bf0939453e747dfaef9a759ffb1eb8ff))
+
+# [1.6.0-dev.7](https://github.com/Atomarverseucht/minesweeper-web/compare/1.6.0-dev.6...1.6.0-dev.7) (2026-03-04)
+
+
+### Bug Fixes
+
+* init gives now more content ([8da287a](https://github.com/Atomarverseucht/minesweeper-web/commit/8da287a3a5bd23b33744285ea246ba4921a7cb30))
+
+# [1.6.0-dev.6](https://github.com/Atomarverseucht/minesweeper-web/compare/1.6.0-dev.5...1.6.0-dev.6) (2026-03-04)
+
+
+### Bug Fixes
+
+* right parameter in server.ts ([82c1772](https://github.com/Atomarverseucht/minesweeper-web/commit/82c177237f47bd15c68348c369c225817da3e01d))
+
+# [1.6.0-dev.5](https://github.com/Atomarverseucht/minesweeper-web/compare/1.6.0-dev.4...1.6.0-dev.5) (2026-03-04)
+
+
+### Bug Fixes
+
+* added playerNumber Counter ([ae880a4](https://github.com/Atomarverseucht/minesweeper-web/commit/ae880a434bf74c3799f9314f93e65bb97114a9a1))
+
+# [1.6.0-dev.4](https://github.com/Atomarverseucht/minesweeper-web/compare/1.6.0-dev.3...1.6.0-dev.4) (2026-03-04)
+
+
+### Features
+
+* FRONTEND: added player list ([a4c7139](https://github.com/Atomarverseucht/minesweeper-web/commit/a4c7139debc7b17fe4615f8ff1f46d33ae3040f5))
+
+# [1.6.0-dev.3](https://github.com/Atomarverseucht/minesweeper-web/compare/1.6.0-dev.2...1.6.0-dev.3) (2026-03-03)
+
+
+### Bug Fixes
+
+* added cmd "myName" ([fd6d386](https://github.com/Atomarverseucht/minesweeper-web/commit/fd6d386d85d8381a66f82376853f9f79de984045))
+
+# [1.6.0-dev.2](https://github.com/Atomarverseucht/minesweeper-web/compare/1.6.0-dev.1...1.6.0-dev.2) (2026-03-03)
+
+
+### Bug Fixes
+
+* better code style with the payLoad in server.ts ([f12f345](https://github.com/Atomarverseucht/minesweeper-web/commit/f12f3451f2a367781b9626f6a4535e2a50698610))
+
+# [1.6.0-dev.1](https://github.com/Atomarverseucht/minesweeper-web/compare/1.5.0...1.6.0-dev.1) (2026-03-03)
+
+
+### Features
+
+* adding name system in Backend ([6ba4fe5](https://github.com/Atomarverseucht/minesweeper-web/commit/6ba4fe53128358a6d90b01c31f60ecd896b6fd21))
+
 # [1.5.0](https://github.com/Atomarverseucht/minesweeper-web/compare/1.4.0...1.5.0) (2026-03-01)
 
 
