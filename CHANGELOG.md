@@ -1,3 +1,10 @@
+# [1.6.0-dev.10](https://github.com/Atomarverseucht/minesweeper-web/compare/1.6.0-dev.9...1.6.0-dev.10) (2026-03-07)
+
+
+### Bug Fixes
+
+* FINALLY correct user display in FRONTEND ;) ([8bbefe4](https://github.com/Atomarverseucht/minesweeper-web/commit/8bbefe4aa516cde3636968e1f2d8476d5790d103))
+
 # [1.6.0-dev.9](https://github.com/Atomarverseucht/minesweeper-web/compare/1.6.0-dev.8...1.6.0-dev.9) (2026-03-05)
 
 
