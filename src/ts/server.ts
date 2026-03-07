@@ -1,6 +1,7 @@
 import type * as Party from "partykit/server";
 import { Controller } from "./Controller/controller";
 import BiMap from 'bidirectional-map'
+import type {ServerPayload} from "../Payload";
 
 export default class Server implements Party.Server {
   count = 0;
@@ -38,11 +39,12 @@ export default class Server implements Party.Server {
     const name = this.playerNames.get(sender.id)!;
     try {
       const args = message.split(" ");
+      console.log(args[1])
       switch (args[0]) {
         case "increment": this.increment(); return;
-        case "changeName": this.playerNames.set(sender.id, args[1]); this.notifyObservers("names"); return;
-        case "getNames": this.specNotify(name, "names"); return;
-        case "myName": this.specNotify(name, "myName"); return;
+        case "changeName": console.log("server: name change"); this.playerNames.delete(sender.id); this.playerNames.set(sender.id, args[1]); this.notifyObservers("names"); return;
+        case "getNames": console.log("server: get names"); this.specNotify(name, "names"); return;
+        case "myName": console.log("server: my name"); this.specNotify(name, "myName"); return;
       }
       if (this.controller.isSysCmd(args[0])) {
         this.controller.doSysCmd(this.playerNames.get(sender.id)!, args);
@@ -72,7 +74,7 @@ export default class Server implements Party.Server {
     const payload = this.getPayload(cmd)
     this.partyRoom.getConnection(this.playerNames.getKey(subName)!)?.send(JSON.stringify(payload));
   }
-  public getPayload(cmd: string, subName?: string){
+  public getPayload(cmd: string, subName?: string): ServerPayload {
     switch (cmd) {
       case "generate":
         return {
@@ -89,10 +91,10 @@ export default class Server implements Party.Server {
       case "names":
         return {
           type: "getNames",
-          users: this.playerNames.values(),
+          users: Array.from(this.playerNames.values()),
           userCount: this.getOnlinePlayersCount()
         };
-      case "update":
+      default:
         return {
           type: "update",
           board: this.controller.getBoard(),

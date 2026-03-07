@@ -1,16 +1,9 @@
-import { Component, type CSSProperties, type MouseEvent } from "react";
+import {Component, type CSSProperties, type MouseEvent} from "react";
 import PartySocket from "partysocket";
-import { RoomService } from "../roomService";
-
-type ServerPayload = {
-  type?: string;
-  cmd?: string;
-  board?: number[][];
-  userCount?: number;
-  gameState?: string;
-  users?: unknown;
-  myName?: string;
-};
+import {RoomService} from "../roomService";
+import type {ServerPayload} from "../../Payload";
+import {Simulate} from "react-dom/test-utils";
+import error = Simulate.error;
 
 type PlayerName = {
   name: string;
@@ -42,9 +35,7 @@ class BoardLayoutService {
   }
 
   public static getCellSize(width: number, height: number): string {
-    const safeWidth = Math.max(width, 1);
-    const safeHeight = Math.max(height, 1);
-    return `min(calc((100vw - 5rem) / ${safeWidth}), calc((100vh - 16rem) / ${safeHeight}))`;
+    return `min(calc((100vw - 5rem) / ${width}), calc((100vh - 16rem) / ${height}))`;
   }
 }
 
@@ -92,8 +83,6 @@ export default class GameUI extends Component<Record<string, never>, GameUIState
 
     this.socket.addEventListener("open", () => {
       this.setState({ statusText: "Connected." });
-      this.socket?.send("myName");
-      this.socket?.send("getNames");
     });
 
     this.socket.addEventListener("message", (event: MessageEvent) => {
@@ -101,15 +90,18 @@ export default class GameUI extends Component<Record<string, never>, GameUIState
     });
   }
 
-  private handleServerMessage(rawPayload: unknown): void {
+  private handleServerMessage(rawPayload: any): void {
     if (typeof rawPayload !== "string") {
       return;
     }
 
     try {
-      const payload = JSON.parse(rawPayload) as ServerPayload;
+      const payload: ServerPayload = JSON.parse(rawPayload);
       this.handleJsonPayload(payload);
-    } catch {
+    } catch (e: any) {
+      if (e as Error) {
+        console.log((e as Error).message);
+      }
       this.handleCommandMessage(rawPayload);
     }
   }
@@ -121,7 +113,6 @@ export default class GameUI extends Component<Record<string, never>, GameUIState
 
     if (typeof payload.userCount === "number") {
       this.setState({ userCount: payload.userCount });
-      this.ensureFallbackNames(payload.userCount);
     }
 
     if (payload.gameState === "win") {
@@ -141,8 +132,9 @@ export default class GameUI extends Component<Record<string, never>, GameUIState
       this.setOwnName(payload.myName!);
     }
 
-    if ( payload.users !== undefined) {
-      this.applyNames(payload.users as string[], payload);
+    if (payload.users) {
+      this.applyNames(payload.users);
+      console.log("hi")
     }
   }
 
@@ -170,11 +162,6 @@ export default class GameUI extends Component<Record<string, never>, GameUIState
         this.applyNames(JSON.parse(rawNames));
         return;
       } catch {
-        const fallbackList = rawNames
-          .split(",")
-          .map((entry) => entry.trim())
-          .filter(Boolean);
-        this.applyNames(fallbackList);
         return;
       }
     }
@@ -192,26 +179,6 @@ export default class GameUI extends Component<Record<string, never>, GameUIState
     }
   }
 
-  private ensureFallbackNames(userCount: number): void {
-    this.setState((prevState) => {
-      if (prevState.playerNames.length > 0 || userCount <= 0) {
-        return null;
-      }
-
-      const fallbackNames: PlayerName[] = Array.from({ length: userCount }, (_, index) => {
-        const name = `Player ${index + 1}`;
-        const isSelf = prevState.ownName ? prevState.ownName === name : index === 0;
-        return { id: `fallback-${index + 1}`, name, isSelf };
-      });
-
-      const ownName = prevState.ownName || "Player 1";
-      return {
-        playerNames: fallbackNames,
-        ownName,
-        pendingName: prevState.isEditingOwnName ? prevState.pendingName : ownName,
-      };
-    });
-  }
 
   private setOwnName(nextOwnName: string): void {
     this.setState((prevState) => ({
@@ -226,10 +193,10 @@ export default class GameUI extends Component<Record<string, never>, GameUIState
     }));
   }
 
-  private applyNames(rawNames: string[], payload?: ServerPayload): void {
-
+  private applyNames(rawNames: string[]): void {
     const normalizedNames: PlayerName[] = rawNames.map((name): PlayerName => {
       const isSelf = name === this.state.ownName;
+      console.log(name)
       return {
         name,
         isSelf,
@@ -289,10 +256,6 @@ export default class GameUI extends Component<Record<string, never>, GameUIState
   private saveOwnName = (): void => {
     const trimmedName = this.state.pendingName.trim();
     const safeName = trimmedName.replace(/\s+/g, "_");
-    if (!safeName) {
-      this.setState({ isEditingOwnName: false, pendingName: this.state.ownName });
-      return;
-    }
 
     this.socket?.send(`changeName ${safeName}`);
     this.setOwnName(safeName);
