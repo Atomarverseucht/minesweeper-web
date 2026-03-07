@@ -1,3 +1,10 @@
+# [1.6.0-dev.9](https://github.com/Atomarverseucht/minesweeper-web/compare/1.6.0-dev.8...1.6.0-dev.9) (2026-03-05)
+
+
+### Bug Fixes
+
+* now something works ([6a4325f](https://github.com/Atomarverseucht/minesweeper-web/commit/6a4325f93c5e059323214f768bd524de769a5c2f))
+
 # [1.6.0-dev.8](https://github.com/Atomarverseucht/minesweeper-web/compare/1.6.0-dev.7...1.6.0-dev.8) (2026-03-05)
 
 
