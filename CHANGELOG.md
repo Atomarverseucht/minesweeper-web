@@ -1,3 +1,10 @@
+## [1.6.1-dev.1](https://github.com/Atomarverseucht/minesweeper-web/compare/1.6.0...1.6.1-dev.1) (2026-03-11)
+
+
+### Bug Fixes
+
+* change name of server code folder ([2398dd6](https://github.com/Atomarverseucht/minesweeper-web/commit/2398dd60bab047c7deb129286a90f3fe2c580546))
+
 # [1.6.0](https://github.com/Atomarverseucht/minesweeper-web/compare/1.5.0...1.6.0) (2026-03-07)
 
 
