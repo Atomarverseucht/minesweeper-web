@@ -1,3 +1,10 @@
+## [1.6.1-dev.2](https://github.com/Atomarverseucht/minesweeper-web/compare/1.6.1-dev.1...1.6.1-dev.2) (2026-03-11)
+
+
+### Bug Fixes
+
+* readded server code ([f1b6ed0](https://github.com/Atomarverseucht/minesweeper-web/commit/f1b6ed013e118bbb73feec01a2f2812f0cf211fa))
+
 ## [1.6.1-dev.1](https://github.com/Atomarverseucht/minesweeper-web/compare/1.6.0...1.6.1-dev.1) (2026-03-11)
 
 
