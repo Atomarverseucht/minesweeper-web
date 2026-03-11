@@ -7,6 +7,7 @@ class App extends Component {
   public render() {
     return (
       <main>
+        <title>Minesweeper-Web</title>
         <h1>
           💣 <a href="https://github.com/Atomarverseucht/minesweeper-web">Minesweeper Web</a>
         </h1>
