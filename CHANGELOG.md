@@ -1,3 +1,10 @@
+# [1.7.0-dev.1](https://github.com/Atomarverseucht/minesweeper-web/compare/1.6.1...1.7.0-dev.1) (2026-03-13)
+
+
+### Features
+
+* Player is now a class object. Not only the name as string anymore ([9317675](https://github.com/Atomarverseucht/minesweeper-web/commit/9317675ad04538dbcdccc2df1e7bbbd27c22dd0a))
+
 ## [1.6.1](https://github.com/Atomarverseucht/minesweeper-web/compare/1.6.0...1.6.1) (2026-03-12)
 
 
