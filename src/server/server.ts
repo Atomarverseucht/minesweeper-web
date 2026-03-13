@@ -1,18 +1,20 @@
 import type * as Party from "partykit/server";
 import { Controller } from "./Controller/controller";
 import BiMap from 'bidirectional-map'
-import type {ServerPayload} from "../Payload";
+import type {ServerPayload} from "../types/Payload";
+import {Player} from "../types/Player";
 
 export default class Server implements Party.Server {
   count = 0;
   playerNumber = 1
   readonly controller: Controller;
-  playerNames = new BiMap<string>();
+  playerNames = new BiMap<Player>();
 
   constructor(readonly partyRoom: Party.Room) {
     this.controller = new Controller(this)
   }
 
+  // Initial
   onConnect(conn: Party.Connection, ctx: Party.ConnectionContext) {
     console.log(
       `Connected:
@@ -20,7 +22,7 @@ export default class Server implements Party.Server {
   room: ${this.partyRoom.id}
   url: ${new URL(ctx.request.url).pathname}`,
     );
-    this.playerNames.set(conn.id, `Player ${this.playerNumber.toString()}`);
+    this.playerNames.set(conn.id, new Player(`Player ${this.playerNumber.toString()}`));
     this.playerNumber++
     const payload = {
       type: "init",
@@ -42,15 +44,22 @@ export default class Server implements Party.Server {
       console.log(args[1])
       switch (args[0]) {
         case "increment": this.increment(); return;
-        case "changeName": console.log("server: name change"); this.playerNames.delete(sender.id); this.playerNames.set(sender.id, args[1]); this.notifyObservers("names"); return;
-        case "getNames": console.log("server: get names"); this.specNotify(name, "names"); return;
-        case "myName": console.log("server: my name"); this.specNotify(name, "myName"); return;
+        case "changeName":
+          console.log("server: name change");
+          this.playerNames.get(sender.id)!.name = args[1];
+          this.notifyObservers("names"); return;
+        case "getNames":
+          console.log("server: get names");
+          this.specNotify(sender.id, "names"); return;
+        case "myName":
+          console.log("server: my name");
+          this.specNotify(sender.id, "myName"); return;
       }
       if (this.controller.isSysCmd(args[0])) {
-        this.controller.doSysCmd(this.playerNames.get(sender.id)!, args);
+        this.controller.doSysCmd(sender.id, args);
         console.log("sysCmd")
       } else {
-        this.controller.turn(this.playerNames.get(sender.id)!, args[0], +args[1], +args[2]);
+        this.controller.turn(sender.id, args[0], +args[1], +args[2]);
         console.log("turn")
       }
     } catch {
@@ -69,10 +78,10 @@ export default class Server implements Party.Server {
     console.log(this.getOnlinePlayersCount());
   }
 
-  public specNotify(subName: string, cmd = "generate"): void {
+  public specNotify(subID: string, cmd = "generate"): void {
 
     const payload = this.getPayload(cmd)
-    this.partyRoom.getConnection(this.playerNames.getKey(subName)!)?.send(JSON.stringify(payload));
+    this.partyRoom.getConnection(subID)?.send(JSON.stringify(payload));
   }
   public getPayload(cmd: string, subName?: string): ServerPayload {
     switch (cmd) {

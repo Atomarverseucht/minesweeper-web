@@ -1,13 +1,14 @@
 import {Component, type CSSProperties, type MouseEvent} from "react";
 import PartySocket from "partysocket";
 import {RoomService} from "../roomService";
-import type {ServerPayload} from "../../Payload";
+import type {ServerPayload} from "../../types/Payload";
 import {Simulate} from "react-dom/test-utils";
 import error = Simulate.error;
+import {Player} from "../../types/Player";
 
 type PlayerName = {
-  name: string;
   isSelf: boolean;
+  player: Player;
 };
 
 type GameUIState = {
@@ -188,18 +189,18 @@ export default class GameUI extends Component<Record<string, never>, GameUIState
         if (entry.isSelf) {
           return { ...entry, name: nextOwnName, isSelf: true };
         }
-        return { ...entry, isSelf: entry.name === nextOwnName };
+        return { ...entry, isSelf: entry.player.name === nextOwnName };
       }),
     }));
   }
 
-  private applyNames(rawNames: string[]): void {
-    const normalizedNames: PlayerName[] = rawNames.map((name): PlayerName => {
-      const isSelf = name === this.state.ownName;
-      console.log(name)
+  private applyNames(rawNames: Player[]): void {
+    const normalizedNames: PlayerName[] = rawNames.map((player): PlayerName => {
+      const isSelf = player.name === this.state.ownName;
+      console.log(player.name)
       return {
-        name,
         isSelf,
+        player
       };
     });
 
@@ -342,8 +343,8 @@ export default class GameUI extends Component<Record<string, never>, GameUIState
           {playerNames.length ? (
             <ul className="name-list">
               {playerNames.map((player) => (
-                <li key={player.name}>
-                  <span>{player.name}{player.isSelf ? " (you)" : ""}</span>
+                <li key={player.player.name}>
+                  <span>{player.player.name}{player.isSelf ? " (you)" : ""}</span>
                 </li>
               ))}
             </ul>
