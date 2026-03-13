@@ -78,12 +78,12 @@ export default class Server implements Party.Server {
     console.log(this.getOnlinePlayersCount());
   }
 
-  public specNotify(subID: string, cmd = "generate"): void {
+  public specNotify(subID: string, cmd = "generate", msg?: string): void {
 
-    const payload = this.getPayload(cmd)
+    const payload = this.getPayload(cmd, msg)
     this.partyRoom.getConnection(subID)?.send(JSON.stringify(payload));
   }
-  public getPayload(cmd: string, subName?: string): ServerPayload {
+  public getPayload(cmd: string, subName?: string, msg?: string): ServerPayload {
     switch (cmd) {
       case "generate":
         return {
@@ -103,12 +103,18 @@ export default class Server implements Party.Server {
           users: Array.from(this.playerNames.values()),
           userCount: this.getOnlinePlayersCount()
         };
+      case "error":
+        return {
+          type: "error",
+          gameState: msg!,
+        }
       default:
         return {
           type: "update",
           board: this.controller.getBoard(),
           userCount: this.getOnlinePlayersCount(),
           gameState: this.controller.gameState,
+          users: Array.from(this.playerNames.values()),
         };
     }
   }

@@ -37,11 +37,11 @@ export class OpenFieldCommand extends TurnCommand{
 
         // Statusänderungen
         if (!discover && !this.ctrl.inGame) {
-            this.ctrl.changeState("running");
+            //this.ctrl.changeState("running");
         }
 
         if (f.isBomb && discover) {
-            this.ctrl.changeState("lost");
+            this.ctrl.looseHeart(this.observerID);
         } else if (gb.getBombNeighbour(this.x, this.y) === 0) {
             for (let fx = this.x - 1; fx <= this.x + 1; fx++) {
                 for (let fy = this.y - 1; fy <= this.y + 1; fy++) {

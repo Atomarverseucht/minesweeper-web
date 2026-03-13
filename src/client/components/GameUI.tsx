@@ -344,7 +344,7 @@ export default class GameUI extends Component<Record<string, never>, GameUIState
             <ul className="name-list">
               {playerNames.map((player) => (
                 <li key={player.player.name}>
-                  <span>{player.player.name}{player.isSelf ? " (you)" : ""}</span>
+                  <span>{player.player.name}{player.isSelf ? " (you)" : ""}: {player.player.lifes} HP</span>
                 </li>
               ))}
             </ul>
