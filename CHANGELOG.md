@@ -1,3 +1,10 @@
+# [1.7.0-dev.2](https://github.com/Atomarverseucht/minesweeper-web/compare/1.7.0-dev.1...1.7.0-dev.2) (2026-03-13)
+
+
+### Features
+
+* Added player hearts (UI is bad) ([e7d6134](https://github.com/Atomarverseucht/minesweeper-web/commit/e7d613471d622d9b34124a79a446c59dda55b1e2))
+
 # [1.7.0-dev.1](https://github.com/Atomarverseucht/minesweeper-web/compare/1.6.1...1.7.0-dev.1) (2026-03-13)
 
 
