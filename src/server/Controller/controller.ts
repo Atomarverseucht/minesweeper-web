@@ -30,7 +30,7 @@ export class Controller extends Observable{
             }
             return this.state.turn(observerID, cmd.toLowerCase(), x, y)
         } catch (error) {
-            throw error // Entspricht .get auf einem Failure in Scala
+            throw error
         }
     }
 
@@ -78,7 +78,6 @@ export class Controller extends Observable{
         }
     }
 
-    // Statische Factory
     static create(server: Server, xStart: number, yStart: number, xSize: number, ySize: number, bombCount: number): Controller {
         const out = new Controller(server, Board.create(xSize, ySize, xStart, yStart, bombCount))
         //out.state = new Running(out)

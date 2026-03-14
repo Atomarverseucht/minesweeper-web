@@ -47,7 +47,8 @@ export default class Server implements Party.Server {
         case "changeName":
           console.log("server: name change");
           this.setName(sender.id, args[1])
-          this.notifyObservers("names"); return;
+          this.notifyObservers("names");
+          this.specNotify(sender.id, "myName"); return;
         case "getNames":
           console.log("server: get names");
           this.specNotify(sender.id, "names"); return;
@@ -80,7 +81,7 @@ export default class Server implements Party.Server {
 
   public specNotify(subID: string, cmd = "generate", msg?: string): void {
 
-    const payload = this.getPayload(cmd, msg)
+    const payload = this.getPayload(cmd, this.playerNames.get(subID), msg)
     this.partyRoom.getConnection(subID)?.send(JSON.stringify(payload));
   }
   public getPayload(cmd: string, subName?: string, msg?: string): ServerPayload {
@@ -143,10 +144,12 @@ export default class Server implements Party.Server {
   }
 
   public setName(subID: string, name: string): void {
-    this.playerNames.set(subID, name);
-    const n = this.playerData.get(subID);
-    if (n) {n.name = name;}
-    else this.playerData.set(subID, new Player(name))
+    if(Array.from(this.playerNames.values()).filter(p => p === name).length <= 0){
+      this.playerNames.set(subID, name);
+      const n = this.playerData.get(subID);
+      if (n) {n.name = name;}
+      else this.playerData.set(subID, new Player(name))
+    }
   }
 }
 
