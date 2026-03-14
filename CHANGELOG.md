@@ -1,3 +1,10 @@
+# [1.7.0-dev.4](https://github.com/Atomarverseucht/minesweeper-web/compare/1.7.0-dev.3...1.7.0-dev.4) (2026-03-14)
+
+
+### Bug Fixes
+
+* UI is now good! and several bug fixes ([35252c1](https://github.com/Atomarverseucht/minesweeper-web/commit/35252c18acfc427b26d085c5e9f8ebd32f5c39e8))
+
 # [1.7.0-dev.3](https://github.com/Atomarverseucht/minesweeper-web/compare/1.7.0-dev.2...1.7.0-dev.3) (2026-03-14)
 
 
