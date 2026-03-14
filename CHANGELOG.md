@@ -1,3 +1,10 @@
+# [1.7.0-dev.3](https://github.com/Atomarverseucht/minesweeper-web/compare/1.7.0-dev.2...1.7.0-dev.3) (2026-03-14)
+
+
+### Bug Fixes
+
+* name fix ([30236a5](https://github.com/Atomarverseucht/minesweeper-web/commit/30236a5692dba2a7ebc263566f262538f6caef2e))
+
 # [1.7.0-dev.2](https://github.com/Atomarverseucht/minesweeper-web/compare/1.7.0-dev.1...1.7.0-dev.2) (2026-03-13)
 
 
