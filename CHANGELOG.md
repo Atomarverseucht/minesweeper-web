@@ -1,3 +1,10 @@
+# [1.8.0](https://github.com/Atomarverseucht/minesweeper-web/compare/1.7.0...1.8.0) (2026-03-14)
+
+
+### Features
+
+* added name check by name change ([537e50a](https://github.com/Atomarverseucht/minesweeper-web/commit/537e50a86e846613dec85812bd3fe05e45cdf5da))
+
 # [1.8.0-dev.1](https://github.com/Atomarverseucht/minesweeper-web/compare/1.7.0...1.8.0-dev.1) (2026-03-14)
 
 
