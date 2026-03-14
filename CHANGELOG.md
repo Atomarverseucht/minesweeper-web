@@ -1,3 +1,17 @@
+# [1.7.0](https://github.com/Atomarverseucht/minesweeper-web/compare/1.6.1...1.7.0) (2026-03-14)
+
+
+### Bug Fixes
+
+* name fix ([30236a5](https://github.com/Atomarverseucht/minesweeper-web/commit/30236a5692dba2a7ebc263566f262538f6caef2e))
+* UI is now good! and several bug fixes ([35252c1](https://github.com/Atomarverseucht/minesweeper-web/commit/35252c18acfc427b26d085c5e9f8ebd32f5c39e8))
+
+
+### Features
+
+* Added player hearts (UI is bad) ([e7d6134](https://github.com/Atomarverseucht/minesweeper-web/commit/e7d613471d622d9b34124a79a446c59dda55b1e2))
+* Player is now a class object. Not only the name as string anymore ([9317675](https://github.com/Atomarverseucht/minesweeper-web/commit/9317675ad04538dbcdccc2df1e7bbbd27c22dd0a))
+
 # [1.7.0-dev.4](https://github.com/Atomarverseucht/minesweeper-web/compare/1.7.0-dev.3...1.7.0-dev.4) (2026-03-14)
 
 
