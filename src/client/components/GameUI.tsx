@@ -1,4 +1,4 @@
-import {Component, type CSSProperties, type MouseEvent} from "react";
+import {Component, type CSSProperties, type KeyboardEvent, type MouseEvent} from "react";
 import PartySocket from "partysocket";
 import {RoomService} from "../roomService";
 import type {ServerPayload} from "../../types/Payload";
@@ -256,15 +256,20 @@ export default class GameUI extends Component<Record<string, never>, GameUIState
 
   private saveOwnName = (): void => {
     const trimmedName = this.state.pendingName.trim();
-    const safeName = trimmedName.replace(/\s+/g, "_");
+    const safeName = trimmedName.replace(/\s+/g, " ");
 
     this.socket?.send(`changeName ${safeName}`);
-    this.setOwnName(safeName);
     this.setState({
       isEditingOwnName: false,
       statusText: "Name change sent.",
     });
-    this.socket?.send("getNames");
+  };
+
+  private handleOwnNameInputKeyDown = (event: KeyboardEvent<HTMLInputElement>): void => {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      this.saveOwnName();
+    }
   };
 
   private cancelOwnNameEdit = (): void => {
@@ -327,6 +332,7 @@ export default class GameUI extends Component<Record<string, never>, GameUIState
                   type="text"
                   value={pendingName}
                   onChange={(event) => this.changePendingName(event.target.value)}
+                  onKeyDown={this.handleOwnNameInputKeyDown}
                   maxLength={24}
                   autoFocus
                 />
@@ -348,7 +354,7 @@ export default class GameUI extends Component<Record<string, never>, GameUIState
                 </li>
               ))}
             </ul>
-          ) : (
+          ): (
             <p className="name-empty">No names received yet.</p>
           )}
         </section>
