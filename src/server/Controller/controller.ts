@@ -1,10 +1,11 @@
 import {Board} from "../Model/Board"
-import {type GameState, Running, Start} from "./state"
+import {type GameState, Lost, Running, Start} from "./state"
 import {Observable} from "../observer";
 import TurnCommandManager from "./Commands/TurnCommands/TurnCommandManager"
 import {SysCommandManager} from "./Commands/SystemCommands/SysCommandManager"
 import type Server from "../server";
 import {Config} from "../config";
+import type {Player} from "../../types/Player";
 
 export class Controller extends Observable{
     public state: GameState = new Start(this)
@@ -23,6 +24,10 @@ export class Controller extends Observable{
 
     public turn(observerID: string, cmd: string, x: number, y: number): string {
         try {
+            if(this.server.playerData.get(observerID)!.lifes <= 0){
+                this.specNotify(observerID, "error", "You cannot play when died")
+                return "Error: Player is already dead"
+            }
             return this.state.turn(observerID, cmd.toLowerCase(), x, y)
         } catch (error) {
             throw error // Entspricht .get auf einem Failure in Scala
@@ -63,6 +68,14 @@ export class Controller extends Observable{
 
     public isVictory(): boolean {
         return this.gb.isVictory()
+    }
+
+    public looseHeart(subID: string) {
+        const p = this.server.playerData.get(subID)!
+        p.lifes = p.lifes - 1
+        if (Array.from(this.server.playerData.values()).filter(p => p.lifes > 0).length <= 0) {
+            this.state = new Lost(this)
+        }
     }
 
     // Statische Factory
