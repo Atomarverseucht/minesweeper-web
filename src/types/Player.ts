@@ -3,7 +3,7 @@ export class Player {
     public lifes: number;
     constructor(name: string) {
         this.name = name;
-        this.lifes = 1;
+        this.lifes = 3;
     }
 
 }

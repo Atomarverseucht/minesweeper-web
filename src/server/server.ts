@@ -44,7 +44,6 @@ export default class Server implements Party.Server {
       const args = message.split(" ");
       console.log(args[1])
       switch (args[0]) {
-        case "increment": this.increment(); return;
         case "changeName":
           console.log("server: name change");
           this.setName(sender.id, args[1])
@@ -139,6 +138,7 @@ export default class Server implements Party.Server {
     // Hier Logik einfügen, z.B. aus der Map löschen
     console.log(`User ${this.playerNames.get(connection.id)} disconnected.`);
     this.playerNames.delete(connection.id);
+    this.playerData.delete(connection.id);
     this.notifyObservers("names");
   }
 

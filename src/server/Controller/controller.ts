@@ -24,7 +24,7 @@ export class Controller extends Observable{
 
     public turn(observerID: string, cmd: string, x: number, y: number): string {
         try {
-            if(this.server.playerNames.get(observerID)!.lifes <= 0){
+            if(this.server.playerData.get(observerID)!.lifes <= 0){
                 this.specNotify(observerID, "error", "You cannot play when died")
                 return "Error: Player is already dead"
             }
@@ -71,9 +71,9 @@ export class Controller extends Observable{
     }
 
     public looseHeart(subID: string) {
-        const p = this.server.playerNames.get(subID)!
+        const p = this.server.playerData.get(subID)!
         p.lifes = p.lifes - 1
-        if (Array.from(this.server.playerNames.values()).filter(p => p.lifes > 0).length <= 0) {
+        if (Array.from(this.server.playerData.values()).filter(p => p.lifes > 0).length <= 0) {
             this.state = new Lost(this)
         }
     }
