@@ -8,7 +8,8 @@ export default class Server implements Party.Server {
   count = 0;
   playerNumber = 1
   readonly controller: Controller;
-  playerNames = new BiMap<Player>();
+  playerNames = new BiMap<string>();
+  playerData = new Map<string, Player>();
 
   constructor(readonly partyRoom: Party.Room) {
     this.controller = new Controller(this)
@@ -22,7 +23,7 @@ export default class Server implements Party.Server {
   room: ${this.partyRoom.id}
   url: ${new URL(ctx.request.url).pathname}`,
     );
-    this.playerNames.set(conn.id, new Player(`Player ${this.playerNumber.toString()}`));
+    this.setName(conn.id, `Player ${this.playerNumber.toString()}`)
     this.playerNumber++
     const payload = {
       type: "init",
@@ -30,7 +31,7 @@ export default class Server implements Party.Server {
       userCount: this.getOnlinePlayersCount(),
       gameState: this.controller.gameState,
       myName: this.playerNames.get(conn.id),
-      users: this.playerNames.values(),
+      users: this.playerData.values(),
     };
     conn.send(JSON.stringify(payload));
     this.notifyObservers("names");
@@ -46,7 +47,7 @@ export default class Server implements Party.Server {
         case "increment": this.increment(); return;
         case "changeName":
           console.log("server: name change");
-          this.playerNames.get(sender.id)!.name = args[1];
+          this.setName(sender.id, args[1])
           this.notifyObservers("names"); return;
         case "getNames":
           console.log("server: get names");
@@ -100,7 +101,7 @@ export default class Server implements Party.Server {
       case "names":
         return {
           type: "getNames",
-          users: Array.from(this.playerNames.values()),
+          users: Array.from(this.playerData.values()),
           userCount: this.getOnlinePlayersCount()
         };
       case "error":
@@ -114,7 +115,7 @@ export default class Server implements Party.Server {
           board: this.controller.getBoard(),
           userCount: this.getOnlinePlayersCount(),
           gameState: this.controller.gameState,
-          users: Array.from(this.playerNames.values()),
+          users: Array.from(this.playerData.values()),
         };
     }
   }
@@ -139,6 +140,13 @@ export default class Server implements Party.Server {
     console.log(`User ${this.playerNames.get(connection.id)} disconnected.`);
     this.playerNames.delete(connection.id);
     this.notifyObservers("names");
+  }
+
+  public setName(subID: string, name: string): void {
+    this.playerNames.set(subID, name);
+    const n = this.playerData.get(subID);
+    if (n) {n.name = name;}
+    else this.playerData.set(subID, new Player(name))
   }
 }
 
