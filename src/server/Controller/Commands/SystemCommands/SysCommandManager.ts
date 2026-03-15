@@ -7,7 +7,7 @@ export class SysCommandManager {
     readonly firstSysCommand = new GenerateCmd()
 
     public isSysCommand(cmd: string): boolean {
-        return this.firstSysCommand.getSysCmd(cmd) != undefined
+        return this.firstSysCommand.getSysCmd(cmd) !== undefined
     }
 
     public doSysCommand(observerID: string, ctrl: Controller, params: string[]): string | undefined {

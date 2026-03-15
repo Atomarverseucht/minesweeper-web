@@ -6,6 +6,7 @@ export abstract class SysCommand implements Command{
     abstract readonly cmd: string
     abstract readonly helpMsg: string
     abstract readonly specHelpMsg: string
+    abstract readonly visible: boolean
 
     abstract readonly next_?: SysCommand
 
@@ -30,4 +31,9 @@ export abstract class SysCommand implements Command{
         }
         return [this, ...this.next_.listCmds()]
     }
+}
+export abstract class InvisibleSysCommand extends SysCommand {
+    override readonly helpMsg: string = "";
+    override readonly specHelpMsg: string = "";
+    override readonly visible: boolean = false;
 }

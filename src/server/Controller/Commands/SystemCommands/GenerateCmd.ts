@@ -2,11 +2,13 @@ import  {SysCommand} from "../SysCommands"
 import  {type Controller} from "../../controller"
 import {Board} from "../../../Model/Board";
 import {Running} from "../../state";
+import {GetNameCmd} from "./NameCmds";
 
 export class GenerateCmd extends SysCommand {
-    override readonly next_?: SysCommand = undefined;
+    override readonly next_?: SysCommand = new GetNameCmd;
     override readonly cmd: string = "generate"
     override readonly helpMsg: string = "generates a new Board"
+    override readonly visible: boolean = true
     override readonly specHelpMsg: string = `generate:
   starts the generation of a board
 

@@ -42,23 +42,10 @@ export default class Server implements Party.Server {
     const name = this.playerNames.get(sender.id)!;
     try {
       const args = message.split(" ");
-      console.log(args[1])
-      switch (args[0]) {
-        case "changeName":
-          console.log("server: name change");
-          this.setName(sender.id, args[1])
-          this.notifyObservers("names");
-          this.specNotify(sender.id, "myName"); return;
-        case "getNames":
-          console.log("server: get names");
-          this.specNotify(sender.id, "names"); return;
-        case "myName":
-          console.log("server: my name");
-          this.specNotify(sender.id, "myName"); return;
-      }
+      console.log(args);
       if (this.controller.isSysCmd(args[0])) {
-        this.controller.doSysCmd(sender.id, args);
         console.log("sysCmd")
+        this.controller.doSysCmd(sender.id, args);
       } else {
         this.controller.turn(sender.id, args[0], +args[1], +args[2]);
         console.log("turn")
