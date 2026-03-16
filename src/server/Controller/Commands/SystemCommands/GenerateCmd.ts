@@ -5,7 +5,7 @@ import {Running} from "../../state";
 import {GetNameCmd} from "./NameCmds";
 
 export class GenerateCmd extends SysCommand {
-    override readonly next_?: SysCommand = new GetNameCmd;
+    override readonly next_?: SysCommand = new GetNameCmd();
     override readonly cmd: string = "generate"
     override readonly helpMsg: string = "generates a new Board"
     override readonly visible: boolean = true

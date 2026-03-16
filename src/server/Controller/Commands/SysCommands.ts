@@ -17,12 +17,12 @@ export abstract class SysCommand implements Command{
     ): string | undefined
 
     getSysCmd(cmd: string): SysCommand | undefined {
-        if (cmd === this.cmd) {
+        if (cmd.toLowerCase() === this.cmd.toLowerCase()) {
             return this
-        } else if (!this.next_){
-            return undefined
+        } else if (this.next_){
+            return this.next_.getSysCmd(cmd)
         }
-        return this.next_?.getSysCmd(cmd)
+        return undefined
     }
 
     listCmds(): SysCommand[] {
@@ -33,7 +33,7 @@ export abstract class SysCommand implements Command{
     }
 }
 export abstract class InvisibleSysCommand extends SysCommand {
-    override readonly helpMsg: string = "";
-    override readonly specHelpMsg: string = "";
+    override readonly helpMsg: string = "invisible";
+    override readonly specHelpMsg: string = "invisible";
     override readonly visible: boolean = false;
 }

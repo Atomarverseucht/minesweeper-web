@@ -12,7 +12,7 @@ export class GetNameCmd extends InvisibleSysCommand {
     }
 }
 
-class MyNameCmd extends InvisibleSysCommand {
+export class MyNameCmd extends InvisibleSysCommand {
     override readonly cmd: string = "myName";
     override readonly next_ = new ChangeNameCmd();
 
@@ -23,7 +23,7 @@ class MyNameCmd extends InvisibleSysCommand {
     }
 }
 
-class ChangeNameCmd extends InvisibleSysCommand {
+export class ChangeNameCmd extends InvisibleSysCommand {
     override readonly cmd: string = "changeName";
     override readonly next_ = new ListCommandsCmd();
 
@@ -35,7 +35,7 @@ class ChangeNameCmd extends InvisibleSysCommand {
     }
 }
 
-class ListCommandsCmd extends InvisibleSysCommand {
+export class ListCommandsCmd extends InvisibleSysCommand {
     override readonly cmd: string = "listCommands";
     override readonly next_ = undefined;
 
