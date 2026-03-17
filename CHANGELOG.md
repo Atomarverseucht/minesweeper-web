@@ -1,3 +1,10 @@
+## [1.8.2-dev.1](https://github.com/Atomarverseucht/minesweeper-web/compare/1.8.1...1.8.2-dev.1) (2026-03-17)
+
+
+### Bug Fixes
+
+* removed useless file ([530de3f](https://github.com/Atomarverseucht/minesweeper-web/commit/530de3fe03f7f8abcfe7524c60286ed28c2c051f))
+
 ## [1.8.1](https://github.com/Atomarverseucht/minesweeper-web/compare/1.8.0...1.8.1) (2026-03-17)
 
 
