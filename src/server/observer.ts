@@ -5,8 +5,8 @@ export abstract class Observable {
     protected constructor(server: Server) {
         this.server = server;
     }
-    public notifyObservers(): void {
-        this.server.notifyObservers()
+    public notifyObservers(cmd?: string): void {
+        this.server.notifyObservers(cmd)
     }
     public specNotify(subID: string, cmd?: string, msg?: string): void {
         this.server.specNotify(subID, cmd, msg)

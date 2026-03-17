@@ -39,7 +39,7 @@ export class Controller extends Observable{
     }
 
     public isSysCmd(cmd: string): boolean {
-        return this.sysCmd.isSysCommand(cmd.toLowerCase())
+        return this.sysCmd.isSysCommand(cmd)
     }
 
     public doSysCmd(observerID: string, params: string[]): string | undefined {

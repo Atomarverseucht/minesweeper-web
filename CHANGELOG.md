@@ -1,3 +1,17 @@
+## [1.8.1-dev.2](https://github.com/Atomarverseucht/minesweeper-web/compare/1.8.1-dev.1...1.8.1-dev.2) (2026-03-16)
+
+
+### Bug Fixes
+
+* ignoring cases by cmds ([e2839b9](https://github.com/Atomarverseucht/minesweeper-web/commit/e2839b9224d30b079c6a5c1449b0b5909a980896))
+
+## [1.8.1-dev.1](https://github.com/Atomarverseucht/minesweeper-web/compare/1.8.0...1.8.1-dev.1) (2026-03-15)
+
+
+### Bug Fixes
+
+* removed useless files ([691cdb6](https://github.com/Atomarverseucht/minesweeper-web/commit/691cdb600632fa1296376e7a1c13dccf3f9a2ce2))
+
 # [1.8.0](https://github.com/Atomarverseucht/minesweeper-web/compare/1.7.0...1.8.0) (2026-03-14)
 
 
