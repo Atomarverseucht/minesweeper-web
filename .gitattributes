@@ -1,1 +1,1 @@
-*.tsx linguist-language=TypeScript/HTML
+*.tsx linguist-detectable=true
