@@ -1,3 +1,10 @@
+# [1.9.0-dev.1](https://github.com/Atomarverseucht/minesweeper-web/compare/1.8.2-dev.1...1.9.0-dev.1) (2026-03-23)
+
+
+### Features
+
+* Added cookies ([a716a71](https://github.com/Atomarverseucht/minesweeper-web/commit/a716a717fdf7dc4e22cdb59dea05201e42f24d15))
+
 ## [1.8.2-dev.1](https://github.com/Atomarverseucht/minesweeper-web/compare/1.8.1...1.8.2-dev.1) (2026-03-17)
 
 
