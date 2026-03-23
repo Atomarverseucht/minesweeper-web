@@ -17,7 +17,7 @@ export class OpenFieldCommand extends TurnCommand{
         return this.step(true);
     }
 
-    override undoStep(): cmdOut{
+    override undoStep(): cmdOut {
         return this.step(false);
     }
     private step(discover: boolean): cmdOut {

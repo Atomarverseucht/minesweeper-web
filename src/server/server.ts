@@ -39,7 +39,6 @@ export default class Server implements Party.Server {
 
   onMessage(message: string, sender: Party.Connection) {
     console.log(`connection ${sender.id} sent message: ${message}`);
-    const name = this.playerNames.get(sender.id)!;
     try {
       const args = message.split(" ");
       console.log(args);
@@ -55,11 +54,6 @@ export default class Server implements Party.Server {
     }
   }
 
-  increment() {
-    this.count = (this.count + 1) % 100;
-    this.partyRoom.broadcast(this.count.toString(), []);
-  }
-
   public notifyObservers(cmd = "update"): void {
     const payload = this.getPayload(cmd)
     this.partyRoom.broadcast(JSON.stringify(payload), []);
@@ -67,7 +61,6 @@ export default class Server implements Party.Server {
   }
 
   public specNotify(subID: string, cmd = "generate", msg?: string): void {
-
     const payload = this.getPayload(cmd, this.playerNames.get(subID), msg)
     this.partyRoom.getConnection(subID)?.send(JSON.stringify(payload));
   }
