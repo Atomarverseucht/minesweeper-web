@@ -4,6 +4,7 @@ import {RoomService} from "../roomService";
 import type {ServerPayload} from "../../types/Payload";
 import {Player} from "../../types/Player";
 import {Cookies} from "react-cookie"
+import {CookieConsent} from "react-cookie-consent";
 import type {CookieData} from "../../types/CookieData";
 
 type PlayerName = {
@@ -298,6 +299,7 @@ export default class GameUI extends Component<Record<string, never>, GameUIState
     };
 
     return (
+
       <section className="game-ui">
         <div className="toolbar" />
 
@@ -366,6 +368,9 @@ export default class GameUI extends Component<Record<string, never>, GameUIState
             <p className="name-empty">No names received yet.</p>
           )}
         </section>
+          <CookieConsent location="bottom" buttonText="I understand" overlay >
+          This website uses cookies to to enhance the user experience. Only technically necessary cookies are used.
+        </CookieConsent>
       </section>
     );
   }
