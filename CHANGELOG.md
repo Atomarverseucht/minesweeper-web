@@ -1,3 +1,10 @@
+# [1.9.0-dev.4](https://github.com/Atomarverseucht/minesweeper-web/compare/1.9.0-dev.3...1.9.0-dev.4) (2026-03-24)
+
+
+### Features
+
+* **Cookie:** new cookie format, now is the clientID captured! It finally works! 🥹 ([19093dc](https://github.com/Atomarverseucht/minesweeper-web/commit/19093dca522b2d14b296c8c1132868d4d5f93fe8))
+
 # [1.9.0-dev.3](https://github.com/Atomarverseucht/minesweeper-web/compare/1.9.0-dev.2...1.9.0-dev.3) (2026-03-24)
 
 
