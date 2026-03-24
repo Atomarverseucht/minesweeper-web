@@ -21,18 +21,16 @@ export default class Server implements Party.Server {
       `Connected:
   id: ${conn.id}
   room: ${this.partyRoom.id}
-  url: ${new URL(ctx.request.url).pathname}`,
-    );
-    this.setName(conn.id, `Player ${this.playerNumber.toString()}`)
-    this.playerNumber++
-    const payload = {
-      type: "init",
-      board: this.controller.getBoard(),
-      userCount: this.getOnlinePlayersCount(),
-      gameState: this.controller.gameState,
-      myName: this.playerNames.get(conn.id),
-      users: this.playerData.values(),
-    };
+  url: ${new URL(ctx.request.url).pathname}`);
+    if (this.playerData.has(conn.id)) {
+      let p = this.playerData.get(conn.id)!;
+      p.isOnline = true;
+      this.playerNames.set(conn.id, p.name);
+    } else {
+      this.setName(conn.id, `Player ${this.playerNumber.toString()}`)
+      this.playerNumber++
+    }
+    const payload = this.getPayload("init", this.playerNames.get(conn.id));
     conn.send(JSON.stringify(payload));
     this.notifyObservers("names");
   }
@@ -65,13 +63,17 @@ export default class Server implements Party.Server {
     this.partyRoom.getConnection(subID)?.send(JSON.stringify(payload));
   }
   public getPayload(cmd: string, subName?: string, msg?: string): ServerPayload {
+    const board = this.controller.getBoard();
+    const userCount = this.getOnlinePlayersCount();
+    const gameState = this.controller.gameState;
+    const users = Array.from(this.playerData.values()).filter(a => a.isOnline)
     switch (cmd) {
       case "generate":
         return {
           type: "generate",
-          board: this.controller.getBoard(),
-          userCount: this.getOnlinePlayersCount(),
-          gameState: this.controller.gameState,
+          board: board,
+          userCount: userCount,
+          gameState: gameState,
         };
       case "myName":
         return {
@@ -81,21 +83,30 @@ export default class Server implements Party.Server {
       case "names":
         return {
           type: "getNames",
-          users: Array.from(this.playerData.values()),
-          userCount: this.getOnlinePlayersCount()
+          users: users,
+          userCount: userCount
         };
       case "error":
         return {
           type: "error",
           gameState: msg!,
-        }
+        };
+      case "init":
+        return {
+          type: "init",
+          board: board,
+          userCount: userCount,
+          gameState: this.controller.gameState,
+          myName: subName,
+          users: users,
+      };
       default:
         return {
           type: "update",
-          board: this.controller.getBoard(),
-          userCount: this.getOnlinePlayersCount(),
+          board: board,
+          userCount: userCount,
           gameState: this.controller.gameState,
-          users: Array.from(this.playerData.values()),
+          users: users,
         };
     }
   }
@@ -116,10 +127,9 @@ export default class Server implements Party.Server {
     }
   }
   async onClose(connection: Party.Connection) {
-    // Hier Logik einfügen, z.B. aus der Map löschen
     console.log(`User ${this.playerNames.get(connection.id)} disconnected.`);
     this.playerNames.delete(connection.id);
-    this.playerData.delete(connection.id);
+    this.playerData.get(connection.id)!.isOnline = false;
     this.notifyObservers("names");
   }
 

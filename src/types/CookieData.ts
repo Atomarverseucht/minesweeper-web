@@ -1,4 +1,3 @@
 export type CookieData = {
-    name: string;
-    room: string;
+    clientID: string;
 }

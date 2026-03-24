@@ -6,6 +6,7 @@ import {Player} from "../../types/Player";
 import {Cookies} from "react-cookie"
 import {CookieConsent} from "react-cookie-consent";
 import type {CookieData} from "../../types/CookieData";
+import {v4 as uuid4} from "uuid";
 
 type PlayerName = {
   isSelf: boolean;
@@ -43,6 +44,7 @@ class BoardLayoutService {
 
 export default class GameUI extends Component<Record<string, never>, GameUIState> {
   private socket?: PartySocket = undefined;
+  private clientID?: string;
   readonly cookie = new Cookies();
   readonly initialCookie = this.cookie.get<CookieData>("minesweeper-web")
   private clearCopyHintTimeout?: number = undefined;
@@ -78,9 +80,22 @@ export default class GameUI extends Component<Record<string, never>, GameUIState
   }
 
   private connectSocket(): void {
+
+// generate uuid if not set via cookie
+    let id: string;
+    if (this.initialCookie) {
+      id = this.initialCookie.clientID;
+    } else {
+      id = uuid4();
+      const cdata: CookieData = {clientID: id}
+      this.cookie.set("minesweeper-web", cdata);
+    }
+
     this.socket = new PartySocket({
       host: window.location.host,
       room: this.state.roomId,
+      maxRetries: 0,
+      id: id,
     });
 
     this.socket.addEventListener("open", () => {
@@ -90,13 +105,8 @@ export default class GameUI extends Component<Record<string, never>, GameUIState
     this.socket.addEventListener("message", (event: MessageEvent) => {
       this.handleServerMessage(event.data);
     });
-
-    const c = this.initialCookie
-    if (c){
-      console.log("cookie ja")
-      this.socket.send(`changeName ${c.name}`)
-      console.log("cookie value:", c, typeof c);
-    }
+    const cdata: CookieData = {clientID: this.socket.id}
+    this.cookie.set("minesweeper-web", cdata);
   }
 
   private handleServerMessage(rawPayload: any): void {
@@ -270,8 +280,6 @@ export default class GameUI extends Component<Record<string, never>, GameUIState
       isEditingOwnName: false,
       statusText: "Name change sent.",
     });
-    const cdata: CookieData = {name: safeName, room: this.state.roomId}
-    this.cookie.set("minesweeper-web", cdata);
   };
 
   private handleOwnNameInputKeyDown = (event: KeyboardEvent<HTMLInputElement>): void => {
