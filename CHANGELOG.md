@@ -1,3 +1,10 @@
+# [1.9.0-dev.3](https://github.com/Atomarverseucht/minesweeper-web/compare/1.9.0-dev.2...1.9.0-dev.3) (2026-03-24)
+
+
+### Features
+
+* new title ([cb26fc1](https://github.com/Atomarverseucht/minesweeper-web/commit/cb26fc1b6f61ab726b53c435139657ab5232fbae))
+
 # [1.9.0-dev.2](https://github.com/Atomarverseucht/minesweeper-web/compare/1.9.0-dev.1...1.9.0-dev.2) (2026-03-24)
 
 
