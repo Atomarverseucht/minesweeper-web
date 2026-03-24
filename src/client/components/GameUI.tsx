@@ -2,9 +2,11 @@ import {Component, type CSSProperties, type KeyboardEvent, type MouseEvent} from
 import PartySocket from "partysocket";
 import {RoomService} from "../roomService";
 import type {ServerPayload} from "../../types/Payload";
-import {Simulate} from "react-dom/test-utils";
-import error = Simulate.error;
 import {Player} from "../../types/Player";
+import {Cookies} from "react-cookie"
+import {CookieConsent} from "react-cookie-consent";
+import type {CookieData} from "../../types/CookieData";
+import {v4 as uuid4} from "uuid";
 
 type PlayerName = {
   isSelf: boolean;
@@ -42,12 +44,13 @@ class BoardLayoutService {
 
 export default class GameUI extends Component<Record<string, never>, GameUIState> {
   private socket?: PartySocket = undefined;
-
+  private clientID?: string;
+  readonly cookie = new Cookies();
+  readonly initialCookie = this.cookie.get<CookieData>("minesweeper-web")
   private clearCopyHintTimeout?: number = undefined;
 
   public constructor(props: Record<string, never>) {
     super(props);
-
     this.state = {
       board: BoardLayoutService.fallbackBoard(10, 10),
       userCount: 0,
@@ -77,9 +80,22 @@ export default class GameUI extends Component<Record<string, never>, GameUIState
   }
 
   private connectSocket(): void {
+
+// generate uuid if not set via cookie
+    let id: string;
+    if (this.initialCookie) {
+      id = this.initialCookie.clientID;
+    } else {
+      id = uuid4();
+      const cdata: CookieData = {clientID: id}
+      this.cookie.set("minesweeper-web", cdata);
+    }
+
     this.socket = new PartySocket({
       host: window.location.host,
       room: this.state.roomId,
+      maxRetries: 0,
+      id: id,
     });
 
     this.socket.addEventListener("open", () => {
@@ -89,6 +105,8 @@ export default class GameUI extends Component<Record<string, never>, GameUIState
     this.socket.addEventListener("message", (event: MessageEvent) => {
       this.handleServerMessage(event.data);
     });
+    const cdata: CookieData = {clientID: this.socket.id}
+    this.cookie.set("minesweeper-web", cdata);
   }
 
   private handleServerMessage(rawPayload: any): void {
@@ -135,7 +153,6 @@ export default class GameUI extends Component<Record<string, never>, GameUIState
 
     if (payload.users) {
       this.applyNames(payload.users);
-      console.log("hi")
     }
   }
 
@@ -290,6 +307,7 @@ export default class GameUI extends Component<Record<string, never>, GameUIState
     };
 
     return (
+
       <section className="game-ui">
         <div className="toolbar" />
 
@@ -358,6 +376,9 @@ export default class GameUI extends Component<Record<string, never>, GameUIState
             <p className="name-empty">No names received yet.</p>
           )}
         </section>
+          <CookieConsent location="bottom" buttonText="I understand" overlay >
+          This website uses cookies to to enhance the user experience. Only technically necessary cookies are used.
+        </CookieConsent>
       </section>
     );
   }

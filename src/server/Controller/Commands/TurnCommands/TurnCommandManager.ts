@@ -55,10 +55,6 @@ class TurnCommandManager {
         return this.firstCommandCOR("server", -1, -1).getCmd(cmd);
     }
 
-    public startCmd(observerID: string, cmd: string, x: number, y: number): string {
-        return "hi 123"
-    }
-
     public buildCmd(observerID: string, cmd: string, x: number, y: number): TurnCommand | undefined {
         return this.firstCommandCOR(observerID, x, y).buildCmd(cmd)
     }
