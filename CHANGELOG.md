@@ -1,3 +1,18 @@
+# [1.9.0](https://github.com/Atomarverseucht/minesweeper-web/compare/1.8.1...1.9.0) (2026-03-24)
+
+
+### Bug Fixes
+
+* removed useless file ([530de3f](https://github.com/Atomarverseucht/minesweeper-web/commit/530de3fe03f7f8abcfe7524c60286ed28c2c051f))
+
+
+### Features
+
+* added cookie banner ([11e87bf](https://github.com/Atomarverseucht/minesweeper-web/commit/11e87bff1149905aec776d1b230efc93d0854b7e))
+* Added cookies ([a716a71](https://github.com/Atomarverseucht/minesweeper-web/commit/a716a717fdf7dc4e22cdb59dea05201e42f24d15))
+* **Cookie:** new cookie format, now is the clientID captured! It finally works! 🥹 ([19093dc](https://github.com/Atomarverseucht/minesweeper-web/commit/19093dca522b2d14b296c8c1132868d4d5f93fe8))
+* new title ([cb26fc1](https://github.com/Atomarverseucht/minesweeper-web/commit/cb26fc1b6f61ab726b53c435139657ab5232fbae))
+
 # [1.9.0-dev.4](https://github.com/Atomarverseucht/minesweeper-web/compare/1.9.0-dev.3...1.9.0-dev.4) (2026-03-24)
 
 
