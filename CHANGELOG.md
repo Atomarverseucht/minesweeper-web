@@ -1,3 +1,10 @@
+# [1.10.0-dev.2](https://github.com/Atomarverseucht/minesweeper-web/compare/1.10.0-dev.1...1.10.0-dev.2) (2026-03-25)
+
+
+### Features
+
+* **SysCmd:** new Command undo & redo ([e6337cc](https://github.com/Atomarverseucht/minesweeper-web/commit/e6337ccb0e4109c6dc59a11cf7d11544d28464fe))
+
 # [1.10.0-dev.1](https://github.com/Atomarverseucht/minesweeper-web/compare/1.9.0...1.10.0-dev.1) (2026-03-25)
 
 
