@@ -1,3 +1,10 @@
+# [1.10.0-dev.1](https://github.com/Atomarverseucht/minesweeper-web/compare/1.9.0...1.10.0-dev.1) (2026-03-25)
+
+
+### Features
+
+* **UI:** new SysCmd view ([9f37254](https://github.com/Atomarverseucht/minesweeper-web/commit/9f37254d6cbe145d58cf6dbc1204f3061ae07960))
+
 # [1.9.0](https://github.com/Atomarverseucht/minesweeper-web/compare/1.8.1...1.9.0) (2026-03-24)
 
 
