@@ -99,6 +99,7 @@ export default class Server implements Party.Server {
           gameState: this.controller.gameState,
           myName: subName,
           users: users,
+          sysCmds: this.controller.getSysCmdList()
       };
       default:
         return {

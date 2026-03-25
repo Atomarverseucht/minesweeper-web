@@ -1,4 +1,5 @@
 import type {Player} from "./Player";
+import type {Command} from "../server/Controller/Commands/commandInterfaces";
 
 export type ServerPayload = {
     type?: string;
@@ -8,4 +9,5 @@ export type ServerPayload = {
     gameState?: string;
     users?: Player[];
     myName?: string;
+    sysCmds?: Command[];
 };

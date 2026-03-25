@@ -7,6 +7,7 @@ import {Cookies} from "react-cookie"
 import {CookieConsent} from "react-cookie-consent";
 import type {CookieData} from "../../types/CookieData";
 import {v4 as uuid4} from "uuid";
+import type {Command} from "../../server/Controller/Commands/commandInterfaces";
 
 type PlayerName = {
   isSelf: boolean;
@@ -23,6 +24,7 @@ type GameUIState = {
   pendingName: string;
   isEditingOwnName: boolean;
   ownName: string;
+  sysCmds: Command[];
 };
 
 class BoardLayoutService {
@@ -61,6 +63,7 @@ export default class GameUI extends Component<Record<string, never>, GameUIState
       pendingName: "...",
       isEditingOwnName: false,
       ownName: "...",
+      sysCmds: [],
     };
   }
 
@@ -139,7 +142,9 @@ export default class GameUI extends Component<Record<string, never>, GameUIState
     } else if (payload.gameState === "lost") {
       this.setState({ statusText: "💥 Game over." });
     }
-
+    if (payload.sysCmds) {
+      this.setState({sysCmds: payload.sysCmds})
+    }
     const cmd = (payload.type ?? "").toLowerCase();
 
     const ownNameFromPayload = payload.myName;
@@ -324,6 +329,11 @@ export default class GameUI extends Component<Record<string, never>, GameUIState
           <span>Status: {statusText}</span>
         </div>
 
+        <div className="sysCmdList">
+          {this.state.sysCmds.map((cmd) => (
+              <button title={cmd.helpMsg}>{cmd.cmd}</button>
+          ))}
+        </div>
         <div className="board" style={boardStyle}>
           {board.map((column, x) =>
             column.map((value, y) => (
@@ -351,7 +361,7 @@ export default class GameUI extends Component<Record<string, never>, GameUIState
                   value={pendingName}
                   onChange={(event) => this.changePendingName(event.target.value)}
                   onKeyDown={this.handleOwnNameInputKeyDown}
-                  maxLength={24}
+                  maxLength={32}
                   autoFocus
                 />
                 <button type="button" onClick={this.saveOwnName}>Save</button>

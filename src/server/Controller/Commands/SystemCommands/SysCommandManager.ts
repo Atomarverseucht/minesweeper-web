@@ -21,7 +21,7 @@ export class SysCommandManager {
     }
 
     public getSysCmdList(): SysCommand[] {
-        return this.firstSysCommand.listCmds()
+        return this.firstSysCommand.listCmds().filter(cmd => cmd.visible)
     }
     public getAbstractCmd(cmd: string, ctrl: Controller): Command | undefined{
         const sysCmd = this.firstSysCommand.getSysCmd(cmd)

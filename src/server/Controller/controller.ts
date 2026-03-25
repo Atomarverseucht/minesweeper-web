@@ -6,6 +6,7 @@ import {SysCommandManager} from "./Commands/SystemCommands/SysCommandManager"
 import type Server from "../server";
 import {Config} from "../config";
 import type {Player} from "../../types/Player";
+import type {Command} from "./Commands/commandInterfaces";
 
 export class Controller extends Observable{
     public state: GameState = new Start(this)
@@ -62,8 +63,8 @@ export class Controller extends Observable{
         return this.state.gameState;
     }
 
-    public getSysCmdList(): string[] {
-        return [];//this.sysCmd.getSysCmdList.map(sys => sys.cmd);
+    public getSysCmdList(): Command[] {
+        return this.sysCmd.getSysCmdList();
     }
 
     public isVictory(): boolean {
