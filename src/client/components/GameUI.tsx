@@ -46,7 +46,6 @@ class BoardLayoutService {
 
 export default class GameUI extends Component<Record<string, never>, GameUIState> {
   private socket?: PartySocket = undefined;
-  private clientID?: string;
   readonly cookie = new Cookies();
   readonly initialCookie = this.cookie.get<CookieData>("minesweeper-web")
   private clearCopyHintTimeout?: number = undefined;
@@ -124,7 +123,6 @@ export default class GameUI extends Component<Record<string, never>, GameUIState
       if (e as Error) {
         console.log((e as Error).message);
       }
-      this.handleCommandMessage(rawPayload);
     }
   }
 
@@ -160,48 +158,6 @@ export default class GameUI extends Component<Record<string, never>, GameUIState
       this.applyNames(payload.users);
     }
   }
-
-  private handleCommandMessage(rawMessage: string): void {
-    const message = rawMessage.trim();
-    if (!message) {
-      return;
-    }
-
-    if (message.startsWith("myName")) {
-      const ownName = message.replace(/^myName[:\s]*/i, "").trim();
-      if (ownName) {
-        this.setOwnName(ownName);
-      }
-      return;
-    }
-
-    if (message.startsWith("getNames") || message.startsWith("notifyNames")) {
-      const rawNames = message.replace(/^(getNames|notifyNames)[:\s]*/i, "").trim();
-      if (!rawNames) {
-        return;
-      }
-
-      try {
-        this.applyNames(JSON.parse(rawNames));
-        return;
-      } catch {
-        return;
-      }
-    }
-
-    if (message.startsWith("changeName")) {
-      const updatedName = message.replace(/^changeName[:\s]*/i, "").trim();
-      if (updatedName) {
-        this.setOwnName(updatedName);
-      }
-      return;
-    }
-
-    if (!message.startsWith("{") && !message.includes(" ")) {
-      this.setOwnName(message);
-    }
-  }
-
 
   private setOwnName(nextOwnName: string): void {
     this.setState((prevState) => ({
