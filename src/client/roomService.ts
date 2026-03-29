@@ -25,4 +25,19 @@ export class RoomService {
     public static buildRoomLink(roomId: string): string {
         return `${window.location.origin}${window.location.pathname}?room=${encodeURIComponent(roomId)}`;
     }
+
+    public static getParams(): PageParams {
+        const url = new URL(window.location.href);
+        return {
+            page:   url.searchParams.get("page")   ?? "room",
+            roomId: url.searchParams.get("room")   ?? "",
+            cmd:    url.searchParams.get("cmd")    ?? undefined,
+        };
+    }
+}
+
+export type PageParams = {
+    page: string;
+    roomId: string;
+    cmd?: string;
 }
