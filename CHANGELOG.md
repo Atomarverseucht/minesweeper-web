@@ -1,3 +1,10 @@
+# [1.10.0-dev.4](https://github.com/Atomarverseucht/minesweeper-web/compare/1.10.0-dev.3...1.10.0-dev.4) (2026-03-29)
+
+
+### Bug Fixes
+
+* a little bit of restyle ([9143dcd](https://github.com/Atomarverseucht/minesweeper-web/commit/9143dcd45aab28422af1dee4e97f8d9f6b593644))
+
 # [1.10.0-dev.3](https://github.com/Atomarverseucht/minesweeper-web/compare/1.10.0-dev.2...1.10.0-dev.3) (2026-03-29)
 
 
