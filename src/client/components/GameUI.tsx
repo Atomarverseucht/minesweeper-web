@@ -1,11 +1,11 @@
 import {Component, type CSSProperties, type KeyboardEvent, type MouseEvent} from "react";
 import PartySocket from "partysocket";
 import {RoomService} from "../roomService";
-import type {ServerPayload} from "../../types/Payload";
-import {Player} from "../../types/Player";
+import type {ServerPayload} from "../../shared/Payload";
+import {Player} from "../../shared/Player";
 import {Cookies} from "react-cookie"
 import {CookieConsent} from "react-cookie-consent";
-import type {CookieData} from "../../types/CookieData";
+import type {CookieData} from "../../shared/CookieData";
 import {v4 as uuid4} from "uuid";
 import type {Command} from "../../server/Controller/Commands/commandInterfaces";
 

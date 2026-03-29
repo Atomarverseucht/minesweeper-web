@@ -1,4 +1,3 @@
-const ROOM_ID_PATTERN = /(?:\?|&|\/)room=([A-Za-z0-9_-]+)/;
 export class RoomService {
     public static createRoomId(length = 8): string {
         const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
@@ -12,7 +11,7 @@ export class RoomService {
             return queryRoom;
         }
 
-        const pathRoom = window.location.href.match(ROOM_ID_PATTERN)?.[1];
+        const pathRoom = url.searchParams.get("room")!;
         if (pathRoom) {
             return pathRoom;
         }

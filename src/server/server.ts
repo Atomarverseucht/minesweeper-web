@@ -1,8 +1,8 @@
 import type * as Party from "partykit/server";
 import { Controller } from "./Controller/controller";
 import BiMap from 'bidirectional-map'
-import type {ServerPayload} from "../types/Payload";
-import {Player} from "../types/Player";
+import type {ServerPayload} from "../shared/Payload";
+import {Player} from "../shared/Player";
 
 export default class Server implements Party.Server {
   count = 0;
@@ -113,20 +113,9 @@ export default class Server implements Party.Server {
   }
 
   public getOnlinePlayersCount(): number {
-    let count = 0;
-    for (const _ of this.getActiveConnections()) {
-      count++;
-    }
-    return count;
+    return Array.from(this.playerData.values()).filter(p => p.isOnline).length;
   }
 
-  public *getActiveConnections(tag?: string): Iterable<Party.Connection> {
-    for (const conn of this.partyRoom.getConnections(tag)) {
-      if (conn && conn.readyState === WebSocket.OPEN) {
-        yield conn;
-      }
-    }
-  }
   async onClose(connection: Party.Connection) {
     console.log(`User ${this.playerNames.get(connection.id)} disconnected.`);
     this.playerNames.delete(connection.id);
