@@ -1,3 +1,10 @@
+# [1.10.0-dev.3](https://github.com/Atomarverseucht/minesweeper-web/compare/1.10.0-dev.2...1.10.0-dev.3) (2026-03-29)
+
+
+### Bug Fixes
+
+* new name for "types" -> "shared" ([222dbfb](https://github.com/Atomarverseucht/minesweeper-web/commit/222dbfb9cd9efe7322a8322a2ffd48fa66998ad2))
+
 # [1.10.0-dev.2](https://github.com/Atomarverseucht/minesweeper-web/compare/1.10.0-dev.1...1.10.0-dev.2) (2026-03-25)
 
 
