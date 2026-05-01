@@ -1,3 +1,10 @@
+# [1.10.0-dev.5](https://github.com/Atomarverseucht/minesweeper-web/compare/1.10.0-dev.4...1.10.0-dev.5) (2026-05-01)
+
+
+### Bug Fixes
+
+* cookies are now used across rooms ([96ba4e4](https://github.com/Atomarverseucht/minesweeper-web/commit/96ba4e4189688dcfd205564fc28c8138911343fc))
+
 # [1.10.0-dev.4](https://github.com/Atomarverseucht/minesweeper-web/compare/1.10.0-dev.3...1.10.0-dev.4) (2026-03-29)
 
 
