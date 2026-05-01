@@ -1,3 +1,10 @@
+# [1.10.0-dev.6](https://github.com/Atomarverseucht/minesweeper-web/compare/1.10.0-dev.5...1.10.0-dev.6) (2026-05-01)
+
+
+### Bug Fixes
+
+* sys cmds without parameters now work ([f5d3a3e](https://github.com/Atomarverseucht/minesweeper-web/commit/f5d3a3ebed829e03920fcd1ed39eb09a95e8d192))
+
 # [1.10.0-dev.5](https://github.com/Atomarverseucht/minesweeper-web/compare/1.10.0-dev.4...1.10.0-dev.5) (2026-05-01)
 
 
