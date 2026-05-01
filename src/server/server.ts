@@ -1,6 +1,5 @@
 import type * as Party from "partykit/server";
 import { Controller } from "./Controller/controller";
-import BiMap from 'bidirectional-map'
 import type {ServerPayload} from "../shared/Payload";
 import {Player} from "../shared/Player";
 
@@ -8,7 +7,7 @@ export default class Server implements Party.Server {
   count = 0;
   playerNumber = 1
   readonly controller: Controller;
-  playerNames = new BiMap<string>();
+  playerNames = new Map<string, string>();
   playerData = new Map<string, Player>();
 
   constructor(readonly partyRoom: Party.Room) {
@@ -18,14 +17,18 @@ export default class Server implements Party.Server {
   // Initial
   onConnect(conn: Party.Connection, ctx: Party.ConnectionContext) {
     console.log(
-      `Connected:
+        `Connected:
   id: ${conn.id}
   room: ${this.partyRoom.id}
-  url: ${new URL(ctx.request.url).pathname}`);
+  url: ${new URL(ctx.request.url)}`);
+    const name: string | null = new URL(conn.uri).searchParams.get("name");
     if (this.playerData.has(conn.id)) {
       let p = this.playerData.get(conn.id)!;
       p.isOnline = true;
       this.playerNames.set(conn.id, p.name);
+    } else if (name) {
+      console.log(name)
+      this.setName(conn.id, name);
     } else {
       this.setName(conn.id, `Player ${this.playerNumber.toString()}`)
       this.playerNumber++

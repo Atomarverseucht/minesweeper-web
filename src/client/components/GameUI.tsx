@@ -47,7 +47,7 @@ class BoardLayoutService {
 export default class GameUI extends Component<Record<string, never>, GameUIState> {
   private socket?: PartySocket = undefined;
   readonly cookie = new Cookies();
-  readonly initialCookie = this.cookie.get<CookieData>("minesweeper-web")
+  readonly initialCookie? = this.cookie.get<CookieData>("minesweeper-web")
   private clearCopyHintTimeout?: number = undefined;
 
   public constructor(props: Record<string, never>) {
@@ -61,7 +61,7 @@ export default class GameUI extends Component<Record<string, never>, GameUIState
       playerNames: [],
       pendingName: "...",
       isEditingOwnName: false,
-      ownName: "...",
+      ownName: "",
       sysCmds: [],
     };
   }
@@ -83,14 +83,15 @@ export default class GameUI extends Component<Record<string, never>, GameUIState
 
   private connectSocket(): void {
 
-// generate uuid if not set via cookie
+    // generate uuid if not set via cookie
     let id: string;
+    let myName: string | undefined = undefined;
     if (this.initialCookie) {
       id = this.initialCookie.clientID;
+      myName = this.initialCookie.playerName;
+      console.log(myName);
     } else {
       id = uuid4();
-      const cdata: CookieData = {clientID: id}
-      this.cookie.set("minesweeper-web", cdata);
     }
 
     this.socket = new PartySocket({
@@ -98,6 +99,9 @@ export default class GameUI extends Component<Record<string, never>, GameUIState
       room: this.state.roomId,
       maxRetries: 0,
       id: id,
+      query: {
+        name: myName
+      }
     });
 
     this.socket.addEventListener("open", () => {
@@ -107,15 +111,12 @@ export default class GameUI extends Component<Record<string, never>, GameUIState
     this.socket.addEventListener("message", (event: MessageEvent) => {
       this.handleServerMessage(event.data);
     });
-    const cdata: CookieData = {clientID: this.socket.id}
-    this.cookie.set("minesweeper-web", cdata);
   }
 
   private handleServerMessage(rawPayload: any): void {
     if (typeof rawPayload !== "string") {
       return;
     }
-
     try {
       const payload: ServerPayload = JSON.parse(rawPayload);
       this.handleJsonPayload(payload);
@@ -170,6 +171,8 @@ export default class GameUI extends Component<Record<string, never>, GameUIState
         return { ...entry, isSelf: entry.player.name === nextOwnName };
       }),
     }));
+    const cdata: CookieData = {clientID: this.socket!.id, playerName: nextOwnName};
+    this.cookie.set("minesweeper-web", cdata);
   }
 
   private applyNames(rawNames: Player[]): void {
