@@ -260,6 +260,10 @@ export default class GameUI extends Component<Record<string, never>, GameUIState
     }));
   };
 
+  private handleSysCommand(cmd: string): void {
+    this.socket!.send(`${cmd}`);
+  }
+
   public render() {
     const { board, userCount, statusText, roomId, copyHint, playerNames, ownName, pendingName, isEditingOwnName } = this.state;
     const [width, height] = BoardLayoutService.getDimensions(board);
@@ -290,7 +294,7 @@ export default class GameUI extends Component<Record<string, never>, GameUIState
 
         <div className="sysCmdList">
           {this.state.sysCmds.map((cmd) => (
-              <button title={cmd.helpMsg}>{cmd.cmd}</button>
+              <button title={cmd.helpMsg} onClick={() => this.handleSysCommand(cmd.cmd)}> {cmd.cmd}  </button>
           ))}
         </div>
         <div className="board" style={boardStyle}>
