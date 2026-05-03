@@ -61,7 +61,7 @@ export default class GameUI extends Component<Record<string, never>, GameUIState
       playerNames: [],
       pendingName: "...",
       isEditingOwnName: false,
-      ownName: "",
+      ownName: "(no name set)",
       sysCmds: [],
     };
   }
@@ -275,10 +275,7 @@ export default class GameUI extends Component<Record<string, never>, GameUIState
     };
 
     return (
-
       <section className="game-ui">
-        <div className="toolbar" />
-
         <div className="game-meta">
           <span>
             Room:{" "}
@@ -292,9 +289,9 @@ export default class GameUI extends Component<Record<string, never>, GameUIState
           <span>Status: {statusText}</span>
         </div>
 
-        <div className="sysCmdList">
+        <div className="toolbar">
           {this.state.sysCmds.map((cmd) => (
-              <button title={cmd.helpMsg} onClick={() => this.handleSysCommand(cmd.cmd)}> {cmd.cmd}  </button>
+              <button title={cmd.helpMsg} onClick={() => this.handleSysCommand(cmd.cmd)}> {cmd.cmd} </button>
           ))}
         </div>
         <div className="board" style={boardStyle}>
@@ -314,7 +311,6 @@ export default class GameUI extends Component<Record<string, never>, GameUIState
         </div>
 
         <section className="name-panel" aria-label="Player names">
-          <h2>Players</h2>
           <div className="own-name-row">
             <span>Your name:</span>
             {isEditingOwnName ? (
@@ -332,7 +328,7 @@ export default class GameUI extends Component<Record<string, never>, GameUIState
               </div>
             ) : (
               <button type="button" className="own-name" onClick={this.startEditingOwnName} title="Click to edit">
-                {ownName || "(no name set)"}
+                {ownName}
               </button>
             )}
           </div>
