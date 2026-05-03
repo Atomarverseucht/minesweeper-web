@@ -1,3 +1,10 @@
+# [1.10.0-dev.7](https://github.com/Atomarverseucht/minesweeper-web/compare/1.10.0-dev.6...1.10.0-dev.7) (2026-05-03)
+
+
+### Features
+
+* hand-written css ([cbba129](https://github.com/Atomarverseucht/minesweeper-web/commit/cbba129cbdc5459733662c4ec586e905d94cdae4))
+
 # [1.10.0-dev.6](https://github.com/Atomarverseucht/minesweeper-web/compare/1.10.0-dev.5...1.10.0-dev.6) (2026-05-01)
 
 
