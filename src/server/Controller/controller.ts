@@ -6,7 +6,7 @@ import {SysCommandManager} from "./Commands/SystemCommands/SysCommandManager"
 import type Server from "../server";
 import {Config} from "../config";
 import type {Player} from "../../shared/Player";
-import type {Command} from "./Commands/commandInterfaces";
+import type {Command} from "../../shared/AbstractCommand";
 
 export class Controller extends Observable{
     public state: GameState = new Start(this)

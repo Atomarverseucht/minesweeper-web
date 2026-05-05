@@ -7,7 +7,7 @@ import {Cookies} from "react-cookie"
 import {CookieConsent} from "react-cookie-consent";
 import type {CookieData} from "../../shared/CookieData";
 import {v4 as uuid4} from "uuid";
-import type {Command} from "../../server/Controller/Commands/commandInterfaces";
+import type {Command} from "../../shared/AbstractCommand";
 
 type PlayerName = {
   isSelf: boolean;
@@ -279,7 +279,7 @@ export default class GameUI extends Component<Record<string, never>, GameUIState
         <div className="game-meta">
           <span>
             Room:{" "}
-            <button type="button" className="room-code" onClick={this.copyRoomLink} title="copy room link">
+            <button type="button" className="room-code visibleButton" onClick={this.copyRoomLink} title="copy room link">
               <code>{roomId}</code>
             </button>
             {copyHint ? <small className="copy-hint">{copyHint}</small> : undefined}
@@ -300,6 +300,7 @@ export default class GameUI extends Component<Record<string, never>, GameUIState
               <button
                 key={`${x}-${y}`}
                 type="button"
+                id={`field(${x}, ${y})`}
                 className="cell"
                 onClick={() => this.handlePrimaryClick(x, y)}
                 onContextMenu={(event) => this.handleSecondaryClick(event, x, y)}
@@ -327,7 +328,7 @@ export default class GameUI extends Component<Record<string, never>, GameUIState
                 <button type="button" onClick={this.cancelOwnNameEdit}>Cancel</button>
               </div>
             ) : (
-              <button type="button" className="own-name" onClick={this.startEditingOwnName} title="Click to edit">
+              <button type="button" className="own-name visibleButton" onClick={this.startEditingOwnName} title="Click to edit">
                 {ownName}
               </button>
             )}

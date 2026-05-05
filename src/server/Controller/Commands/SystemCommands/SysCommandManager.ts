@@ -1,7 +1,7 @@
 import type {SysCommand} from "../SysCommands"
 import {GenerateCmd} from "./GenerateCmd"
 import type {Controller} from "../../controller"
-import type {Command} from "../commandInterfaces"
+import type {Command} from "../../../../shared/AbstractCommand";
 
 export class SysCommandManager {
     readonly firstSysCommand = new GenerateCmd()

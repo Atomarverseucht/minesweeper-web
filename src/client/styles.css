@@ -5,10 +5,15 @@ body {
   color: #e2e8f0;
   background: radial-gradient(circle at top, #1e293b 0%, #0f172a 55%);
 }
-.room-code {
+.visibleButton {
   background-color: transparent;
   color: white;
   border: 1px solid white;
+  border-radius: 10px;
+  padding: 0.5rem;
+  :hover {
+    color: yellow;
+  }
 }
 a { color: white; }
 main {
@@ -16,50 +21,47 @@ main {
 }
 .game-meta {
   display: flex;
-  * {
-    padding: 10px;
-  }
   max-width: 100%;
   max-height: 100%;
+}
+.toolbar {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
 }
 .board {
   display: grid;
   grid-template-columns: repeat(10, 1fr);
   grid-template-rows: repeat(10, 1fr);
-  .cell{
+  .cell {
     padding: 0;
     background-color: transparent;
-    img{
+    img {
       max-width: 100%;
       max-height: 100%;
     }
   }
+  margin-bottom: 0.5rem;
 }
 
-.game-ui{
+.game-ui {
   background-color: #0b1220;
   border: 3px solid #334155;
   border-radius: 2vmin;
   padding: 1rem;
 }
 
-.name-panel{
+.name-panel {
   border: 2px solid #334155;
   border-radius: 1vmin;
   background-color:  #1e293b;
   padding: 1rem;
 }
 
-input {
-  background-color: transparent;
-}
-
-.own-name {
-  background-color: transparent;
-  color: white;
-  border: 1px solid white;
-  padding: 0.5rem;
-}
 span {
   padding: 0.5rem;
+}
+
+button {
+  cursor: pointer;
 }

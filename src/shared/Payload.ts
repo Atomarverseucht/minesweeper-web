@@ -1,5 +1,5 @@
 import type {Player} from "./Player";
-import type {Command} from "../server/Controller/Commands/commandInterfaces";
+import type {Command} from "./AbstractCommand";
 
 export type ServerPayload = {
     type?: string;

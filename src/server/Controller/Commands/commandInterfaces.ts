@@ -1,11 +1,7 @@
 import type {Controller} from "../controller"
 import type {cmdOut} from "../../config"
+import type {Command} from "../../../shared/AbstractCommand";
 
-export interface Command {
-    readonly cmd: string
-    readonly helpMsg: string
-    readonly specHelpMsg: string
-}
 export abstract class TurnCommand implements Command {
     // from the abstract Command
     abstract readonly helpMsg: string
@@ -34,7 +30,7 @@ export abstract class TurnCommand implements Command {
     };
     public listCmds(): TurnCommand[] {
         if (this.next_){
-            var cmdList: TurnCommand[] = this.next_.listCmds()
+            let cmdList: TurnCommand[] = this.next_.listCmds()
             cmdList.push(this)
             return cmdList
         } else return [this]
