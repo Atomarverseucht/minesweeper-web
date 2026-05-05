@@ -1,3 +1,10 @@
+# [1.10.0-dev.8](https://github.com/Atomarverseucht/minesweeper-web/compare/1.10.0-dev.7...1.10.0-dev.8) (2026-05-05)
+
+
+### Bug Fixes
+
+* better css ([d8e29f1](https://github.com/Atomarverseucht/minesweeper-web/commit/d8e29f1c15e8d6280074647d62b9a827c7f11c78))
+
 # [1.10.0-dev.7](https://github.com/Atomarverseucht/minesweeper-web/compare/1.10.0-dev.6...1.10.0-dev.7) (2026-05-03)
 
 
