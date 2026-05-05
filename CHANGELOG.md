@@ -1,3 +1,10 @@
+# [1.10.0-dev.9](https://github.com/Atomarverseucht/minesweeper-web/compare/1.10.0-dev.8...1.10.0-dev.9) (2026-05-05)
+
+
+### Bug Fixes
+
+* abstract cmd now in shared, better css ([c02c209](https://github.com/Atomarverseucht/minesweeper-web/commit/c02c209d3b16b21c0ab10d68b41226d45287113c))
+
 # [1.10.0-dev.8](https://github.com/Atomarverseucht/minesweeper-web/compare/1.10.0-dev.7...1.10.0-dev.8) (2026-05-05)
 
 
