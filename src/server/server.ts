@@ -1,13 +1,14 @@
 import type * as Party from "partykit/server";
 import { Controller } from "./Controller/controller";
-import type {ServerPayload} from "../shared/Payload";
+import type { ServerPayload} from "../shared/Payload";
 import {Player} from "../shared/Player";
+import {v4 as uuid4} from "uuid";
 
 export default class Server implements Party.Server {
   count = 0;
   playerNumber = 1
   readonly controller: Controller;
-  playerNames = new Map<string, string>();
+  playerIds = new Map<string, string>();
   playerData = new Map<string, Player>();
 
   constructor(readonly partyRoom: Party.Room) {
@@ -16,16 +17,12 @@ export default class Server implements Party.Server {
 
   // Initial
   onConnect(conn: Party.Connection, ctx: Party.ConnectionContext) {
-    console.log(
-        `Connected:
-  id: ${conn.id}
-  room: ${this.partyRoom.id}
-  url: ${new URL(ctx.request.url)}`);
+    console.log(`Connected: id: ${conn.id}, room: ${this.partyRoom.id}, url: ${new URL(ctx.request.url)}`);
     const name: string | null = new URL(conn.uri).searchParams.get("name");
     if (this.playerData.has(conn.id)) {
       let p = this.playerData.get(conn.id)!;
       p.isOnline = true;
-      this.playerNames.set(conn.id, p.name);
+      this.playerIds.set(p.id, conn.id);
     } else if (name) {
       console.log(name)
       this.setName(conn.id, name);
@@ -33,7 +30,7 @@ export default class Server implements Party.Server {
       this.setName(conn.id, `Player ${this.playerNumber.toString()}`)
       this.playerNumber++
     }
-    const payload = this.getPayload("init", this.playerNames.get(conn.id));
+    const payload = this.getPayload("init", this.playerData.get(conn.id)!.id);
     conn.send(JSON.stringify(payload));
     this.notifyObservers("names");
   }
@@ -62,7 +59,7 @@ export default class Server implements Party.Server {
   }
 
   public specNotify(subID: string, cmd = "generate", msg?: string): void {
-    const payload = this.getPayload(cmd, this.playerNames.get(subID), msg)
+    const payload = this.getPayload(cmd, this.playerData.get(subID)!.id, msg)
     this.partyRoom.getConnection(subID)?.send(JSON.stringify(payload));
   }
   public getPayload(cmd: string, subName?: string, msg?: string): ServerPayload {
@@ -81,7 +78,7 @@ export default class Server implements Party.Server {
       case "myName":
         return {
           type: "myName",
-          myName: subName!
+          myId: subName!
         }
       case "names":
         return {
@@ -100,7 +97,7 @@ export default class Server implements Party.Server {
           board: board,
           userCount: userCount,
           gameState: this.controller.gameState,
-          myName: subName,
+          myId: subName,
           users: users,
           sysCmds: this.controller.getSysCmdList()
       };
@@ -120,18 +117,18 @@ export default class Server implements Party.Server {
   }
 
   async onClose(connection: Party.Connection) {
-    console.log(`User ${this.playerNames.get(connection.id)} disconnected.`);
-    this.playerNames.delete(connection.id);
-    this.playerData.get(connection.id)!.isOnline = false;
+    let p = this.playerData.get(connection.id)!;
+    console.log(`User ${p.name} disconnected.`);
+    this.playerIds.delete(p.id);
+    p.isOnline = false;
     this.notifyObservers("names");
   }
 
   public setName(subID: string, name: string): void {
-    if(Array.from(this.playerNames.values()).filter(p => p === name).length <= 0){
-      this.playerNames.set(subID, name);
+    if(Array.from(this.playerData.values()).filter(p => p.name === name).length <= 0){
       const n = this.playerData.get(subID);
       if (n) {n.name = name;}
-      else this.playerData.set(subID, new Player(name))
+      else this.playerData.set(subID, new Player(name, uuid4()))
     }
   }
 }

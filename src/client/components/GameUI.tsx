@@ -24,7 +24,10 @@ type GameUIState = {
   pendingName: string;
   isEditingOwnName: boolean;
   ownName: string;
+  ownId: string;
   sysCmds: Command[];
+  cmdLine?: Command;
+  cmdLineContent?: string;
 };
 
 class BoardLayoutService {
@@ -62,6 +65,7 @@ export default class GameUI extends Component<Record<string, never>, GameUIState
       pendingName: "...",
       isEditingOwnName: false,
       ownName: "(no name set)",
+      ownId: "...",
       sysCmds: [],
     };
   }
@@ -132,7 +136,7 @@ export default class GameUI extends Component<Record<string, never>, GameUIState
       this.setState({ board: payload.board });
     }
 
-    if (typeof payload.userCount === "number") {
+    if (payload.userCount) {
       this.setState({ userCount: payload.userCount });
     }
 
@@ -144,19 +148,12 @@ export default class GameUI extends Component<Record<string, never>, GameUIState
     if (payload.sysCmds) {
       this.setState({sysCmds: payload.sysCmds})
     }
-    const cmd = (payload.type ?? "").toLowerCase();
-
-    const ownNameFromPayload = payload.myName;
-    if (typeof ownNameFromPayload === "string" && ownNameFromPayload.trim()) {
-      this.setOwnName(ownNameFromPayload.trim());
+    if (payload.myId) {
+      this.setState({ ownId: payload.myId });
     }
-
-    if (cmd === "myName") {
-      this.setOwnName(payload.myName!);
-    }
-
     if (payload.users) {
       this.applyNames(payload.users);
+      this.setOwnName(payload.users.find(p => p.id === this.state.ownId)?.name ?? "ERRÖR")
     }
   }
 
@@ -260,12 +257,21 @@ export default class GameUI extends Component<Record<string, never>, GameUIState
     }));
   };
 
-  private handleSysCommand(cmd: string): void {
-    this.socket!.send(`${cmd}`);
+  private handleSysCommand(cmd: Command): void {
+    if (!cmd.hasCmdLine) {
+      this.socket!.send(`${cmd.cmd}`);
+    } else {
+      this.setState({cmdLine: cmd})
+    }
+  }
+
+  private handleSpecSysCommand(cmd: string, params: string): void {
+    let outString = cmd + " " + params;
+    this.socket!.send(outString);
   }
 
   public render() {
-    const { board, userCount, statusText, roomId, copyHint, playerNames, ownName, pendingName, isEditingOwnName } = this.state;
+    const { board, userCount, statusText, roomId, copyHint, playerNames, ownName, pendingName, isEditingOwnName, cmdLine } = this.state;
     const [width, height] = BoardLayoutService.getDimensions(board);
     const cellSize = BoardLayoutService.getCellSize(width, height);
 
@@ -291,26 +297,36 @@ export default class GameUI extends Component<Record<string, never>, GameUIState
 
         <div className="toolbar">
           {this.state.sysCmds.map((cmd) => (
-              <button title={cmd.helpMsg} onClick={() => this.handleSysCommand(cmd.cmd)}> {cmd.cmd} </button>
+              <button title={cmd.helpMsg} onClick={() => this.handleSysCommand(cmd)}> {cmd.cmd} </button>
           ))}
         </div>
-        <div className="board" style={boardStyle}>
-          {board.map((column, x) =>
-            column.map((value, y) => (
-              <button
-                key={`${x}-${y}`}
-                type="button"
-                id={`field(${x}, ${y})`}
-                className="cell"
-                onClick={() => this.handlePrimaryClick(x, y)}
-                onContextMenu={(event) => this.handleSecondaryClick(event, x, y)}
-                title={`(${x}, ${y})`} >
-                <img src={`/assets/fields/${value}.png`} alt={`Cell value ${value}`} draggable={false} />
-              </button>
-            ))
-          )}
-        </div>
-
+        <section id="gridCmdLine">
+          <div className="board" style={boardStyle}>
+            {board.map((column, x) =>
+              column.map((value, y) => (
+                <button
+                  key={`${x}-${y}`}
+                  type="button"
+                  id={`field(${x}, ${y})`}
+                  className="cell"
+                  onClick={() => this.handlePrimaryClick(x, y)}
+                  onContextMenu={(event) => this.handleSecondaryClick(event, x, y)}
+                  title={`(${x}, ${y})`} >
+                  <img src={`/assets/fields/${value}.png`} alt={`Cell value ${value}`} draggable={false} />
+                </button>
+              ))
+            )}
+          </div>
+          { cmdLine ?
+              <section id="secCmdLine">
+                <label className="allowNewLine">{cmdLine.specHelpMsg}</label>
+                <input id="cmdLine" value={this.state.cmdLineContent} onChange={event => this.setState({ cmdLineContent: event.target.value })}/>
+                <button
+                    onClick={() => this.handleSpecSysCommand(cmdLine.cmd, this.state.cmdLineContent ?? "")}
+                ></button>
+              </section> : null
+          }
+        </section>
         <section className="name-panel" aria-label="Player names">
           <div className="own-name-row">
             <span>Your name:</span>

@@ -2,7 +2,7 @@ import type {TurnCommand} from "../commandInterfaces"
 import type {Controller} from "../../controller";
 import {FlagCommand} from "./FlagCommand"
 
-class TurnCommandManager {
+export class TurnCommandManager {
     private undoStack: TurnCommand[] = [];
     private redoStack: TurnCommand[] = [];
     private firstCommandCOR(obsID: string, x: number, y: number) {
@@ -59,5 +59,3 @@ class TurnCommandManager {
         return this.firstCommandCOR(observerID, x, y).buildCmd(cmd)
     }
 }
-
-export default TurnCommandManager

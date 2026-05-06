@@ -1,7 +1,7 @@
 import {Board} from "../Model/Board"
 import {type GameState, Lost, Running, Start} from "./state"
 import {Observable} from "../observer";
-import TurnCommandManager from "./Commands/TurnCommands/TurnCommandManager"
+import {TurnCommandManager} from "./Commands/TurnCommands/TurnCommandManager"
 import {SysCommandManager} from "./Commands/SystemCommands/SysCommandManager"
 import type Server from "../server";
 import {Config} from "../config";

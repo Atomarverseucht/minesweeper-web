@@ -7,6 +7,7 @@ export abstract class TurnCommand implements Command {
     abstract readonly helpMsg: string
     abstract readonly specHelpMsg: string
     abstract readonly cmd: string
+    hasCmdLine = false
 
     readonly ctrl: Controller
     readonly observerID: string

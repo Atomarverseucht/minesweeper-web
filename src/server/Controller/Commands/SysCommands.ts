@@ -8,6 +8,7 @@ export abstract class SysCommand implements Command{
     abstract readonly helpMsg: string
     abstract readonly specHelpMsg: string
     abstract readonly visible: boolean
+    readonly hasCmdLine: boolean = false
 
     abstract readonly next_?: SysCommand
 

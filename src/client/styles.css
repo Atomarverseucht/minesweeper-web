@@ -29,6 +29,13 @@ main {
   gap: 0.5rem;
   margin-bottom: 0.5rem;
 }
+#gridCmdLine {
+  display: grid;
+  grid-template-columns: 50vw 50vw;
+}
+.allowNewLine {
+  white-space: pre-line;
+}
 .board {
   display: grid;
   grid-template-columns: repeat(10, 1fr);
