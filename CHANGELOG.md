@@ -1,3 +1,10 @@
+# [1.10.0-dev.10](https://github.com/Atomarverseucht/minesweeper-web/compare/1.10.0-dev.9...1.10.0-dev.10) (2026-05-06)
+
+
+### Bug Fixes
+
+* added frontend ids ([1a72ca3](https://github.com/Atomarverseucht/minesweeper-web/commit/1a72ca305181180e9559d50bec539d99a224e4eb))
+
 # [1.10.0-dev.9](https://github.com/Atomarverseucht/minesweeper-web/compare/1.10.0-dev.8...1.10.0-dev.9) (2026-05-05)
 
 
