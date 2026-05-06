@@ -24,6 +24,7 @@ type GameUIState = {
   pendingName: string;
   isEditingOwnName: boolean;
   ownName: string;
+  ownId: string;
   sysCmds: Command[];
 };
 
@@ -62,6 +63,7 @@ export default class GameUI extends Component<Record<string, never>, GameUIState
       pendingName: "...",
       isEditingOwnName: false,
       ownName: "(no name set)",
+      ownId: "...",
       sysCmds: [],
     };
   }
@@ -132,7 +134,7 @@ export default class GameUI extends Component<Record<string, never>, GameUIState
       this.setState({ board: payload.board });
     }
 
-    if (typeof payload.userCount === "number") {
+    if (payload.userCount) {
       this.setState({ userCount: payload.userCount });
     }
 
@@ -144,19 +146,12 @@ export default class GameUI extends Component<Record<string, never>, GameUIState
     if (payload.sysCmds) {
       this.setState({sysCmds: payload.sysCmds})
     }
-    const cmd = (payload.type ?? "").toLowerCase();
-
-    const ownNameFromPayload = payload.myName;
-    if (typeof ownNameFromPayload === "string" && ownNameFromPayload.trim()) {
-      this.setOwnName(ownNameFromPayload.trim());
+    if (payload.myId) {
+      this.setState({ ownId: payload.myId });
     }
-
-    if (cmd === "myName") {
-      this.setOwnName(payload.myName!);
-    }
-
     if (payload.users) {
       this.applyNames(payload.users);
+      this.setOwnName(payload.users.find(p => p.id === this.state.ownId)?.name ?? "ERRÖR")
     }
   }
 

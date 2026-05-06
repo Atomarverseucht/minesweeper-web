@@ -8,6 +8,6 @@ export type ServerPayload = {
     userCount?: number;
     gameState?: string;
     users?: Player[];
-    myName?: string;
+    myId?: string;
     sysCmds?: Command[];
 };
