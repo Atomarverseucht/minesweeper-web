@@ -1,3 +1,10 @@
+# [1.10.0-dev.11](https://github.com/Atomarverseucht/minesweeper-web/compare/1.10.0-dev.10...1.10.0-dev.11) (2026-05-06)
+
+
+### Features
+
+* sys cmd system with parameters added, but with bugs :) ([c4b4ec9](https://github.com/Atomarverseucht/minesweeper-web/commit/c4b4ec9d3fdaf809dd4fe32af1a96e0c0366a035))
+
 # [1.10.0-dev.10](https://github.com/Atomarverseucht/minesweeper-web/compare/1.10.0-dev.9...1.10.0-dev.10) (2026-05-06)
 
 
