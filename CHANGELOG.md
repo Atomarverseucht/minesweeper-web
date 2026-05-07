@@ -1,3 +1,26 @@
+# [1.10.0](https://github.com/Atomarverseucht/minesweeper-web/compare/1.9.0...1.10.0) (2026-05-07)
+
+
+### Bug Fixes
+
+* a little bit of restyle ([9143dcd](https://github.com/Atomarverseucht/minesweeper-web/commit/9143dcd45aab28422af1dee4e97f8d9f6b593644))
+* abstract cmd now in shared, better css ([c02c209](https://github.com/Atomarverseucht/minesweeper-web/commit/c02c209d3b16b21c0ab10d68b41226d45287113c))
+* added frontend ids ([1a72ca3](https://github.com/Atomarverseucht/minesweeper-web/commit/1a72ca305181180e9559d50bec539d99a224e4eb))
+* better css ([d8e29f1](https://github.com/Atomarverseucht/minesweeper-web/commit/d8e29f1c15e8d6280074647d62b9a827c7f11c78))
+* cookies are now used across rooms ([96ba4e4](https://github.com/Atomarverseucht/minesweeper-web/commit/96ba4e4189688dcfd205564fc28c8138911343fc))
+* finally formatting bugfix (; ([eab7086](https://github.com/Atomarverseucht/minesweeper-web/commit/eab70861cf6d3d8694b83b703a7d30ef94a0cc89))
+* new name for "types" -> "shared" ([222dbfb](https://github.com/Atomarverseucht/minesweeper-web/commit/222dbfb9cd9efe7322a8322a2ffd48fa66998ad2))
+* sys cmds without parameters now work ([f5d3a3e](https://github.com/Atomarverseucht/minesweeper-web/commit/f5d3a3ebed829e03920fcd1ed39eb09a95e8d192))
+
+
+### Features
+
+* hand-written css ([cbba129](https://github.com/Atomarverseucht/minesweeper-web/commit/cbba129cbdc5459733662c4ec586e905d94cdae4))
+* sys cmd system with parameters added, but with bugs :) ([c4b4ec9](https://github.com/Atomarverseucht/minesweeper-web/commit/c4b4ec9d3fdaf809dd4fe32af1a96e0c0366a035))
+* **sysCmd:** css style & several bug fixes ([cb63b65](https://github.com/Atomarverseucht/minesweeper-web/commit/cb63b65195c73da47e8fec1d07d56617b4b1f7b3))
+* **SysCmd:** new Command undo & redo ([e6337cc](https://github.com/Atomarverseucht/minesweeper-web/commit/e6337ccb0e4109c6dc59a11cf7d11544d28464fe))
+* **UI:** new SysCmd view ([9f37254](https://github.com/Atomarverseucht/minesweeper-web/commit/9f37254d6cbe145d58cf6dbc1204f3061ae07960))
+
 # [1.10.0-dev.13](https://github.com/Atomarverseucht/minesweeper-web/compare/1.10.0-dev.12...1.10.0-dev.13) (2026-05-07)
 
 
