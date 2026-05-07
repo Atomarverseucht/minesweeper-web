@@ -1,5 +1,6 @@
 import {InvisibleSysCommand} from "../SysCommands";
 import type {Controller} from "../../controller";
+import {RedoCmd} from "./RedoCmd";
 
 export class GetNameCmd extends InvisibleSysCommand {
     override readonly cmd: string = "getName";
@@ -25,21 +26,13 @@ export class MyNameCmd extends InvisibleSysCommand {
 
 export class ChangeNameCmd extends InvisibleSysCommand {
     override readonly cmd: string = "changeName";
-    override readonly next_ = new ListCommandsCmd();
+    override readonly next_ = new RedoCmd();
 
     override execute(observerID: string, ctrl: Controller, params: string[]): string | undefined {
         console.log("server: changeName");
         ctrl.server.setName(observerID, params[1])
         ctrl.notifyObservers("names");
-        ctrl.specNotify(observerID, "myName"); return undefined;
-    }
-}
-
-export class ListCommandsCmd extends InvisibleSysCommand {
-    override readonly cmd: string = "listCommands";
-    override readonly next_ = undefined;
-
-    override execute(observerID: string, ctrl: Controller, params: string[]): string | undefined {
+        ctrl.specNotify(observerID, "myName");
         return undefined;
     }
 }

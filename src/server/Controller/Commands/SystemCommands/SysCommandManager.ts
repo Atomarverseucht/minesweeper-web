@@ -1,7 +1,7 @@
 import type {SysCommand} from "../SysCommands"
 import {GenerateCmd} from "./GenerateCmd"
 import type {Controller} from "../../controller"
-import type {Command} from "../commandInterfaces"
+import type {Command} from "../../../../shared/AbstractCommand";
 
 export class SysCommandManager {
     readonly firstSysCommand = new GenerateCmd()
@@ -21,9 +21,9 @@ export class SysCommandManager {
     }
 
     public getSysCmdList(): SysCommand[] {
-        return this.firstSysCommand.listCmds()
+        return this.firstSysCommand.listCmds().filter(cmd => cmd.visible)
     }
-    public getAbstractCmd(cmd: string, ctrl: Controller): Command | undefined{
+    public getAbstractCmd(cmd: string, ctrl: Controller): Command | undefined {
         const sysCmd = this.firstSysCommand.getSysCmd(cmd)
         return sysCmd ?? ctrl.undo.getCmd(cmd)
     }

@@ -1,11 +1,14 @@
 import type {Player} from "./Player";
+import type {Command} from "./AbstractCommand";
 
 export type ServerPayload = {
-    type?: string;
+    type: string;
     cmd?: string;
     board?: number[][];
     userCount?: number;
     gameState?: string;
     users?: Player[];
-    myName?: string;
+    myId?: string;
+    sysCmds?: Command[];
+    size?: number[];
 };

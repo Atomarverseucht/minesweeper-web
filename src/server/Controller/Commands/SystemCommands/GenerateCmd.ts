@@ -9,6 +9,7 @@ export class GenerateCmd extends SysCommand {
     override readonly cmd: string = "generate"
     override readonly helpMsg: string = "generates a new Board"
     override readonly visible: boolean = true
+    override readonly hasCmdLine = true
     override readonly specHelpMsg: string = `generate:
   starts the generation of a board
 
@@ -26,17 +27,18 @@ generate is not undo-able!`
             ctrl.state = new Running(ctrl)
             ctrl.turn(observerID, "open", +params[3], +params[4])
             ctrl.undo.overrideStacks([],[])
+            ctrl.notifyObservers("generate")
             return "Generated!"
         } catch (e) {
             try {
                 ctrl.config.bombCount4Generate = +params[3]
                 ctrl.gb = ctrl.config.startBoard(+params[1], +params[2])
                 ctrl.changeState("start")
+                ctrl.notifyObservers("generate")
                 return "Place to generate!"
             } catch (e) {
-                ctrl.specNotify(observerID);
+                return undefined;
             }
         }
-        }
-
+    }
 }

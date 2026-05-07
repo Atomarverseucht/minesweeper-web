@@ -1,4 +1,3 @@
-const ROOM_ID_PATTERN = /(?:\?|&|\/)room=([A-Za-z0-9_-]+)/;
 export class RoomService {
     public static createRoomId(length = 8): string {
         const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
@@ -12,7 +11,7 @@ export class RoomService {
             return queryRoom;
         }
 
-        const pathRoom = window.location.href.match(ROOM_ID_PATTERN)?.[1];
+        const pathRoom = url.searchParams.get("room")!;
         if (pathRoom) {
             return pathRoom;
         }
@@ -26,4 +25,19 @@ export class RoomService {
     public static buildRoomLink(roomId: string): string {
         return `${window.location.origin}${window.location.pathname}?room=${encodeURIComponent(roomId)}`;
     }
+
+    public static getParams(): PageParams {
+        const url = new URL(window.location.href);
+        return {
+            page:   url.searchParams.get("page")   ?? "room",
+            roomId: url.searchParams.get("room")   ?? "",
+            cmd:    url.searchParams.get("cmd")    ?? undefined,
+        };
+    }
+}
+
+export type PageParams = {
+    page: string;
+    roomId: string;
+    cmd?: string;
 }

@@ -1,12 +1,13 @@
 import {Component, type CSSProperties, type KeyboardEvent, type MouseEvent} from "react";
 import PartySocket from "partysocket";
 import {RoomService} from "../roomService";
-import type {ServerPayload} from "../../types/Payload";
-import {Player} from "../../types/Player";
+import type {ServerPayload} from "../../shared/Payload";
+import {Player} from "../../shared/Player";
 import {Cookies} from "react-cookie"
 import {CookieConsent} from "react-cookie-consent";
-import type {CookieData} from "../../types/CookieData";
+import type {CookieData} from "../../shared/CookieData";
 import {v4 as uuid4} from "uuid";
+import type {Command} from "../../shared/AbstractCommand";
 
 type PlayerName = {
   isSelf: boolean;
@@ -23,6 +24,10 @@ type GameUIState = {
   pendingName: string;
   isEditingOwnName: boolean;
   ownName: string;
+  ownId: string;
+  sysCmds: Command[];
+  cmdLine?: Command;
+  cmdLineContent?: string;
 };
 
 class BoardLayoutService {
@@ -44,9 +49,8 @@ class BoardLayoutService {
 
 export default class GameUI extends Component<Record<string, never>, GameUIState> {
   private socket?: PartySocket = undefined;
-  private clientID?: string;
   readonly cookie = new Cookies();
-  readonly initialCookie = this.cookie.get<CookieData>("minesweeper-web")
+  readonly initialCookie? = this.cookie.get<CookieData>("minesweeper-web")
   private clearCopyHintTimeout?: number = undefined;
 
   public constructor(props: Record<string, never>) {
@@ -60,7 +64,9 @@ export default class GameUI extends Component<Record<string, never>, GameUIState
       playerNames: [],
       pendingName: "...",
       isEditingOwnName: false,
-      ownName: "...",
+      ownName: "(no name set)",
+      ownId: "...",
+      sysCmds: [],
     };
   }
 
@@ -81,14 +87,15 @@ export default class GameUI extends Component<Record<string, never>, GameUIState
 
   private connectSocket(): void {
 
-// generate uuid if not set via cookie
+    // generate uuid if not set via cookie
     let id: string;
+    let myName: string | undefined = undefined;
     if (this.initialCookie) {
       id = this.initialCookie.clientID;
+      myName = this.initialCookie.playerName;
+      console.log(myName);
     } else {
       id = uuid4();
-      const cdata: CookieData = {clientID: id}
-      this.cookie.set("minesweeper-web", cdata);
     }
 
     this.socket = new PartySocket({
@@ -96,6 +103,9 @@ export default class GameUI extends Component<Record<string, never>, GameUIState
       room: this.state.roomId,
       maxRetries: 0,
       id: id,
+      query: {
+        name: myName
+      }
     });
 
     this.socket.addEventListener("open", () => {
@@ -105,15 +115,12 @@ export default class GameUI extends Component<Record<string, never>, GameUIState
     this.socket.addEventListener("message", (event: MessageEvent) => {
       this.handleServerMessage(event.data);
     });
-    const cdata: CookieData = {clientID: this.socket.id}
-    this.cookie.set("minesweeper-web", cdata);
   }
 
   private handleServerMessage(rawPayload: any): void {
     if (typeof rawPayload !== "string") {
       return;
     }
-
     try {
       const payload: ServerPayload = JSON.parse(rawPayload);
       this.handleJsonPayload(payload);
@@ -121,7 +128,6 @@ export default class GameUI extends Component<Record<string, never>, GameUIState
       if (e as Error) {
         console.log((e as Error).message);
       }
-      this.handleCommandMessage(rawPayload);
     }
   }
 
@@ -130,7 +136,7 @@ export default class GameUI extends Component<Record<string, never>, GameUIState
       this.setState({ board: payload.board });
     }
 
-    if (typeof payload.userCount === "number") {
+    if (payload.userCount) {
       this.setState({ userCount: payload.userCount });
     }
 
@@ -139,64 +145,20 @@ export default class GameUI extends Component<Record<string, never>, GameUIState
     } else if (payload.gameState === "lost") {
       this.setState({ statusText: "💥 Game over." });
     }
-
-    const cmd = (payload.type ?? "").toLowerCase();
-
-    const ownNameFromPayload = payload.myName;
-    if (typeof ownNameFromPayload === "string" && ownNameFromPayload.trim()) {
-      this.setOwnName(ownNameFromPayload.trim());
+    if (payload.sysCmds) {
+      this.setState({sysCmds: payload.sysCmds})
     }
-
-    if (cmd === "myName") {
-      this.setOwnName(payload.myName!);
+    if (payload.myId) {
+      this.setState({ ownId: payload.myId });
     }
-
     if (payload.users) {
       this.applyNames(payload.users);
+      this.setOwnName(payload.users.find(p => p.id === this.state.ownId)?.name ?? "ERRÖR")
+    }
+    if (payload.type === "generate") {
+      console.log(payload.size!)
     }
   }
-
-  private handleCommandMessage(rawMessage: string): void {
-    const message = rawMessage.trim();
-    if (!message) {
-      return;
-    }
-
-    if (message.startsWith("myName")) {
-      const ownName = message.replace(/^myName[:\s]*/i, "").trim();
-      if (ownName) {
-        this.setOwnName(ownName);
-      }
-      return;
-    }
-
-    if (message.startsWith("getNames") || message.startsWith("notifyNames")) {
-      const rawNames = message.replace(/^(getNames|notifyNames)[:\s]*/i, "").trim();
-      if (!rawNames) {
-        return;
-      }
-
-      try {
-        this.applyNames(JSON.parse(rawNames));
-        return;
-      } catch {
-        return;
-      }
-    }
-
-    if (message.startsWith("changeName")) {
-      const updatedName = message.replace(/^changeName[:\s]*/i, "").trim();
-      if (updatedName) {
-        this.setOwnName(updatedName);
-      }
-      return;
-    }
-
-    if (!message.startsWith("{") && !message.includes(" ")) {
-      this.setOwnName(message);
-    }
-  }
-
 
   private setOwnName(nextOwnName: string): void {
     this.setState((prevState) => ({
@@ -209,6 +171,8 @@ export default class GameUI extends Component<Record<string, never>, GameUIState
         return { ...entry, isSelf: entry.player.name === nextOwnName };
       }),
     }));
+    const cdata: CookieData = {clientID: this.socket!.id, playerName: nextOwnName};
+    this.cookie.set("minesweeper-web", cdata);
   }
 
   private applyNames(rawNames: Player[]): void {
@@ -296,25 +260,37 @@ export default class GameUI extends Component<Record<string, never>, GameUIState
     }));
   };
 
-  public render() {
-    const { board, userCount, statusText, roomId, copyHint, playerNames, ownName, pendingName, isEditingOwnName } = this.state;
-    const [width, height] = BoardLayoutService.getDimensions(board);
-    const cellSize = BoardLayoutService.getCellSize(width, height);
+  private handleSysCommand(cmd: Command): void {
+    if (!cmd.hasCmdLine) {
+      this.socket!.send(`${cmd.cmd}`);
+    } else {
+      this.setState({cmdLine: cmd})
+    }
+  }
 
+  private handleSpecSysCommand(cmd: string, params: string): void {
+    let outString = cmd + " " + params;
+    this.socket!.send(outString);
+    this.setState({cmdLine: undefined})
+  }
+
+  public render() {
+    const { board, userCount, statusText, roomId, copyHint, playerNames, ownName, pendingName, isEditingOwnName, cmdLine } = this.state;
+    const [height, width] = BoardLayoutService.getDimensions(board);
+    const cellSize = BoardLayoutService.getCellSize(width, height);
     const boardStyle: CSSProperties = {
-      gridTemplateColumns: `repeat(${width}, var(--cell-size))`,
+      display: 'grid',
+      gridTemplateColumns: `repeat(${width}, ${cellSize})`,
+      gridTemplateRows: `repeat(${height}, ${cellSize})`,
       ["--cell-size" as string]: cellSize,
     };
 
     return (
-
       <section className="game-ui">
-        <div className="toolbar" />
-
         <div className="game-meta">
           <span>
             Room:{" "}
-            <button type="button" className="room-code" onClick={this.copyRoomLink} title="copy room link">
+            <button type="button" className="room-code visibleButton" onClick={this.copyRoomLink} title="copy room link">
               <code>{roomId}</code>
             </button>
             {copyHint ? <small className="copy-hint">{copyHint}</small> : undefined}
@@ -324,24 +300,42 @@ export default class GameUI extends Component<Record<string, never>, GameUIState
           <span>Status: {statusText}</span>
         </div>
 
-        <div className="board" style={boardStyle}>
-          {board.map((column, x) =>
-            column.map((value, y) => (
-              <button
-                key={`${x}-${y}`}
-                type="button"
-                className="cell"
-                onClick={() => this.handlePrimaryClick(x, y)}
-                onContextMenu={(event) => this.handleSecondaryClick(event, x, y)}
-                title={`(${x}, ${y})`} >
-                <img src={`/assets/fields/${value}.png`} alt={`Cell value ${value}`} draggable={false} />
-              </button>
-            ))
-          )}
+        <div className="toolbar">
+          {this.state.sysCmds.map((cmd) => (
+              <button title={cmd.helpMsg} onClick={() => this.handleSysCommand(cmd)}> {cmd.cmd} </button>
+          ))}
         </div>
-
+        <section id="gridCmdLine">
+          <div className="board" style={boardStyle}>
+            {board.map((column, x) =>
+              column.map((value, y) => (
+                <button
+                  key={`${x}-${y}`}
+                  type="button"
+                  id={`field(${x}, ${y})`}
+                  className="cell"
+                  onClick={() => this.handlePrimaryClick(x, y)}
+                  onContextMenu={(event) => this.handleSecondaryClick(event, x, y)}
+                  title={`(${x}, ${y})`} >
+                  <img src={`/assets/fields/${value}.png`} alt={`Cell value ${value}`} draggable={false} />
+                </button>
+              ))
+            )}
+          </div>
+          { cmdLine ?
+            <section id="secCmdLine">
+              <p className="allowNewLine">{cmdLine.specHelpMsg}</p>
+              <section>
+                <input id="cmdLine" type="text" value={this.state.cmdLineContent}
+                  onChange={event => this.setState({ cmdLineContent: event.target.value })}
+                  onKeyDown={(key) => key.key === "Enter" ? this.handleSpecSysCommand(cmdLine.cmd, this.state.cmdLineContent ?? ""):null}/>
+                <button
+                  onClick={() => this.handleSpecSysCommand(cmdLine.cmd, this.state.cmdLineContent ?? "")}> Submit </button>
+              </section>
+            </section> : null
+          }
+        </section>
         <section className="name-panel" aria-label="Player names">
-          <h2>Players</h2>
           <div className="own-name-row">
             <span>Your name:</span>
             {isEditingOwnName ? (
@@ -351,15 +345,15 @@ export default class GameUI extends Component<Record<string, never>, GameUIState
                   value={pendingName}
                   onChange={(event) => this.changePendingName(event.target.value)}
                   onKeyDown={this.handleOwnNameInputKeyDown}
-                  maxLength={24}
+                  maxLength={32}
                   autoFocus
                 />
                 <button type="button" onClick={this.saveOwnName}>Save</button>
                 <button type="button" onClick={this.cancelOwnNameEdit}>Cancel</button>
               </div>
             ) : (
-              <button type="button" className="own-name" onClick={this.startEditingOwnName} title="Click to edit">
-                {ownName || "(no name set)"}
+              <button type="button" className="own-name visibleButton" onClick={this.startEditingOwnName} title="Click to edit">
+                {ownName}
               </button>
             )}
           </div>

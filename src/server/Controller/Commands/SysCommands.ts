@@ -1,5 +1,6 @@
-import type {Command} from "./commandInterfaces"
+
 import type {Controller} from "../controller"
+import type {Command} from "../../../shared/AbstractCommand";
 
 export abstract class SysCommand implements Command{
     // from the abstract command interface
@@ -7,6 +8,7 @@ export abstract class SysCommand implements Command{
     abstract readonly helpMsg: string
     abstract readonly specHelpMsg: string
     abstract readonly visible: boolean
+    readonly hasCmdLine: boolean = false
 
     abstract readonly next_?: SysCommand
 

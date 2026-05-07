@@ -37,7 +37,7 @@ export class OpenFieldCommand extends TurnCommand{
 
         // Statusänderungen
         if (!discover && !this.ctrl.inGame) {
-            //this.ctrl.changeState("running");
+            this.ctrl.changeState("running");
         }
 
         if (f.isBomb && discover) {

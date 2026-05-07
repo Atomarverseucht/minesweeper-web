@@ -1,11 +1,12 @@
 import {Board} from "../Model/Board"
 import {type GameState, Lost, Running, Start} from "./state"
 import {Observable} from "../observer";
-import TurnCommandManager from "./Commands/TurnCommands/TurnCommandManager"
+import {TurnCommandManager} from "./Commands/TurnCommands/TurnCommandManager"
 import {SysCommandManager} from "./Commands/SystemCommands/SysCommandManager"
 import type Server from "../server";
 import {Config} from "../config";
-import type {Player} from "../../types/Player";
+import type {Player} from "../../shared/Player";
+import type {Command} from "../../shared/AbstractCommand";
 
 export class Controller extends Observable{
     public state: GameState = new Start(this)
@@ -62,8 +63,8 @@ export class Controller extends Observable{
         return this.state.gameState;
     }
 
-    public getSysCmdList(): string[] {
-        return [];//this.sysCmd.getSysCmdList.map(sys => sys.cmd);
+    public getSysCmdList(): Command[] {
+        return this.sysCmd.getSysCmdList();
     }
 
     public isVictory(): boolean {
