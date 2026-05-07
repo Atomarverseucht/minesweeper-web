@@ -155,6 +155,9 @@ export default class GameUI extends Component<Record<string, never>, GameUIState
       this.applyNames(payload.users);
       this.setOwnName(payload.users.find(p => p.id === this.state.ownId)?.name ?? "ERRÖR")
     }
+    if (payload.type === "generate") {
+      console.log(payload.size!)
+    }
   }
 
   private setOwnName(nextOwnName: string): void {
@@ -273,11 +276,12 @@ export default class GameUI extends Component<Record<string, never>, GameUIState
 
   public render() {
     const { board, userCount, statusText, roomId, copyHint, playerNames, ownName, pendingName, isEditingOwnName, cmdLine } = this.state;
-    const [width, height] = BoardLayoutService.getDimensions(board);
+    const [height, width] = BoardLayoutService.getDimensions(board);
     const cellSize = BoardLayoutService.getCellSize(width, height);
-
     const boardStyle: CSSProperties = {
-      gridTemplateColumns: `repeat(${width}, var(--cell-size))`,
+      display: 'grid',
+      gridTemplateColumns: `repeat(${width}, ${cellSize})`,
+      gridTemplateRows: `repeat(${height}, ${cellSize})`,
       ["--cell-size" as string]: cellSize,
     };
 

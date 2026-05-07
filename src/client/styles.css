@@ -8,6 +8,8 @@ body {
 :root {
   --background: #0b1220;
   --background2: #1e293b;
+  --row: 10;
+  --column: 10;
 }
 .visibleButton {
   background-color: transparent;
@@ -49,9 +51,6 @@ main {
   max-width: 100%;
 }
 .board {
-  display: grid;
-  grid-template-columns: repeat(10, 1fr);
-  grid-template-rows: repeat(10, 1fr);
   .cell {
     padding: 0;
     background-color: transparent;

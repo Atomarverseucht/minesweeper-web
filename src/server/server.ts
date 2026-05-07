@@ -74,6 +74,7 @@ export default class Server implements Party.Server {
           board: board,
           userCount: userCount,
           gameState: gameState,
+          size: [board.length, board[0].length]
         };
       case "myName":
         return {
