@@ -268,6 +268,7 @@ export default class GameUI extends Component<Record<string, never>, GameUIState
   private handleSpecSysCommand(cmd: string, params: string): void {
     let outString = cmd + " " + params;
     this.socket!.send(outString);
+    this.setState({cmdLine: undefined})
   }
 
   public render() {
@@ -318,13 +319,16 @@ export default class GameUI extends Component<Record<string, never>, GameUIState
             )}
           </div>
           { cmdLine ?
-              <section id="secCmdLine">
-                <label className="allowNewLine">{cmdLine.specHelpMsg}</label>
-                <input id="cmdLine" value={this.state.cmdLineContent} onChange={event => this.setState({ cmdLineContent: event.target.value })}/>
+            <section id="secCmdLine">
+              <p className="allowNewLine">{cmdLine.specHelpMsg}</p>
+              <section>
+                <input id="cmdLine" type="text" value={this.state.cmdLineContent}
+                  onChange={event => this.setState({ cmdLineContent: event.target.value })}
+                  onKeyDown={(key) => key.key === "Enter" ? this.handleSpecSysCommand(cmdLine.cmd, this.state.cmdLineContent ?? ""):null}/>
                 <button
-                    onClick={() => this.handleSpecSysCommand(cmdLine.cmd, this.state.cmdLineContent ?? "")}
-                ></button>
-              </section> : null
+                  onClick={() => this.handleSpecSysCommand(cmdLine.cmd, this.state.cmdLineContent ?? "")}> Submit </button>
+              </section>
+            </section> : null
           }
         </section>
         <section className="name-panel" aria-label="Player names">

@@ -27,17 +27,18 @@ generate is not undo-able!`
             ctrl.state = new Running(ctrl)
             ctrl.turn(observerID, "open", +params[3], +params[4])
             ctrl.undo.overrideStacks([],[])
+            ctrl.notifyObservers()
             return "Generated!"
         } catch (e) {
             try {
                 ctrl.config.bombCount4Generate = +params[3]
                 ctrl.gb = ctrl.config.startBoard(+params[1], +params[2])
                 ctrl.changeState("start")
+                ctrl.notifyObservers()
                 return "Place to generate!"
             } catch (e) {
                 return undefined;
             }
         }
-        }
-
+    }
 }

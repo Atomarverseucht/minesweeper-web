@@ -32,6 +32,7 @@ export class ChangeNameCmd extends InvisibleSysCommand {
         console.log("server: changeName");
         ctrl.server.setName(observerID, params[1])
         ctrl.notifyObservers("names");
-        ctrl.specNotify(observerID, "myName"); return undefined;
+        ctrl.specNotify(observerID, "myName");
+        return undefined;
     }
 }

@@ -5,6 +5,10 @@ body {
   color: #e2e8f0;
   background: radial-gradient(circle at top, #1e293b 0%, #0f172a 55%);
 }
+:root {
+  --background: #0b1220;
+  --background2: #1e293b;
+}
 .visibleButton {
   background-color: transparent;
   color: white;
@@ -31,10 +35,18 @@ main {
 }
 #gridCmdLine {
   display: grid;
-  grid-template-columns: 50vw 50vw;
+  grid-template-columns: 1fr 1fr;
 }
 .allowNewLine {
   white-space: pre-line;
+}
+#secCmdLine {
+  background-color: var(--background2);
+  border: 1px solid white;
+  border-radius: 10px;
+  margin: 1rem;
+  padding: 1rem;
+  max-width: 100%;
 }
 .board {
   display: grid;
@@ -52,7 +64,7 @@ main {
 }
 
 .game-ui {
-  background-color: #0b1220;
+  background-color: var(--background);
   border: 3px solid #334155;
   border-radius: 2vmin;
   padding: 1rem;
@@ -61,7 +73,7 @@ main {
 .name-panel {
   border: 2px solid #334155;
   border-radius: 1vmin;
-  background-color:  #1e293b;
+  background-color:  var(--background2);
   padding: 1rem;
 }
 
