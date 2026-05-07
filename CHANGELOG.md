@@ -1,3 +1,10 @@
+# [1.10.0-dev.12](https://github.com/Atomarverseucht/minesweeper-web/compare/1.10.0-dev.11...1.10.0-dev.12) (2026-05-07)
+
+
+### Features
+
+* **sysCmd:** css style & several bug fixes ([cb63b65](https://github.com/Atomarverseucht/minesweeper-web/commit/cb63b65195c73da47e8fec1d07d56617b4b1f7b3))
+
 # [1.10.0-dev.11](https://github.com/Atomarverseucht/minesweeper-web/compare/1.10.0-dev.10...1.10.0-dev.11) (2026-05-06)
 
 
