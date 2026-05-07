@@ -1,3 +1,10 @@
+# [1.10.0-dev.13](https://github.com/Atomarverseucht/minesweeper-web/compare/1.10.0-dev.12...1.10.0-dev.13) (2026-05-07)
+
+
+### Bug Fixes
+
+* finally formatting bugfix (; ([eab7086](https://github.com/Atomarverseucht/minesweeper-web/commit/eab70861cf6d3d8694b83b703a7d30ef94a0cc89))
+
 # [1.10.0-dev.12](https://github.com/Atomarverseucht/minesweeper-web/compare/1.10.0-dev.11...1.10.0-dev.12) (2026-05-07)
 
 
