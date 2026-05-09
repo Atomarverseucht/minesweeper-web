@@ -1,4 +1,4 @@
-import type {TurnCommand} from "../commandInterfaces"
+import type {TurnCommand} from "../TurnCommands"
 import type {Controller} from "../../controller";
 import {FlagCommand} from "./FlagCommand"
 

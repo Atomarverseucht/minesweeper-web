@@ -7,7 +7,7 @@ import {Cookies} from "react-cookie"
 import {CookieConsent} from "react-cookie-consent";
 import type {CookieData} from "../../shared/CookieData";
 import {v4 as uuid4} from "uuid";
-import type {Command} from "../../shared/AbstractCommand";
+import type {Command} from "../../shared/Command";
 
 type PlayerName = {
   isSelf: boolean;

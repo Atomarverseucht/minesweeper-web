@@ -3,7 +3,7 @@ import { Controller } from "./game/Controller/controller";
 import type { ServerPayload} from "../shared/Payload";
 import {Player} from "../shared/Player";
 import {v4 as uuid4} from "uuid";
-import type {Command} from "../shared/AbstractCommand";
+import type {Command} from "../shared/Command";
 
 export default class Server implements Party.Server {
   count = 0;

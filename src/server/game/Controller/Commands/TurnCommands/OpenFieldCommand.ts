@@ -1,4 +1,4 @@
-import {TurnCommand} from "../commandInterfaces";
+import {TurnCommand} from "../TurnCommands";
 import {cmdOut} from "../../../../config";
 import {Field} from "../../../Model/Field";
 

@@ -1,4 +1,4 @@
-import {TurnCommand} from "../commandInterfaces";
+import {TurnCommand} from "../TurnCommands";
 import type {Controller} from "../../controller";
 import {OpenFieldCommand} from "./OpenFieldCommand";
 import {cmdOut} from "../../../../config";

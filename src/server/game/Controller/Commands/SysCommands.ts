@@ -1,6 +1,6 @@
 
 import type {Controller} from "../controller"
-import type {Command} from "../../../../shared/AbstractCommand";
+import {type Command, CommandImpl} from "../../../../shared/Command";
 
 export abstract class SysCommand implements Command{
     readonly isPrivileged = false;
@@ -8,12 +8,14 @@ export abstract class SysCommand implements Command{
     abstract readonly cmd: string
     abstract readonly helpMsg: string
     abstract readonly specHelpMsg: string
-    abstract readonly visible: boolean
     readonly hasCmdLine: boolean = false
 
     abstract readonly next_?: SysCommand
 
-    constructor(readonly ctrl: Controller) {}
+    constructor(protected readonly ctrl: Controller) {
+    }
+
+    visible: boolean = false;
     abstract execute(observerID: string,  params: string[]): string | undefined
 
     getSysCmd(cmd: string): SysCommand | undefined {
@@ -25,11 +27,15 @@ export abstract class SysCommand implements Command{
         return undefined
     }
 
-    listCmds(subId: string): SysCommand[] {
-        if (!this.next_ || ((this.ctrl.server.hostPlayerConnId !== subId) && this.next_.isPrivileged)) {
-            return [this]
+    listCmds(subId: string): Command[] {
+        const baseKeys = Object.keys(new CommandImpl());
+        const entries = baseKeys.map(key => [key, this[key as keyof this]]);
+        const e: Command = Object.fromEntries(entries);
+        if (!this.next_ //|| ((this.ctrl.server.hostPlayerConnId !== subId) && this.next_.isPrivileged)
+        ) {
+            return [e]
         }
-        return [this, ...this.next_.listCmds(subId)]
+        return [e, ...this.next_.listCmds(subId)]
     }
 }
 export abstract class InvisibleSysCommand extends SysCommand {

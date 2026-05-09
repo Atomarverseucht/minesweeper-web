@@ -4,22 +4,21 @@ import {Observable} from "../observer";
 import {TurnCommandManager} from "./Commands/TurnCommands/TurnCommandManager"
 import {SysCommandManager} from "./Commands/SystemCommands/SysCommandManager"
 import type Server from "../../server";
-import {Config} from "../../config";
-import type {Command} from "../../../shared/AbstractCommand";
+import {config, startBoard} from "../../config";
+import type {Command} from "../../../shared/Command";
 
 export class Controller extends Observable{
     public state: GameState = new Start(this)
     public readonly undo
     public readonly sysCmd
     public gb: Board
-    public config = new Config()
 
     constructor(server: Server, gb?: Board) {
         super(server)
         this.undo = new TurnCommandManager(this)
         this.sysCmd = new SysCommandManager(this)
         if (gb) {this.gb = gb}
-        else {this.gb = this.config.startBoard(10, 10)}
+        else {this.gb = startBoard(config.standXSize, config.standYSize)}
     }
 
     public turn(observerID: string, cmd: string, x: number, y: number): string {

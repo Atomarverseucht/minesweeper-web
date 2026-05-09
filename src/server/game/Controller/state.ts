@@ -1,4 +1,5 @@
 import type {Controller} from "./controller";
+import {bombCount4Generate} from "../../config";
 
 export abstract class GameState {
     abstract readonly nextState?: GameState
@@ -63,7 +64,7 @@ export class Start extends GameState {
         }
         const [xSize, ySize] = this.context.gb.getSize()
         return this.context.doSysCmd(observerID,["generate", String(xSize), String(ySize),
-            String(x), String(y), String(this.context.config.bombCount4Generate)]) ?? ""
+            String(x), String(y), String(bombCount4Generate)]) ?? ""
     }
 
     public changeState(state: string): void {
