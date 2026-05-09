@@ -1,3 +1,10 @@
+# [1.11.0-dev.1](https://github.com/Atomarverseucht/minesweeper-web/compare/1.10.0...1.11.0-dev.1) (2026-05-09)
+
+
+### Features
+
+* Host system (in development) ([5395d5d](https://github.com/Atomarverseucht/minesweeper-web/commit/5395d5d5509cee6c36ac809b6d758fe53cac2e43))
+
 # [1.10.0](https://github.com/Atomarverseucht/minesweeper-web/compare/1.9.0...1.10.0) (2026-05-07)
 
 
