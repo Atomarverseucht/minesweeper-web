@@ -1,8 +1,9 @@
 
 import type {Controller} from "../controller"
-import type {Command} from "../../../shared/AbstractCommand";
+import type {Command} from "../../../../shared/AbstractCommand";
 
 export abstract class SysCommand implements Command{
+    readonly isPrivileged = false;
     // from the abstract command interface
     abstract readonly cmd: string
     abstract readonly helpMsg: string
@@ -12,11 +13,8 @@ export abstract class SysCommand implements Command{
 
     abstract readonly next_?: SysCommand
 
-    abstract execute(
-        observerID: string,
-        ctrl: Controller,
-        params: string[]
-    ): string | undefined
+    constructor(readonly ctrl: Controller) {}
+    abstract execute(observerID: string,  params: string[]): string | undefined
 
     getSysCmd(cmd: string): SysCommand | undefined {
         if (cmd.toLowerCase() === this.cmd.toLowerCase()) {
@@ -27,11 +25,11 @@ export abstract class SysCommand implements Command{
         return undefined
     }
 
-    listCmds(): SysCommand[] {
-        if (!this.next_) {
+    listCmds(subId: string): SysCommand[] {
+        if (!this.next_ || ((this.ctrl.server.hostPlayerConnId !== subId) && this.next_.isPrivileged)) {
             return [this]
         }
-        return [this, ...this.next_.listCmds()]
+        return [this, ...this.next_.listCmds(subId)]
     }
 }
 export abstract class InvisibleSysCommand extends SysCommand {

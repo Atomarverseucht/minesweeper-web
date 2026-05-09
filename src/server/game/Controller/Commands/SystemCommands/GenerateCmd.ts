@@ -5,7 +5,7 @@ import {Running} from "../../state";
 import {GetNameCmd} from "./NameCmds";
 
 export class GenerateCmd extends SysCommand {
-    override readonly next_?: SysCommand = new GetNameCmd();
+    override readonly next_?: SysCommand = new GetNameCmd(this.ctrl);
     override readonly cmd: string = "generate"
     override readonly helpMsg: string = "generates a new Board"
     override readonly visible: boolean = true
@@ -20,21 +20,22 @@ generate <x-size> <y-size> <bomb-count>
 
 generate is not undo-able!`
 
-    override execute(observerID: string, ctrl: Controller, params: string[]): string | undefined {
+    override execute(observerID: string, params: string[]): string | undefined {
         console.log("generate command")
+        const ctrl = this.ctrl
         try{
             ctrl.gb = Board.create(+params[1], +params[2], +params[3], +params[4], +params[5])
             ctrl.state = new Running(ctrl)
             ctrl.turn(observerID, "open", +params[3], +params[4])
             ctrl.undo.overrideStacks([],[])
-            ctrl.notifyObservers("generate")
+            ctrl.notifyObservers()
             return "Generated!"
         } catch (e) {
             try {
                 ctrl.config.bombCount4Generate = +params[3]
                 ctrl.gb = ctrl.config.startBoard(+params[1], +params[2])
                 ctrl.changeState("start")
-                ctrl.notifyObservers("generate")
+                ctrl.notifyObservers()
                 return "Place to generate!"
             } catch (e) {
                 return undefined;

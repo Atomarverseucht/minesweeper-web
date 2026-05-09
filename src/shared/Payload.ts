@@ -10,5 +10,5 @@ export type ServerPayload = {
     users?: Player[];
     myId?: string;
     sysCmds?: Command[];
-    size?: number[];
+    isHostPlayer?: boolean;
 };

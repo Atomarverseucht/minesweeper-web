@@ -3,10 +3,9 @@ import {type GameState, Lost, Running, Start} from "./state"
 import {Observable} from "../observer";
 import {TurnCommandManager} from "./Commands/TurnCommands/TurnCommandManager"
 import {SysCommandManager} from "./Commands/SystemCommands/SysCommandManager"
-import type Server from "../server";
-import {Config} from "../config";
-import type {Player} from "../../shared/Player";
-import type {Command} from "../../shared/AbstractCommand";
+import type Server from "../../server";
+import {Config} from "../../config";
+import type {Command} from "../../../shared/AbstractCommand";
 
 export class Controller extends Observable{
     public state: GameState = new Start(this)
@@ -18,7 +17,7 @@ export class Controller extends Observable{
     constructor(server: Server, gb?: Board) {
         super(server)
         this.undo = new TurnCommandManager(this)
-        this.sysCmd = new SysCommandManager()
+        this.sysCmd = new SysCommandManager(this)
         if (gb) {this.gb = gb}
         else {this.gb = this.config.startBoard(10, 10)}
     }
@@ -44,7 +43,7 @@ export class Controller extends Observable{
     }
 
     public doSysCmd(observerID: string, params: string[]): string | undefined {
-        return this.sysCmd.doSysCommand(observerID, this, params)
+        return this.sysCmd.doSysCommand(observerID, params)
     }
 
     public getBoard(): number[][] {
@@ -63,8 +62,8 @@ export class Controller extends Observable{
         return this.state.gameState;
     }
 
-    public getSysCmdList(): Command[] {
-        return this.sysCmd.getSysCmdList();
+    public getSysCmdList(subId: string): Command[] {
+        return this.sysCmd.getSysCmdList(subId);
     }
 
     public isVictory(): boolean {

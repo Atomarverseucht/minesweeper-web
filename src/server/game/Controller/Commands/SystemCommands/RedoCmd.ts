@@ -11,14 +11,14 @@ export class RedoCmd extends SysCommand{
 redo <count>:
     remakes your latest <count> undone actions`;
     override readonly visible = true;
-    override readonly next_ = new UndoCmd();
+    override readonly next_ = new UndoCmd(this.ctrl);
 
-    override execute(observerID: string, ctrl: Controller, params: string[]): string | undefined {
+    override execute(observerID: string, params: string[]): string | undefined {
         const count: number = isNaN(Number(params[1])) ? 1 : Number(params[1]);
         for (let i = count; i > 0; i--) {
-            ctrl.undo.redoStep()
+            this.ctrl.undo.redoStep()
         }
-        ctrl.notifyObservers()
+        this.ctrl.notifyObservers()
         return undefined;
     }
 }

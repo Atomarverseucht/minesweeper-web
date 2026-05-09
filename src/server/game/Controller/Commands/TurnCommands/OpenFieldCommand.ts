@@ -1,5 +1,5 @@
 import {TurnCommand} from "../commandInterfaces";
-import {cmdOut} from "../../../config";
+import {cmdOut} from "../../../../config";
 import {Field} from "../../../Model/Field";
 
 export class OpenFieldCommand extends TurnCommand{

@@ -3,4 +3,5 @@ export interface Command {
     readonly helpMsg: string
     readonly specHelpMsg: string
     readonly hasCmdLine: boolean
+    readonly isPrivileged: boolean
 }

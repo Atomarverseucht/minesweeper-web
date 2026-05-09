@@ -155,9 +155,6 @@ export default class GameUI extends Component<Record<string, never>, GameUIState
       this.applyNames(payload.users);
       this.setOwnName(payload.users.find(p => p.id === this.state.ownId)?.name ?? "ERRÖR")
     }
-    if (payload.type === "generate") {
-      console.log(payload.size!)
-    }
   }
 
   private setOwnName(nextOwnName: string): void {
@@ -269,7 +266,7 @@ export default class GameUI extends Component<Record<string, never>, GameUIState
   }
 
   private handleSpecSysCommand(cmd: string, params: string): void {
-    let outString = cmd + " " + params;
+    let outString = cmd + " " + params.replace(cmd, "");
     this.socket!.send(outString);
     this.setState({cmdLine: undefined})
   }

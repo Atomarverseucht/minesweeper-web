@@ -1,6 +1,6 @@
 import type {Controller} from "../controller"
-import type {cmdOut} from "../../config"
-import type {Command} from "../../../shared/AbstractCommand";
+import type {cmdOut} from "../../../config"
+import type {Command} from "../../../../shared/AbstractCommand";
 
 export abstract class TurnCommand implements Command {
     // from the abstract Command
@@ -24,6 +24,8 @@ export abstract class TurnCommand implements Command {
         this.x = x
         this.y = y
     }
+
+    isPrivileged: boolean = false;
     public buildCmd(cmd: String): TurnCommand | undefined {
         if (cmd === this.cmd) return this
         else if (!this.next_) return undefined

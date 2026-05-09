@@ -1,7 +1,7 @@
 import {TurnCommand} from "../commandInterfaces";
 import type {Controller} from "../../controller";
 import {OpenFieldCommand} from "./OpenFieldCommand";
-import {cmdOut} from "../../../config";
+import {cmdOut} from "../../../../config";
 import {Field} from "../../../Model/Field";
 
 export class FlagCommand extends TurnCommand{

@@ -4,35 +4,35 @@ import {RedoCmd} from "./RedoCmd";
 
 export class GetNameCmd extends InvisibleSysCommand {
     override readonly cmd: string = "getName";
-    override readonly next_ = new MyNameCmd();
+    override readonly next_ = new MyNameCmd(this.ctrl);
 
-    override execute(observerID: string, ctrl: Controller, params: string[]): string | undefined {
+    override execute(observerID: string, params: string[]): string | undefined {
         console.log("server: get names");
-        ctrl.specNotify(observerID, "names");
+        this.ctrl.specNotify(observerID, "names");
         return undefined;
     }
 }
 
 export class MyNameCmd extends InvisibleSysCommand {
     override readonly cmd: string = "myName";
-    override readonly next_ = new ChangeNameCmd();
+    override readonly next_ = new ChangeNameCmd(this.ctrl);
 
-    override execute(observerID: string, ctrl: Controller, params: string[]): string | undefined {
+    override execute(observerID: string, params: string[]): string | undefined {
         console.log("server: my name");
-        ctrl.specNotify(observerID, "myName");
+        this.ctrl.specNotify(observerID, "myName");
         return undefined;
     }
 }
 
 export class ChangeNameCmd extends InvisibleSysCommand {
     override readonly cmd: string = "changeName";
-    override readonly next_ = new RedoCmd();
+    override readonly next_ = new RedoCmd(this.ctrl);
 
-    override execute(observerID: string, ctrl: Controller, params: string[]): string | undefined {
+    override execute(observerID: string, params: string[]): string | undefined {
         console.log("server: changeName");
-        ctrl.server.setName(observerID, params[1])
-        ctrl.notifyObservers("names");
-        ctrl.specNotify(observerID, "myName");
+        this.ctrl.server.setName(observerID, params[1])
+        this.ctrl.notifyObservers("names");
+        this.ctrl.specNotify(observerID, "myName");
         return undefined;
     }
 }

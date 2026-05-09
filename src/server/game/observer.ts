@@ -1,10 +1,7 @@
-import type Server from "./server"
+import type Server from "../server"
 
 export abstract class Observable {
-    public readonly server: Server
-    protected constructor(server: Server) {
-        this.server = server;
-    }
+    protected constructor(public readonly server: Server) {}
     public notifyObservers(cmd?: string): void {
         this.server.notifyObservers(cmd)
     }

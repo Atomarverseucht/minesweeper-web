@@ -12,12 +12,12 @@ undo <count>:
     override readonly visible = true;
     override readonly next_ = undefined;
 
-    override execute(observerID: string, ctrl: Controller, params: string[]): string | undefined {
+    override execute(observerID: string, params: string[]): string | undefined {
         const count: number = isNaN(Number(params[1])) ? 1 : Number(params[1]);
         for (let i = count; i > 0; i--) {
-            ctrl.undo.undoStep()
+            this.ctrl.undo.undoStep()
         }
-        ctrl.notifyObservers()
+        this.ctrl.notifyObservers()
         return undefined;
     }
 }

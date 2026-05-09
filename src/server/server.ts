@@ -1,19 +1,19 @@
 import type * as Party from "partykit/server";
-import { Controller } from "./Controller/controller";
+import { Controller } from "./game/Controller/controller";
 import type { ServerPayload} from "../shared/Payload";
 import {Player} from "../shared/Player";
 import {v4 as uuid4} from "uuid";
+import type {Command} from "../shared/AbstractCommand";
 
 export default class Server implements Party.Server {
   count = 0;
   playerNumber = 1
-  readonly controller: Controller;
+  readonly controller: Controller = new Controller(this);
   playerIds = new Map<string, string>();
   playerData = new Map<string, Player>();
+  hostPlayerConnId?: string;
 
-  constructor(readonly partyRoom: Party.Room) {
-    this.controller = new Controller(this)
-  }
+  constructor(readonly partyRoom: Party.Room) {}
 
   // Initial
   onConnect(conn: Party.Connection, ctx: Party.ConnectionContext) {
@@ -30,6 +30,7 @@ export default class Server implements Party.Server {
       this.setName(conn.id, `Player ${this.playerNumber.toString()}`)
       this.playerNumber++
     }
+    if(!this.hostPlayerConnId){this.hostPlayerConnId = conn.id}
     const payload = this.getPayload("init", this.playerData.get(conn.id)!.id);
     conn.send(JSON.stringify(payload));
     this.notifyObservers("names");
@@ -62,24 +63,17 @@ export default class Server implements Party.Server {
     const payload = this.getPayload(cmd, this.playerData.get(subID)!.id, msg)
     this.partyRoom.getConnection(subID)?.send(JSON.stringify(payload));
   }
-  public getPayload(cmd: string, subName?: string, msg?: string): ServerPayload {
+  public getPayload(cmd: string, subId?: string, msg?: string): ServerPayload {
     const board = this.controller.getBoard();
     const userCount = this.getOnlinePlayersCount();
     const gameState = this.controller.gameState;
     const users = Array.from(this.playerData.values()).filter(a => a.isOnline)
+    const myConnId = subId ? this.playerIds.get(subId) : undefined;
     switch (cmd) {
-      case "generate":
-        return {
-          type: "generate",
-          board: board,
-          userCount: userCount,
-          gameState: gameState,
-          size: [board.length, board[0].length]
-        };
       case "myName":
         return {
           type: "myName",
-          myId: subName!
+          myId: subId!
         }
       case "names":
         return {
@@ -98,9 +92,10 @@ export default class Server implements Party.Server {
           board: board,
           userCount: userCount,
           gameState: this.controller.gameState,
-          myId: subName,
+          myId: subId,
           users: users,
-          sysCmds: this.controller.getSysCmdList()
+          sysCmds: this.controller.getSysCmdList(myConnId!) as Command[],
+          isHostPlayer: this.hostPlayerConnId === myConnId
       };
       default:
         return {
