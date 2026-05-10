@@ -1,3 +1,10 @@
+# [1.11.0-dev.2](https://github.com/Atomarverseucht/minesweeper-web/compare/1.11.0-dev.1...1.11.0-dev.2) (2026-05-10)
+
+
+### Features
+
+* privilege system ([019dc9c](https://github.com/Atomarverseucht/minesweeper-web/commit/019dc9cdfa475119b389336770eae175c22524e7))
+
 # [1.11.0-dev.1](https://github.com/Atomarverseucht/minesweeper-web/compare/1.10.0...1.11.0-dev.1) (2026-05-09)
 
 
