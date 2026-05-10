@@ -11,6 +11,7 @@ export class GenerateCmd extends SysCommand {
     override readonly helpMsg: string = "generates a new Board"
     override readonly visible: boolean = true
     override readonly hasCmdLine = true
+    override readonly isPrivileged: boolean = true
     override readonly specHelpMsg: string = `generate:
   starts the generation of a board
 

@@ -299,7 +299,7 @@ export default class GameUI extends Component<Record<string, never>, GameUIState
 
         <div className="toolbar">
           {this.state.sysCmds.map((cmd) => (
-              <button title={cmd.helpMsg} onClick={() => this.handleSysCommand(cmd)}> {cmd.cmd} </button>
+              <button className={cmd.isPrivileged ? "privileged" : "unprivileged"} title={cmd.helpMsg} onClick={() => this.handleSysCommand(cmd)}> {cmd.cmd} </button>
           ))}
         </div>
         <section id="gridCmdLine">

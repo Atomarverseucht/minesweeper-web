@@ -19,21 +19,29 @@ export default class Server implements Party.Server {
   onConnect(conn: Party.Connection, ctx: Party.ConnectionContext) {
     console.log(`Connected: id: ${conn.id}, room: ${this.partyRoom.id}, url: ${new URL(ctx.request.url)}`);
     const name: string | null = new URL(conn.uri).searchParams.get("name");
+
+    // Re-connect
     if (this.playerData.has(conn.id)) {
       let p = this.playerData.get(conn.id)!;
       p.isOnline = true;
       this.playerIds.set(p.id, conn.id);
-    } else if (name) {
-      console.log(name)
-      this.setName(conn.id, name);
+
+      // Connect with preferred name
     } else {
-      this.setName(conn.id, `Player ${this.playerNumber.toString()}`)
-      this.playerNumber++
+      if (name) {
+        this.setName(conn.id, name);
+        // Connect without preferred name
+      } else {
+        this.setName(conn.id, `Player ${this.playerNumber.toString()}`)
+        this.playerNumber++
+      }
+      this.playerIds.set(this.playerData.get(conn.id)!.id, conn.id);
     }
     if(!this.hostPlayerConnId){this.hostPlayerConnId = conn.id}
     const payload = this.getPayload("init", this.playerData.get(conn.id)!.id);
     conn.send(JSON.stringify(payload));
     this.notifyObservers("names");
+    console.log("Host: ", this.hostPlayerConnId, (conn.id === this.hostPlayerConnId))
   }
 
   onMessage(message: string, sender: Party.Connection) {
@@ -87,6 +95,7 @@ export default class Server implements Party.Server {
           gameState: msg!,
         };
       case "init":
+        console.log(this.hostPlayerConnId === myConnId);
         return {
           type: "init",
           board: board,

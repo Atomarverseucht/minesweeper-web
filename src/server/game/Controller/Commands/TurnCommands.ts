@@ -26,15 +26,15 @@ export abstract class TurnCommand implements Command {
     }
 
     visible = false;
-
     isPrivileged: boolean = false;
+
     public buildCmd(cmd: String): TurnCommand | undefined {
-        if (cmd === this.cmd) return this
-        else if (!this.next_) return undefined
-        else return this.next_?.buildCmd(cmd)
-    };
+        if (cmd === this.cmd)   return this
+        else if (!this.next_)   return undefined
+        else                    return this.next_.buildCmd(cmd)
+    }
     public listCmds(): TurnCommand[] {
-        if (this.next_){
+        if (this.next_) {
             let cmdList: TurnCommand[] = this.next_.listCmds()
             cmdList.push(this)
             return cmdList
