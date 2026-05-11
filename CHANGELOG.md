@@ -1,3 +1,10 @@
+# [1.11.0-dev.3](https://github.com/Atomarverseucht/minesweeper-web/compare/1.11.0-dev.2...1.11.0-dev.3) (2026-05-11)
+
+
+### Features
+
+* HostPlayer Variable is now hashed ([88681a1](https://github.com/Atomarverseucht/minesweeper-web/commit/88681a18ff7804662ef2ab9f899a4f2e2eec8492))
+
 # [1.11.0-dev.2](https://github.com/Atomarverseucht/minesweeper-web/compare/1.11.0-dev.1...1.11.0-dev.2) (2026-05-10)
 
 
