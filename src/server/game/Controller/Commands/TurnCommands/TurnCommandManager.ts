@@ -6,7 +6,7 @@ export class TurnCommandManager {
     private undoStack: TurnCommand[] = [];
     private redoStack: TurnCommand[] = [];
     private firstCommandCOR(obsID: string, x: number, y: number) {
-        return new FlagCommand(this.control, obsID, x, y); }
+        return new FlagCommand(obsID, this.control, x, y); }
 
     constructor(private control: Controller){}
 
@@ -35,7 +35,7 @@ export class TurnCommandManager {
 
     public doCmd(observerID: string, cmd: string, x: number, y: number): string {
         const result = this.buildCmd(observerID, cmd, x, y)
-        if (result) return this.doStep(result); else return ""
+        if (result) {console.log("cmd: ", result.cmd); return this.doStep(result); } else {console.log("cmd not found"); return ""}
     }
 
     public getStacks(): [TurnCommand[], TurnCommand[]] {

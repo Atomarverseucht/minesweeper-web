@@ -2,10 +2,9 @@ import  {SysCommand} from "../SysCommands"
 import {Board} from "../../../Model/Board";
 import {Running} from "../../state";
 import {GetNameCmd} from "./NameCmds";
-import {startBoard} from "../../../../config";
+import {bombCount4Generate, setBC4G, startBoard} from "../../../../config";
 
-export class GenerateCmd extends SysCommand {
-    private bombCount4Generate: number = 10
+class GenerateCmd extends SysCommand {
     override readonly next_?: SysCommand = new GetNameCmd(this.ctrl);
     override readonly cmd: string = "generate"
     override readonly helpMsg: string = "generates a new Board"
@@ -34,7 +33,7 @@ generate is not undo-able!`
             return "Generated!"
         } catch (e) {
             try {
-                this.bombCount4Generate = +params[3]
+                setBC4G(+params[3])
                 ctrl.gb = startBoard(+params[1], +params[2])
                 ctrl.changeState("start")
                 ctrl.notifyObservers()
@@ -45,3 +44,5 @@ generate is not undo-able!`
         }
     }
 }
+
+export default GenerateCmd

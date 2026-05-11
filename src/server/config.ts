@@ -12,7 +12,7 @@ export const config = {
 }
 
 export let bombCount4Generate: number = 10
-
+export function setBC4G(value: number) {bombCount4Generate = value}
 export function startBoard(xSize: number = config.standXSize, ySize: number = config.standYSize): Board {
     return new Board(Array.from({ length: xSize }, () =>
         Array.from({ length: ySize }, () => new Field(true, false, false))))

@@ -46,7 +46,7 @@ export class OpenFieldCommand extends TurnCommand{
             for (let fx = this.x - 1; fx <= this.x + 1; fx++) {
                 for (let fy = this.y - 1; fy <= this.y + 1; fy++) {
                     if (gb.in(fx, fy) && !gb.getFieldAt(fx, fy).isOpened === discover) {
-                        new OpenFieldCommand(this.ctrl, this.observerID, fx, fy).step(discover);
+                        new OpenFieldCommand(this.observerID, this.ctrl, fx, fy).step(discover);
                     }
                 }
             }

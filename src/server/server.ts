@@ -4,6 +4,7 @@ import type { ServerPayload} from "../shared/Payload";
 import {Player} from "../shared/Player";
 import {v4 as uuid4} from "uuid";
 import type {Command} from "../shared/Command";
+import {createHash} from "crypto";
 
 export default class Server implements Party.Server {
   count = 0;
@@ -11,7 +12,7 @@ export default class Server implements Party.Server {
   readonly controller: Controller = new Controller(this);
   playerIds = new Map<string, string>();
   playerData = new Map<string, Player>();
-  hostPlayerConnId?: string;
+  private hostPlayerConnId?: string;
 
   constructor(readonly partyRoom: Party.Room) {}
 
@@ -37,11 +38,12 @@ export default class Server implements Party.Server {
       }
       this.playerIds.set(this.playerData.get(conn.id)!.id, conn.id);
     }
-    if(!this.hostPlayerConnId){this.hostPlayerConnId = conn.id}
-    const payload = this.getPayload("init", this.playerData.get(conn.id)!.id);
+    const FEID = this.playerData.get(conn.id)!.id
+    if(!this.hostPlayerConnId){console.log(this.setPrivilegedUserWithFEID(FEID,undefined))}
+    const payload = this.getPayload("init", FEID);
     conn.send(JSON.stringify(payload));
     this.notifyObservers("names");
-    console.log("Host: ", this.hostPlayerConnId, (conn.id === this.hostPlayerConnId))
+    console.log("Host: ", this.hostPlayerConnId, "FEID: ", FEID, ", privUser? ", this.isPrivilegedUser(conn.id))
   }
 
   onMessage(message: string, sender: Party.Connection) {
@@ -49,11 +51,11 @@ export default class Server implements Party.Server {
     try {
       const args = message.split(" ");
       console.log(args);
-      if (this.controller.isSysCmd(args[0])) {
+      if (this.controller.isSysCmd(sender.id, args[0])) {
         console.log("sysCmd")
         this.controller.doSysCmd(sender.id, args);
       } else {
-        this.controller.turn(sender.id, args[0], +args[1], +args[2]);
+        console.log(this.controller.turn(sender.id, args[0], +args[1], +args[2]));
         console.log("turn")
       }
     } catch {
@@ -95,7 +97,6 @@ export default class Server implements Party.Server {
           gameState: msg!,
         };
       case "init":
-        console.log(this.hostPlayerConnId === myConnId);
         return {
           type: "init",
           board: board,
@@ -111,7 +112,7 @@ export default class Server implements Party.Server {
           type: "update",
           board: board,
           userCount: userCount,
-          gameState: this.controller.gameState,
+          gameState: gameState,
           users: users,
         };
     }
@@ -135,6 +136,20 @@ export default class Server implements Party.Server {
       if (n) {n.name = name;}
       else this.playerData.set(subID, new Player(name, uuid4()))
     }
+  }
+
+  public isPrivilegedUser(subId?: string): boolean{
+    return this.hostPlayerConnId === this.hashIDs(subId);
+  }
+
+  public setPrivilegedUserWithFEID(newPrivUserFEID: string, oldPrivUser?: string): boolean{
+    const hasRights = this.isPrivilegedUser(oldPrivUser)
+    if (hasRights) this.hostPlayerConnId = this.hashIDs(this.playerIds.get(newPrivUserFEID)!);
+    return hasRights;
+  }
+
+  private hashIDs(subID?: string): string | undefined {
+    return subID ? createHash("sha256").update(subID).digest("base64") : undefined;
   }
 }
 

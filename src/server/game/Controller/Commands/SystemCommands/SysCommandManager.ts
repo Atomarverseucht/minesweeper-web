@@ -1,4 +1,4 @@
-import {GenerateCmd} from "./GenerateCmd"
+import GenerateCmd from "./GenerateCmd"
 import type {Controller} from "../../controller"
 import type {Command} from "../../../../../shared/Command";
 
@@ -10,7 +10,7 @@ export class SysCommandManager {
     }
 
     public doSysCommand(observerID: string, params: string[]): string | undefined {
-        const command = this.firstSysCommand.getSysCmd(params[0], observerID)
+        const command = this.firstSysCommand.getSysCmd(observerID, params[0])
         if (command) {
             return command.execute(observerID, params)
         }

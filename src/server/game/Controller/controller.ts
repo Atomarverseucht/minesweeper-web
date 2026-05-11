@@ -27,7 +27,7 @@ export class Controller extends Observable{
                 this.specNotify(observerID, "error", "You cannot play when died")
                 return "Error: Player is already dead"
             }
-            return this.state.turn(observerID, cmd.toLowerCase(), x, y)
+            return this.state.turn(observerID, cmd, x, y)
         } catch (error) {
             throw error
         }
@@ -37,8 +37,8 @@ export class Controller extends Observable{
         this.state.changeState(newState)
     }
 
-    public isSysCmd(cmd: string): boolean {
-        return this.sysCmd.isSysCommand(cmd)
+    public isSysCmd(subID: string, cmd: string): boolean {
+        return this.sysCmd.isSysCommand(subID, cmd)
     }
 
     public doSysCmd(observerID: string, params: string[]): string | undefined {
@@ -47,10 +47,6 @@ export class Controller extends Observable{
 
     public getBoard(): number[][] {
         return this.gb.getBoard()
-    }
-
-    public getSize(): [number, number] {
-        return this.gb.getSize()
     }
 
     public get inGame(): boolean {

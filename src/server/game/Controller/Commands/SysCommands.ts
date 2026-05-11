@@ -18,11 +18,11 @@ export abstract class SysCommand implements Command{
     visible: boolean = false;
     abstract execute(observerID: string,  params: string[]): string | undefined
 
-    getSysCmd(cmd: string, subId: string): SysCommand | undefined {
+    getSysCmd(subId: string, cmd: string): SysCommand | undefined {
         if (cmd.toLowerCase() === this.cmd.toLowerCase()) {
             return (this.hasRights(subId)) ? this : undefined;
         } else if (this.next_){
-            return this.next_.getSysCmd(cmd, subId)
+            return this.next_.getSysCmd(subId, cmd)
         }
         return undefined
     }
@@ -31,6 +31,7 @@ export abstract class SysCommand implements Command{
         const baseKeys = Object.keys(new CommandImpl());
         const entries = baseKeys.map(key => [key, this[key as keyof this]]);
         const e: Command = Object.fromEntries(entries);
+        console.log(this.hasRights(subId))
         if (this.next_){
             const cmds = this.next_.listCmds(subId)
             return this.hasRights(subId) ? [e, ...cmds] : cmds;
@@ -39,7 +40,7 @@ export abstract class SysCommand implements Command{
         }
     }
 
-    hasRights(subId: string): boolean { return !this.isPrivileged || (this.ctrl.server.hostPlayerConnId === subId) }
+    hasRights(subId: string): boolean { return !this.isPrivileged || this.ctrl.server.isPrivilegedUser(subId) }
 }
 export abstract class InvisibleSysCommand extends SysCommand {
     override readonly helpMsg: string = "invisible";

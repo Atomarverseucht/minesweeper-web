@@ -36,7 +36,6 @@ export class Running extends GameState {
         if (!this.context.gb.in(x, y)) {
             throw new Error(`${x} or ${y} is out of bound!`)
         }
-        // In TS gibt doCmd direkt den Erfolgswert zurück oder wirft Fehler
         return this.context.undo.doCmd(observerID, cmd, x, y)
     }
 }
