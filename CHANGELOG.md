@@ -1,3 +1,10 @@
+# [1.11.0-dev.6](https://github.com/Atomarverseucht/minesweeper-web/compare/1.11.0-dev.5...1.11.0-dev.6) (2026-05-27)
+
+
+### Bug Fixes
+
+* No search for new host if room is empty ([a50f0d7](https://github.com/Atomarverseucht/minesweeper-web/commit/a50f0d700fb7d0341148de2d96b9bb5ed6290bb8))
+
 # [1.11.0-dev.5](https://github.com/Atomarverseucht/minesweeper-web/compare/1.11.0-dev.4...1.11.0-dev.5) (2026-05-27)
 
 
