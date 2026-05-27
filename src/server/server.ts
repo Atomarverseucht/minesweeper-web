@@ -1,50 +1,63 @@
 import type * as Party from "partykit/server";
-import { Controller } from "./Controller/controller";
+import { Controller } from "./game/Controller/controller";
 import type { ServerPayload} from "../shared/Payload";
 import {Player} from "../shared/Player";
 import {v4 as uuid4} from "uuid";
+import type {Command} from "../shared/Command";
+import {createHash} from "crypto";
 
 export default class Server implements Party.Server {
   count = 0;
   playerNumber = 1
-  readonly controller: Controller;
+  readonly controller: Controller = new Controller(this);
   playerIds = new Map<string, string>();
   playerData = new Map<string, Player>();
+  private hostPlayerConnId?: string;
 
-  constructor(readonly partyRoom: Party.Room) {
-    this.controller = new Controller(this)
-  }
+  constructor(readonly partyRoom: Party.Room) {}
 
   // Initial
   onConnect(conn: Party.Connection, ctx: Party.ConnectionContext) {
-    console.log(`Connected: id: ${conn.id}, room: ${this.partyRoom.id}, url: ${new URL(ctx.request.url)}`);
+    const connIdHashed = this.hashIDs(conn.id)!;
+    console.log(`Connected: hashed id: ${connIdHashed}, room: ${this.partyRoom.id}, url: ${new URL(ctx.request.url)}`);
     const name: string | null = new URL(conn.uri).searchParams.get("name");
-    if (this.playerData.has(conn.id)) {
-      let p = this.playerData.get(conn.id)!;
+
+    // Re-connect
+    if (this.playerData.has(connIdHashed)) {
+      let p = this.playerData.get(connIdHashed)!;
       p.isOnline = true;
-      this.playerIds.set(p.id, conn.id);
-    } else if (name) {
-      console.log(name)
-      this.setName(conn.id, name);
+      this.playerIds.set(p.id, connIdHashed);
+
+      // Connect with preferred name
     } else {
-      this.setName(conn.id, `Player ${this.playerNumber.toString()}`)
-      this.playerNumber++
+      if (name) {
+        this.setName(connIdHashed, name);
+        // Connect without preferred name
+      } else {
+        this.setName(connIdHashed, `Player ${this.playerNumber.toString()}`)
+        this.playerNumber++
+      }
+      this.playerIds.set(this.playerData.get(connIdHashed)!.id, connIdHashed);
     }
-    const payload = this.getPayload("init", this.playerData.get(conn.id)!.id);
+    const FEID = this.playerData.get(connIdHashed)!.id
+    if(!this.hostPlayerConnId){console.log(this.setPrivilegedUserWithConnID(connIdHashed,undefined))}
+    const payload = this.getPayload("init", FEID);
     conn.send(JSON.stringify(payload));
     this.notifyObservers("names");
+    console.log("Host: ", this.hostPlayerConnId, ", FEID: ", FEID, ", privUser? ", this.isPrivilegedUser(connIdHashed))
   }
 
   onMessage(message: string, sender: Party.Connection) {
-    console.log(`connection ${sender.id} sent message: ${message}`);
+    const connIdHashed = this.hashIDs(sender.id)!
+    console.log(`connection ${connIdHashed}[hashed] sent message: ${message}`);
     try {
       const args = message.split(" ");
       console.log(args);
-      if (this.controller.isSysCmd(args[0])) {
+      if (this.controller.isSysCmd(connIdHashed, args[0])) {
         console.log("sysCmd")
-        this.controller.doSysCmd(sender.id, args);
+        this.controller.doSysCmd(connIdHashed, args);
       } else {
-        this.controller.turn(sender.id, args[0], +args[1], +args[2]);
+        console.log(this.controller.turn(connIdHashed, args[0], +args[1], +args[2]));
         console.log("turn")
       }
     } catch {
@@ -62,24 +75,17 @@ export default class Server implements Party.Server {
     const payload = this.getPayload(cmd, this.playerData.get(subID)!.id, msg)
     this.partyRoom.getConnection(subID)?.send(JSON.stringify(payload));
   }
-  public getPayload(cmd: string, subName?: string, msg?: string): ServerPayload {
+  public getPayload(cmd: string, subId?: string, msg?: string): ServerPayload {
     const board = this.controller.getBoard();
     const userCount = this.getOnlinePlayersCount();
     const gameState = this.controller.gameState;
     const users = Array.from(this.playerData.values()).filter(a => a.isOnline)
+    const myConnId = subId ? this.playerIds.get(subId) : undefined;
     switch (cmd) {
-      case "generate":
-        return {
-          type: "generate",
-          board: board,
-          userCount: userCount,
-          gameState: gameState,
-          size: [board.length, board[0].length]
-        };
       case "myName":
         return {
           type: "myName",
-          myId: subName!
+          myId: subId!
         }
       case "names":
         return {
@@ -98,16 +104,17 @@ export default class Server implements Party.Server {
           board: board,
           userCount: userCount,
           gameState: this.controller.gameState,
-          myId: subName,
+          myId: subId,
           users: users,
-          sysCmds: this.controller.getSysCmdList()
+          sysCmds: this.controller.getSysCmdList(myConnId!) as Command[],
+          isHostPlayer: this.hostPlayerConnId === myConnId
       };
       default:
         return {
           type: "update",
           board: board,
           userCount: userCount,
-          gameState: this.controller.gameState,
+          gameState: gameState,
           users: users,
         };
     }
@@ -117,9 +124,11 @@ export default class Server implements Party.Server {
     return Array.from(this.playerData.values()).filter(p => p.isOnline).length;
   }
 
-  async onClose(connection: Party.Connection) {
-    let p = this.playerData.get(connection.id)!;
+  async onClose(conn: Party.Connection) {
+    const connIdHashed = this.hashIDs(conn.id)!;
+    let p = this.playerData.get(connIdHashed)!;
     console.log(`User ${p.name} disconnected.`);
+    this.controller.doSysCmd(connIdHashed, ["transferHost", ""])
     this.playerIds.delete(p.id);
     p.isOnline = false;
     this.notifyObservers("names");
@@ -131,6 +140,24 @@ export default class Server implements Party.Server {
       if (n) {n.name = name;}
       else this.playerData.set(subID, new Player(name, uuid4()))
     }
+  }
+
+  public isPrivilegedUser(subId?: string): boolean{
+    return this.hostPlayerConnId === this.hashIDs(subId);
+  }
+
+  public setPrivilegedUserWithFEID(newPrivUserFEID: string, oldPrivUser?: string): boolean{
+    return this.setPrivilegedUserWithConnID(this.playerIds.get(newPrivUserFEID)!, oldPrivUser);
+  }
+
+  public setPrivilegedUserWithConnID(newPrivUserConnID?: string, oldPrivUser?: string): boolean{
+    const hasRights = this.isPrivilegedUser(oldPrivUser)
+    if (hasRights) this.hostPlayerConnId = this.hashIDs(newPrivUserConnID);
+    return hasRights;
+  }
+
+  private hashIDs(subID?: string): string | undefined {
+    return subID ? createHash("sha256").update(subID).digest("base64") : undefined;
   }
 }
 

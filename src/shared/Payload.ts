@@ -1,5 +1,5 @@
 import type {Player} from "./Player";
-import type {Command} from "./AbstractCommand";
+import type {Command} from "./Command";
 
 export type ServerPayload = {
     type: string;
@@ -10,5 +10,5 @@ export type ServerPayload = {
     users?: Player[];
     myId?: string;
     sysCmds?: Command[];
-    size?: number[];
+    isHostPlayer?: boolean;
 };

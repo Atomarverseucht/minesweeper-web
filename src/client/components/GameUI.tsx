@@ -7,7 +7,7 @@ import {Cookies} from "react-cookie"
 import {CookieConsent} from "react-cookie-consent";
 import type {CookieData} from "../../shared/CookieData";
 import {v4 as uuid4} from "uuid";
-import type {Command} from "../../shared/AbstractCommand";
+import type {Command} from "../../shared/Command";
 
 type PlayerName = {
   isSelf: boolean;
@@ -155,9 +155,6 @@ export default class GameUI extends Component<Record<string, never>, GameUIState
       this.applyNames(payload.users);
       this.setOwnName(payload.users.find(p => p.id === this.state.ownId)?.name ?? "ERRÖR")
     }
-    if (payload.type === "generate") {
-      console.log(payload.size!)
-    }
   }
 
   private setOwnName(nextOwnName: string): void {
@@ -269,9 +266,12 @@ export default class GameUI extends Component<Record<string, never>, GameUIState
   }
 
   private handleSpecSysCommand(cmd: string, params: string): void {
-    let outString = cmd + " " + params;
+    let outString = cmd + " " + params.replace(cmd, "");
     this.socket!.send(outString);
     this.setState({cmdLine: undefined})
+  }
+  private copyClipboard = async (text: string): Promise<void> => {
+    await navigator.clipboard.writeText(text)
   }
 
   public render() {
@@ -302,7 +302,7 @@ export default class GameUI extends Component<Record<string, never>, GameUIState
 
         <div className="toolbar">
           {this.state.sysCmds.map((cmd) => (
-              <button title={cmd.helpMsg} onClick={() => this.handleSysCommand(cmd)}> {cmd.cmd} </button>
+              <button className={cmd.isPrivileged ? "privileged" : "unprivileged"} title={cmd.helpMsg} onClick={() => this.handleSysCommand(cmd)}> {cmd.cmd} </button>
           ))}
         </div>
         <section id="gridCmdLine">
@@ -362,7 +362,8 @@ export default class GameUI extends Component<Record<string, never>, GameUIState
             <ul className="name-list">
               {playerNames.map((player) => (
                 <li key={player.player.name}>
-                  <span>{player.player.name}{player.isSelf ? " (you)" : ""} {"♥️".repeat(player.player.lifes)}</span>
+                  <span title={`Frontend ID: ${player.player.id}`} onClick={() => this.copyClipboard(player.player.id)}>
+                    {player.player.name}{player.isSelf ? " (you)" : ""} {"♥️".repeat(player.player.lifes)}</span>
                 </li>
               ))}
             </ul>

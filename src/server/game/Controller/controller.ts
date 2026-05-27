@@ -3,24 +3,22 @@ import {type GameState, Lost, Running, Start} from "./state"
 import {Observable} from "../observer";
 import {TurnCommandManager} from "./Commands/TurnCommands/TurnCommandManager"
 import {SysCommandManager} from "./Commands/SystemCommands/SysCommandManager"
-import type Server from "../server";
-import {Config} from "../config";
-import type {Player} from "../../shared/Player";
-import type {Command} from "../../shared/AbstractCommand";
+import type Server from "../../server";
+import {config, startBoard} from "../../config";
+import type {Command} from "../../../shared/Command";
 
 export class Controller extends Observable{
     public state: GameState = new Start(this)
     public readonly undo
     public readonly sysCmd
     public gb: Board
-    public config = new Config()
 
     constructor(server: Server, gb?: Board) {
         super(server)
         this.undo = new TurnCommandManager(this)
-        this.sysCmd = new SysCommandManager()
+        this.sysCmd = new SysCommandManager(this)
         if (gb) {this.gb = gb}
-        else {this.gb = this.config.startBoard(10, 10)}
+        else {this.gb = startBoard(config.standXSize, config.standYSize)}
     }
 
     public turn(observerID: string, cmd: string, x: number, y: number): string {
@@ -29,7 +27,7 @@ export class Controller extends Observable{
                 this.specNotify(observerID, "error", "You cannot play when died")
                 return "Error: Player is already dead"
             }
-            return this.state.turn(observerID, cmd.toLowerCase(), x, y)
+            return this.state.turn(observerID, cmd, x, y)
         } catch (error) {
             throw error
         }
@@ -39,20 +37,16 @@ export class Controller extends Observable{
         this.state.changeState(newState)
     }
 
-    public isSysCmd(cmd: string): boolean {
-        return this.sysCmd.isSysCommand(cmd)
+    public isSysCmd(subID: string, cmd: string): boolean {
+        return this.sysCmd.isSysCommand(subID, cmd)
     }
 
     public doSysCmd(observerID: string, params: string[]): string | undefined {
-        return this.sysCmd.doSysCommand(observerID, this, params)
+        return this.sysCmd.doSysCommand(observerID, params)
     }
 
     public getBoard(): number[][] {
         return this.gb.getBoard()
-    }
-
-    public getSize(): [number, number] {
-        return this.gb.getSize()
     }
 
     public get inGame(): boolean {
@@ -63,8 +57,8 @@ export class Controller extends Observable{
         return this.state.gameState;
     }
 
-    public getSysCmdList(): Command[] {
-        return this.sysCmd.getSysCmdList();
+    public getSysCmdList(subId: string): Command[] {
+        return this.sysCmd.getSysCmdList(subId);
     }
 
     public isVictory(): boolean {
