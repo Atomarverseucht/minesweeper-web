@@ -150,9 +150,9 @@ export default class Server implements Party.Server {
     return this.setPrivilegedUserWithConnID(this.playerIds.get(newPrivUserFEID)!, oldPrivUser);
   }
 
-  public setPrivilegedUserWithConnID(newPrivUserFEID: string, oldPrivUser?: string): boolean{
+  public setPrivilegedUserWithConnID(newPrivUserConnID?: string, oldPrivUser?: string): boolean{
     const hasRights = this.isPrivilegedUser(oldPrivUser)
-    if (hasRights) this.hostPlayerConnId = this.hashIDs(newPrivUserFEID);
+    if (hasRights) this.hostPlayerConnId = this.hashIDs(newPrivUserConnID);
     return hasRights;
   }
 

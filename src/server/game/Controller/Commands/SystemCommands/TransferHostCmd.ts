@@ -13,7 +13,11 @@ export class TransferHostCmd extends SysCommand{
     execute(observerID: string, params: string[]): string | undefined {
         const server = this.ctrl.server;
         let user: string;
-        if (params.length < 2) {
+        if (server.playerIds.size <= 1) {
+            server.setPrivilegedUserWithConnID(undefined, observerID);
+            return undefined;
+        }
+        else if (params.length < 2) {
             user = Array.from(server.playerIds.values()).filter(e => e !== observerID) [Math.floor(Math.random() * server.playerIds.size - 1)];
         }
         else if (server.playerIds.has(params[1])) {
