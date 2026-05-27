@@ -1,3 +1,10 @@
+# [1.11.0-dev.4](https://github.com/Atomarverseucht/minesweeper-web/compare/1.11.0-dev.3...1.11.0-dev.4) (2026-05-27)
+
+
+### Features
+
+* connection ids are now hashed ([e8af378](https://github.com/Atomarverseucht/minesweeper-web/commit/e8af3788f2a8e16a94a98f5d8b638a06807435f4))
+
 # [1.11.0-dev.3](https://github.com/Atomarverseucht/minesweeper-web/compare/1.11.0-dev.2...1.11.0-dev.3) (2026-05-11)
 
 
