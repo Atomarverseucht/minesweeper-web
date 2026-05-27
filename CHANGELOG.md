@@ -1,3 +1,19 @@
+# [1.11.0](https://github.com/Atomarverseucht/minesweeper-web/compare/1.10.0...1.11.0) (2026-05-27)
+
+
+### Bug Fixes
+
+* No search for new host if room is empty ([a50f0d7](https://github.com/Atomarverseucht/minesweeper-web/commit/a50f0d700fb7d0341148de2d96b9bb5ed6290bb8))
+
+
+### Features
+
+* connection ids are now hashed ([e8af378](https://github.com/Atomarverseucht/minesweeper-web/commit/e8af3788f2a8e16a94a98f5d8b638a06807435f4))
+* Host system (in development) ([5395d5d](https://github.com/Atomarverseucht/minesweeper-web/commit/5395d5d5509cee6c36ac809b6d758fe53cac2e43))
+* HostPlayer Variable is now hashed ([88681a1](https://github.com/Atomarverseucht/minesweeper-web/commit/88681a18ff7804662ef2ab9f899a4f2e2eec8492))
+* privilege system ([019dc9c](https://github.com/Atomarverseucht/minesweeper-web/commit/019dc9cdfa475119b389336770eae175c22524e7))
+* **SystemCmd:** added transferHost ([705d727](https://github.com/Atomarverseucht/minesweeper-web/commit/705d727626fdabea9448f7f515dbc1fdc809b211))
+
 # [1.11.0-dev.6](https://github.com/Atomarverseucht/minesweeper-web/compare/1.11.0-dev.5...1.11.0-dev.6) (2026-05-27)
 
 
