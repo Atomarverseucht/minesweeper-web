@@ -1,3 +1,10 @@
+# [1.11.0-dev.5](https://github.com/Atomarverseucht/minesweeper-web/compare/1.11.0-dev.4...1.11.0-dev.5) (2026-05-27)
+
+
+### Features
+
+* **SystemCmd:** added transferHost ([705d727](https://github.com/Atomarverseucht/minesweeper-web/commit/705d727626fdabea9448f7f515dbc1fdc809b211))
+
 # [1.11.0-dev.4](https://github.com/Atomarverseucht/minesweeper-web/compare/1.11.0-dev.3...1.11.0-dev.4) (2026-05-27)
 
 
