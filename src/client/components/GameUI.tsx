@@ -1,4 +1,4 @@
-import {Component, type CSSProperties, type KeyboardEvent, type MouseEvent} from "react";
+import {Component, type CSSProperties, type MouseEvent} from "react";
 import PartySocket from "partysocket";
 import {RoomService} from "../roomService";
 import type {ServerPayload} from "../../shared/Payload";
@@ -8,29 +8,10 @@ import {CookieConsent} from "react-cookie-consent";
 import type {CookieData} from "../../shared/CookieData";
 import {v4 as uuid4} from "uuid";
 import type {Command} from "../../shared/Command";
+import type {PlayerName, UIState} from "../UIState";
+import {NamePanel} from "./NamePanel";
 
-type PlayerName = {
-  isSelf: boolean;
-  player: Player;
-};
-
-type GameUIState = {
-  board: number[][];
-  userCount: number;
-  statusText: string;
-  roomId: string;
-  copyHint: string;
-  playerNames: PlayerName[];
-  pendingName: string;
-  isEditingOwnName: boolean;
-  ownName: string;
-  ownId: string;
-  sysCmds: Command[];
-  cmdLine?: Command;
-  cmdLineContent?: string;
-};
-
-class BoardLayoutService {
+export class BoardLayoutService {
   public static fallbackBoard(width: number, height: number): number[][] {
     return Array.from({ length: width }, () => Array.from({ length: height }, () => -1));
   }
@@ -47,12 +28,11 @@ class BoardLayoutService {
   }
 }
 
-export default class GameUI extends Component<Record<string, never>, GameUIState> {
-  private socket?: PartySocket = undefined;
+export default class GameUI extends Component<Record<string, never>, UIState> {
   readonly cookie = new Cookies();
   readonly initialCookie? = this.cookie.get<CookieData>("minesweeper-web")
   private clearCopyHintTimeout?: number = undefined;
-
+  readonly namePanel: NamePanel;
   public constructor(props: Record<string, never>) {
     super(props);
     this.state = {
@@ -68,6 +48,7 @@ export default class GameUI extends Component<Record<string, never>, GameUIState
       ownId: "...",
       sysCmds: [],
     };
+    this.namePanel = new NamePanel(this.props, this.state)
   }
 
   public componentDidMount(): void {
@@ -75,9 +56,9 @@ export default class GameUI extends Component<Record<string, never>, GameUIState
   }
 
   public componentWillUnmount(): void {
-    if (this.socket) {
-      this.socket.close();
-      this.socket = undefined;
+    if (this.state.socket) {
+      this.state.socket.close();
+      this.setState({socket: undefined}) ;
     }
     if (this.clearCopyHintTimeout !== undefined) {
       window.clearTimeout(this.clearCopyHintTimeout);
@@ -97,8 +78,7 @@ export default class GameUI extends Component<Record<string, never>, GameUIState
     } else {
       id = uuid4();
     }
-
-    this.socket = new PartySocket({
+    const socket = new PartySocket({
       host: window.location.host,
       room: this.state.roomId,
       maxRetries: 0,
@@ -106,15 +86,15 @@ export default class GameUI extends Component<Record<string, never>, GameUIState
       query: {
         name: myName
       }
-    });
-
-    this.socket.addEventListener("open", () => {
+    })
+    socket.addEventListener("open", () => {
       this.setState({ statusText: "Connected." });
     });
 
-    this.socket.addEventListener("message", (event: MessageEvent) => {
+    socket.addEventListener("message", (event: MessageEvent) => {
       this.handleServerMessage(event.data);
     });
+    this.setState({socket: socket})
   }
 
   private handleServerMessage(rawPayload: any): void {
@@ -168,7 +148,7 @@ export default class GameUI extends Component<Record<string, never>, GameUIState
         return { ...entry, isSelf: entry.player.name === nextOwnName };
       }),
     }));
-    const cdata: CookieData = {clientID: this.socket!.id, playerName: nextOwnName};
+    const cdata: CookieData = {clientID: this.state.socket!.id, playerName: nextOwnName};
     this.cookie.set("minesweeper-web", cdata);
   }
 
@@ -183,14 +163,14 @@ export default class GameUI extends Component<Record<string, never>, GameUIState
     });
 
     this.setState((prevState) => {
-      let newState: GameUIState = prevState
+      let newState: UIState = prevState
       newState.playerNames = normalizedNames
       return newState;
     });
   }
 
   private sendTurn(command: string, x: number, y: number): void {
-    this.socket?.send(`${command} ${x} ${y}`);
+    this.state.socket?.send(`${command} ${x} ${y}`);
   }
 
   private handlePrimaryClick = (x: number, y: number): void => {
@@ -221,45 +201,9 @@ export default class GameUI extends Component<Record<string, never>, GameUIState
     }, 2000);
   };
 
-  private startEditingOwnName = (): void => {
-    this.setState((prevState) => ({
-      isEditingOwnName: true,
-      pendingName: prevState.ownName,
-    }));
-  };
-
-  private changePendingName = (nextName: string): void => {
-    this.setState({ pendingName: nextName });
-  };
-
-  private saveOwnName = (): void => {
-    const trimmedName = this.state.pendingName.trim();
-    const safeName = trimmedName.replace(/\s+/g, " ");
-
-    this.socket?.send(`changeName ${safeName}`);
-    this.setState({
-      isEditingOwnName: false,
-      statusText: "Name change sent.",
-    });
-  };
-
-  private handleOwnNameInputKeyDown = (event: KeyboardEvent<HTMLInputElement>): void => {
-    if (event.key === "Enter") {
-      event.preventDefault();
-      this.saveOwnName();
-    }
-  };
-
-  private cancelOwnNameEdit = (): void => {
-    this.setState((prevState) => ({
-      isEditingOwnName: false,
-      pendingName: prevState.ownName,
-    }));
-  };
-
   private handleSysCommand(cmd: Command): void {
     if (!cmd.hasCmdLine) {
-      this.socket!.send(`${cmd.cmd}`);
+      this.state.socket!.send(`${cmd.cmd}`);
     } else {
       this.setState({cmdLine: cmd})
     }
@@ -267,15 +211,12 @@ export default class GameUI extends Component<Record<string, never>, GameUIState
 
   private handleSpecSysCommand(cmd: string, params: string): void {
     let outString = cmd + " " + params.replace(cmd, "");
-    this.socket!.send(outString);
+    this.state.socket!.send(outString);
     this.setState({cmdLine: undefined})
-  }
-  private copyClipboard = async (text: string): Promise<void> => {
-    await navigator.clipboard.writeText(text)
   }
 
   public render() {
-    const { board, userCount, statusText, roomId, copyHint, playerNames, ownName, pendingName, isEditingOwnName, cmdLine } = this.state;
+    const { board, userCount, statusText, roomId, copyHint, cmdLine } = this.state;
     const [height, width] = BoardLayoutService.getDimensions(board);
     const cellSize = BoardLayoutService.getCellSize(width, height);
     const boardStyle: CSSProperties = {
@@ -335,42 +276,7 @@ export default class GameUI extends Component<Record<string, never>, GameUIState
             </section> : null
           }
         </section>
-        <section className="name-panel" aria-label="Player names">
-          <div className="own-name-row">
-            <span>Your name:</span>
-            {isEditingOwnName ? (
-              <div className="name-edit-row">
-                <input
-                  type="text"
-                  value={pendingName}
-                  onChange={(event) => this.changePendingName(event.target.value)}
-                  onKeyDown={this.handleOwnNameInputKeyDown}
-                  maxLength={32}
-                  autoFocus
-                />
-                <button type="button" onClick={this.saveOwnName}>Save</button>
-                <button type="button" onClick={this.cancelOwnNameEdit}>Cancel</button>
-              </div>
-            ) : (
-              <button type="button" className="own-name visibleButton" onClick={this.startEditingOwnName} title="Click to edit">
-                {ownName}
-              </button>
-            )}
-          </div>
-
-          {playerNames.length ? (
-            <ul className="name-list">
-              {playerNames.map((player) => (
-                <li key={player.player.name}>
-                  <span title={`Frontend ID: ${player.player.id}`} onClick={() => this.copyClipboard(player.player.id)}>
-                    {player.player.name}{player.isSelf ? " (you)" : ""} {"♥️".repeat(player.player.lifes)}</span>
-                </li>
-              ))}
-            </ul>
-          ): (
-            <p className="name-empty">No names received yet.</p>
-          )}
-        </section>
+        {this.namePanel}
           <CookieConsent location="bottom" buttonText="I understand" overlay >
           This website uses cookies to to enhance the user experience. Only technically necessary cookies are used.
         </CookieConsent>
