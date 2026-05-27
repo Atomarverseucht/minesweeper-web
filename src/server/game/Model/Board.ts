@@ -64,7 +64,6 @@ export class Board {
         return this.board.map(row => row.join(", ")).join("\n")
     }
 
-    // Statische "Object" Methoden
     static maxBombs(xSize: number, ySize: number): number {
         return xSize * ySize - 9
     }
@@ -74,7 +73,7 @@ export class Board {
     }
 
     static create(xSize: number, ySize: number, xStart: number, yStart: number, bombCount: number): Board {
-        if (xSize < 10 || ySize < 10) throw new Error("x and y size must be >= 10")
+        if (xSize < 5 || ySize < 5) throw new Error("x and y size must be >= 5")
         const isEdge = (size: number, pos: number) => pos === 0 || pos === size - 1
 
         let ex = 0
@@ -84,7 +83,6 @@ export class Board {
         const bMax = Board.maxBombs(xSize, ySize) + ex
         if (bombCount < 1 || bombCount > bMax) throw new Error(`Bomb Count must be between 1 and ${bMax}`)
 
-        // Initiale Matrix erstellen
         let currentBoard: Field[][] = Array.from({ length: xSize }, () =>
             Array.from({ length: ySize }, () => new Field(false, true, false))
         )

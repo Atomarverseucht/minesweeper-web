@@ -31,7 +31,6 @@ export abstract class SysCommand implements Command{
         const baseKeys = Object.keys(new CommandImpl());
         const entries = baseKeys.map(key => [key, this[key as keyof this]]);
         const e: Command = Object.fromEntries(entries);
-        console.log(this.hasRights(subId))
         if (this.next_){
             const cmds = this.next_.listCmds(subId)
             return this.hasRights(subId) ? [e, ...cmds] : cmds;

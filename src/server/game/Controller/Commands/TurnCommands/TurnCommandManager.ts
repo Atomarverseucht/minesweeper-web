@@ -11,7 +11,7 @@ export class TurnCommandManager {
     constructor(private control: Controller){}
 
     private doStep(cmd: TurnCommand): string {
-            const stepResult = cmd.doStep(); // Annahme: wirft Error bei Failure oder gibt Try zurück
+            const stepResult = cmd.doStep();
             this.undoStack.push(cmd);
             this.control.notifyObservers();
             return stepResult.value;

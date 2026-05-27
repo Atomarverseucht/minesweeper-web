@@ -18,44 +18,46 @@ export default class Server implements Party.Server {
 
   // Initial
   onConnect(conn: Party.Connection, ctx: Party.ConnectionContext) {
-    console.log(`Connected: id: ${conn.id}, room: ${this.partyRoom.id}, url: ${new URL(ctx.request.url)}`);
+    const connIdHashed = this.hashIDs(conn.id)!;
+    console.log(`Connected: hashed id: ${connIdHashed}, room: ${this.partyRoom.id}, url: ${new URL(ctx.request.url)}`);
     const name: string | null = new URL(conn.uri).searchParams.get("name");
 
     // Re-connect
-    if (this.playerData.has(conn.id)) {
-      let p = this.playerData.get(conn.id)!;
+    if (this.playerData.has(connIdHashed)) {
+      let p = this.playerData.get(connIdHashed)!;
       p.isOnline = true;
-      this.playerIds.set(p.id, conn.id);
+      this.playerIds.set(p.id, connIdHashed);
 
       // Connect with preferred name
     } else {
       if (name) {
-        this.setName(conn.id, name);
+        this.setName(connIdHashed, name);
         // Connect without preferred name
       } else {
-        this.setName(conn.id, `Player ${this.playerNumber.toString()}`)
+        this.setName(connIdHashed, `Player ${this.playerNumber.toString()}`)
         this.playerNumber++
       }
-      this.playerIds.set(this.playerData.get(conn.id)!.id, conn.id);
+      this.playerIds.set(this.playerData.get(connIdHashed)!.id, connIdHashed);
     }
-    const FEID = this.playerData.get(conn.id)!.id
+    const FEID = this.playerData.get(connIdHashed)!.id
     if(!this.hostPlayerConnId){console.log(this.setPrivilegedUserWithFEID(FEID,undefined))}
     const payload = this.getPayload("init", FEID);
     conn.send(JSON.stringify(payload));
     this.notifyObservers("names");
-    console.log("Host: ", this.hostPlayerConnId, "FEID: ", FEID, ", privUser? ", this.isPrivilegedUser(conn.id))
+    console.log("Host: ", this.hostPlayerConnId, ", FEID: ", FEID, ", privUser? ", this.isPrivilegedUser(connIdHashed))
   }
 
   onMessage(message: string, sender: Party.Connection) {
-    console.log(`connection ${sender.id} sent message: ${message}`);
+    const connIdHashed = this.hashIDs(sender.id)!
+    console.log(`connection ${connIdHashed}[hashed] sent message: ${message}`);
     try {
       const args = message.split(" ");
       console.log(args);
-      if (this.controller.isSysCmd(sender.id, args[0])) {
+      if (this.controller.isSysCmd(connIdHashed, args[0])) {
         console.log("sysCmd")
-        this.controller.doSysCmd(sender.id, args);
+        this.controller.doSysCmd(connIdHashed, args);
       } else {
-        console.log(this.controller.turn(sender.id, args[0], +args[1], +args[2]));
+        console.log(this.controller.turn(connIdHashed, args[0], +args[1], +args[2]));
         console.log("turn")
       }
     } catch {
