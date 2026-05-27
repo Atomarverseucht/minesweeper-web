@@ -40,7 +40,7 @@ export default class Server implements Party.Server {
       this.playerIds.set(this.playerData.get(connIdHashed)!.id, connIdHashed);
     }
     const FEID = this.playerData.get(connIdHashed)!.id
-    if(!this.hostPlayerConnId){console.log(this.setPrivilegedUserWithFEID(FEID,undefined))}
+    if(!this.hostPlayerConnId){console.log(this.setPrivilegedUserWithConnID(connIdHashed,undefined))}
     const payload = this.getPayload("init", FEID);
     conn.send(JSON.stringify(payload));
     this.notifyObservers("names");
@@ -124,9 +124,11 @@ export default class Server implements Party.Server {
     return Array.from(this.playerData.values()).filter(p => p.isOnline).length;
   }
 
-  async onClose(connection: Party.Connection) {
-    let p = this.playerData.get(connection.id)!;
+  async onClose(conn: Party.Connection) {
+    const connIdHashed = this.hashIDs(conn.id)!;
+    let p = this.playerData.get(connIdHashed)!;
     console.log(`User ${p.name} disconnected.`);
+    this.controller.doSysCmd(connIdHashed, ["transferHost", ""])
     this.playerIds.delete(p.id);
     p.isOnline = false;
     this.notifyObservers("names");
@@ -145,8 +147,12 @@ export default class Server implements Party.Server {
   }
 
   public setPrivilegedUserWithFEID(newPrivUserFEID: string, oldPrivUser?: string): boolean{
+    return this.setPrivilegedUserWithConnID(this.playerIds.get(newPrivUserFEID)!, oldPrivUser);
+  }
+
+  public setPrivilegedUserWithConnID(newPrivUserFEID: string, oldPrivUser?: string): boolean{
     const hasRights = this.isPrivilegedUser(oldPrivUser)
-    if (hasRights) this.hostPlayerConnId = this.hashIDs(this.playerIds.get(newPrivUserFEID)!);
+    if (hasRights) this.hostPlayerConnId = this.hashIDs(newPrivUserFEID);
     return hasRights;
   }
 

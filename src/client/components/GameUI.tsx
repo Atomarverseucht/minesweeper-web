@@ -270,6 +270,9 @@ export default class GameUI extends Component<Record<string, never>, GameUIState
     this.socket!.send(outString);
     this.setState({cmdLine: undefined})
   }
+  private copyClipboard = async (text: string): Promise<void> => {
+    await navigator.clipboard.writeText(text)
+  }
 
   public render() {
     const { board, userCount, statusText, roomId, copyHint, playerNames, ownName, pendingName, isEditingOwnName, cmdLine } = this.state;
@@ -359,7 +362,8 @@ export default class GameUI extends Component<Record<string, never>, GameUIState
             <ul className="name-list">
               {playerNames.map((player) => (
                 <li key={player.player.name}>
-                  <span>{player.player.name}{player.isSelf ? " (you)" : ""} {"♥️".repeat(player.player.lifes)}</span>
+                  <span title={`Frontend ID: ${player.player.id}`} onClick={() => this.copyClipboard(player.player.id)}>
+                    {player.player.name}{player.isSelf ? " (you)" : ""} {"♥️".repeat(player.player.lifes)}</span>
                 </li>
               ))}
             </ul>

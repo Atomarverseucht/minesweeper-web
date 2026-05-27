@@ -1,5 +1,4 @@
 import {SysCommand} from "../SysCommands";
-import type {Controller} from "../../controller";
 
 export class UndoCmd extends SysCommand {
     override readonly cmd: string = "undo";
