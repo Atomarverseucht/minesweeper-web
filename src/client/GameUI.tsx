@@ -1,15 +1,13 @@
-import {Component, type CSSProperties, type MouseEvent} from "react";
+import { Component, type CSSProperties, type MouseEvent } from "react";
+import { RoomService } from "../roomService";
+import type { ServerPayload } from "../../shared/Payload";
+import { Player } from "../../shared/Player";
+import { CookieConsent } from "react-cookie-consent";
+import type { Command } from "../../shared/Command";
+import type { PlayerName, UIState } from "../UIState";
+import { NamePanel } from "./NamePanel";
+import { SocketService } from "../SocketService";
 import PartySocket from "partysocket";
-import {RoomService} from "../roomService";
-import type {ServerPayload} from "../../shared/Payload";
-import {Player} from "../../shared/Player";
-import {Cookies} from "react-cookie"
-import {CookieConsent} from "react-cookie-consent";
-import type {CookieData} from "../../shared/CookieData";
-import {v4 as uuid4} from "uuid";
-import type {Command} from "../../shared/Command";
-import type {PlayerName, UIState} from "../UIState";
-import {NamePanel} from "./NamePanel";
 
 export class BoardLayoutService {
   public static fallbackBoard(width: number, height: number): number[][] {
@@ -17,9 +15,7 @@ export class BoardLayoutService {
   }
 
   public static getDimensions(board: number[][]): [number, number] {
-    if (!board.length || !board[0]) {
-      return [0, 0];
-    }
+    if (!board.length || !board[0]) return [0, 0];
     return [board.length, board[0].length];
   }
 
@@ -29,9 +25,9 @@ export class BoardLayoutService {
 }
 
 export default class GameUI extends Component<Record<string, never>, UIState> {
-  readonly cookie = new Cookies();
-  readonly initialCookie? = this.cookie.get<CookieData>("minesweeper-web")
+  private readonly socketService = new SocketService();
   private clearCopyHintTimeout?: number = undefined;
+
   public constructor(props: Record<string, never>) {
     super(props);
     this.state = {
@@ -55,8 +51,8 @@ export default class GameUI extends Component<Record<string, never>, UIState> {
 
   public componentWillUnmount(): void {
     if (this.state.socket) {
-      this.state.socket.close();
-      this.setState({socket: undefined}) ;
+      this.socketService.disconnect(this.state.socket);
+      this.setState({ socket: undefined });
     }
     if (this.clearCopyHintTimeout !== undefined) {
       window.clearTimeout(this.clearCopyHintTimeout);
@@ -65,73 +61,36 @@ export default class GameUI extends Component<Record<string, never>, UIState> {
   }
 
   private connectSocket(): void {
-
-    // generate uuid if not set via cookie
-    let id: string;
-    let myName: string | undefined = undefined;
-    if (this.initialCookie) {
-      id = this.initialCookie.clientID;
-      myName = this.initialCookie.playerName;
-      console.log(myName);
-    } else {
-      id = uuid4();
-    }
-    const socket = new PartySocket({
-      host: window.location.host,
-      room: this.state.roomId,
-      maxRetries: 0,
-      id: id,
-      query: {
-        name: myName
-      }
-    })
-    socket.addEventListener("open", () => {
-      this.setState({ statusText: "Connected." });
+    const socket = this.socketService.connect(this.state.roomId, {
+      onOpen: () => {
+        this.setState({ statusText: "Connected." });
+      },
+      onMessage: (payload: ServerPayload) => {
+        this.handleJsonPayload(payload);
+      },
+      onError: (error: Error) => {
+        console.log(error.message);
+      },
     });
-
-    socket.addEventListener("message", (event: MessageEvent) => {
-      this.handleServerMessage(event.data);
-    });
-    this.setState({socket: socket})
-  }
-
-  private handleServerMessage(rawPayload: any): void {
-    if (typeof rawPayload !== "string") {
-      return;
-    }
-    try {
-      const payload: ServerPayload = JSON.parse(rawPayload);
-      this.handleJsonPayload(payload);
-    } catch (e: any) {
-      if (e as Error) {
-        console.log((e as Error).message);
-      }
-    }
+    this.setState({ socket });
   }
 
   private handleJsonPayload(payload: ServerPayload): void {
-    if (payload.board) {
-      this.setState({ board: payload.board });
-    }
-
-    if (payload.userCount) {
-      this.setState({ userCount: payload.userCount });
-    }
+    if (payload.board) this.setState({ board: payload.board });
+    if (payload.userCount) this.setState({ userCount: payload.userCount });
 
     if (payload.gameState === "win") {
       this.setState({ statusText: "🎉 You won!" });
     } else if (payload.gameState === "lost") {
       this.setState({ statusText: "💥 Game over." });
     }
-    if (payload.sysCmds) {
-      this.setState({sysCmds: payload.sysCmds})
-    }
-    if (payload.myId) {
-      this.setState({ ownId: payload.myId });
-    }
+
+    if (payload.sysCmds) this.setState({ sysCmds: payload.sysCmds });
+    if (payload.myId) this.setState({ ownId: payload.myId });
+
     if (payload.users) {
       this.applyNames(payload.users);
-      this.setOwnName(payload.users.find(p => p.id === this.state.ownId)?.name ?? "ERRÖR")
+      this.setOwnName(payload.users.find((p) => p.id === this.state.ownId)?.name ?? "ERRÖR");
     }
   }
 
@@ -140,31 +99,23 @@ export default class GameUI extends Component<Record<string, never>, UIState> {
       ownName: nextOwnName,
       pendingName: prevState.isEditingOwnName ? prevState.pendingName : nextOwnName,
       playerNames: prevState.playerNames.map((entry) => {
-        if (entry.isSelf) {
-          return { ...entry, name: nextOwnName, isSelf: true };
-        }
+        if (entry.isSelf) return { ...entry, name: nextOwnName, isSelf: true };
         return { ...entry, isSelf: entry.player.name === nextOwnName };
       }),
     }));
-    const cdata: CookieData = {clientID: this.state.socket!.id, playerName: nextOwnName};
-    this.cookie.set("minesweeper-web", cdata);
+
+    if (this.state.socket) {
+      this.socketService.saveName(this.state.socket, nextOwnName);
+    }
   }
 
   private applyNames(rawNames: Player[]): void {
-    const normalizedNames: PlayerName[] = rawNames.map((player): PlayerName => {
-      const isSelf = player.name === this.state.ownName;
-      console.log(player.name)
-      return {
-        isSelf,
-        player
-      };
-    });
+    const normalizedNames: PlayerName[] = rawNames.map((player): PlayerName => ({
+      isSelf: player.name === this.state.ownName,
+      player,
+    }));
 
-    this.setState((prevState) => {
-      let newState: UIState = prevState
-      newState.playerNames = normalizedNames
-      return newState;
-    });
+    this.setState((prevState) => ({ ...prevState, playerNames: normalizedNames }));
   }
 
   private sendTurn(command: string, x: number, y: number): void {
@@ -203,14 +154,14 @@ export default class GameUI extends Component<Record<string, never>, UIState> {
     if (!cmd.hasCmdLine) {
       this.state.socket!.send(`${cmd.cmd}`);
     } else {
-      this.setState({cmdLine: cmd})
+      this.setState({ cmdLine: cmd });
     }
   }
 
   private handleSpecSysCommand(cmd: string, params: string): void {
-    let outString = cmd + " " + params.replace(cmd, "");
+    const outString = cmd + " " + params.replace(cmd, "");
     this.state.socket!.send(outString);
-    this.setState({cmdLine: undefined})
+    this.setState({ cmdLine: undefined });
   }
 
   public render() {
@@ -218,7 +169,7 @@ export default class GameUI extends Component<Record<string, never>, UIState> {
     const [height, width] = BoardLayoutService.getDimensions(board);
     const cellSize = BoardLayoutService.getCellSize(width, height);
     const boardStyle: CSSProperties = {
-      display: 'grid',
+      display: "grid",
       gridTemplateColumns: `repeat(${width}, ${cellSize})`,
       gridTemplateRows: `repeat(${height}, ${cellSize})`,
       ["--cell-size" as string]: cellSize,
@@ -241,9 +192,17 @@ export default class GameUI extends Component<Record<string, never>, UIState> {
 
         <div className="toolbar">
           {this.state.sysCmds.map((cmd) => (
-              <button className={cmd.isPrivileged ? "privileged" : "unprivileged"} title={cmd.helpMsg} onClick={() => this.handleSysCommand(cmd)}> {cmd.cmd} </button>
+            <button
+              key={cmd.cmd}
+              className={cmd.isPrivileged ? "privileged" : "unprivileged"}
+              title={cmd.helpMsg}
+              onClick={() => this.handleSysCommand(cmd)}
+            >
+              {cmd.cmd}
+            </button>
           ))}
         </div>
+
         <section id="gridCmdLine">
           <div className="board" style={boardStyle}>
             {board.map((column, x) =>
@@ -255,24 +214,35 @@ export default class GameUI extends Component<Record<string, never>, UIState> {
                   className="cell"
                   onClick={() => this.handlePrimaryClick(x, y)}
                   onContextMenu={(event) => this.handleSecondaryClick(event, x, y)}
-                  title={`(${x}, ${y})`} >
+                  title={`(${x}, ${y})`}
+                >
                   <img src={`/assets/fields/${value}.png`} alt={`Cell value ${value}`} draggable={false} />
                 </button>
               ))
             )}
           </div>
-          { cmdLine ?
+
+          {cmdLine ? (
             <section id="secCmdLine">
               <p className="allowNewLine">{cmdLine.specHelpMsg}</p>
               <section>
-                <input id="cmdLine" type="text" value={this.state.cmdLineContent}
-                  onChange={event => this.setState({ cmdLineContent: event.target.value })}
-                  onKeyDown={(key) => key.key === "Enter" ? this.handleSpecSysCommand(cmdLine.cmd, this.state.cmdLineContent ?? ""):null}/>
-                <button
-                  onClick={() => this.handleSpecSysCommand(cmdLine.cmd, this.state.cmdLineContent ?? "")}> Submit </button>
+                <input
+                  id="cmdLine"
+                  type="text"
+                  value={this.state.cmdLineContent}
+                  onChange={(event) => this.setState({ cmdLineContent: event.target.value })}
+                  onKeyDown={(key) =>
+                    key.key === "Enter"
+                      ? this.handleSpecSysCommand(cmdLine.cmd, this.state.cmdLineContent ?? "")
+                      : null
+                  }
+                />
+                <button onClick={() => this.handleSpecSysCommand(cmdLine.cmd, this.state.cmdLineContent ?? "")}>
+                  Submit
+                </button>
               </section>
-            </section> : null
-          }
+            </section>
+          ) : null}
         </section>
       </section>
     );

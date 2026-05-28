@@ -8,17 +8,20 @@ export type UIState = {
     statusText: string;
     roomId: string;
     copyHint: string;
-    playerNames: PlayerName[];
-    pendingName: string;
-    isEditingOwnName: boolean;
-    ownName: string;
-    ownId: string;
+
     sysCmds: Command[];
     cmdLine?: Command;
     cmdLineContent?: string;
     socket?: PartySocket;
 };
 
+export type NameState = {
+    pendingName: string;
+    isEditingOwnName: boolean;
+    ownName: string;
+    ownId: string;
+    playerNames: PlayerName[];
+}
 export type PlayerName = {
     isSelf: boolean;
     player: Player;

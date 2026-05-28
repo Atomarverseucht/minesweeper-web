@@ -1,11 +1,11 @@
 import "./styles.css";
-import {Component} from "react";
 import { createRoot } from "react-dom/client";
 import GameUI from "./components/GameUI";
 import {version} from "../../package.json";
+import {CookieConsent} from "react-cookie-consent";
+import {NamePanel} from "./components/NamePanel";
 
-class App extends Component {
-  public render() {
+function App() {
     return (
       <main>
         <h1>
@@ -15,9 +15,12 @@ class App extends Component {
           The web version of <a href="https://github.com/Atomarverseucht/minesweeper">Atoms and Guakocius Minesweeper project</a>.
         </p>
         <GameUI />
+        <NamePanel />
+        <CookieConsent location="bottom" buttonText="I understand" overlay >
+          This website uses cookies to to enhance the user experience. Only technically necessary cookies are used.
+        </CookieConsent>
       </main>
     );
   }
-}
 document.title = `Minesweeper Web v${version}`;
 createRoot(document.getElementById("app")!).render(<App />);
