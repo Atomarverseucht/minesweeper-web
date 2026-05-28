@@ -4,8 +4,18 @@ import GameUI from "./components/GameUI";
 import {version} from "../../package.json";
 import {CookieConsent} from "react-cookie-consent";
 import {NamePanel} from "./components/NamePanel";
+import {useEffect} from "react";
+import {socketService} from "./SocketService";
 
 function App() {
+    useEffect(() => {
+        socketService.connect();
+
+        // Ersetzt componentWillUnmount (Clean-up Funktion)
+        return () => {
+            disconnect();
+        };
+    }, []);
     return (
       <main>
         <h1>

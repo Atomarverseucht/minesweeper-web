@@ -2,7 +2,7 @@ import type {Command} from "../shared/Command";
 import {Player} from "../shared/Player";
 import PartySocket from "partysocket";
 
-export type UIState = {
+export type GameState = {
     board: number[][];
     userCount: number;
     statusText: string;
